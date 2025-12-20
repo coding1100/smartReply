@@ -22,7 +22,7 @@ export function ChatHeader({
 }: ChatHeaderProps) {
     return (
         <div className="flex shrink-0 items-center justify-between border-b border-zinc-200 px-6 py-3">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1 flex-col">
                 {/* Mobile Back Button (Hidden on lg) */}
                 <button className="text-zinc-500 hover:text-zinc-700 lg:hidden">
                     <svg
