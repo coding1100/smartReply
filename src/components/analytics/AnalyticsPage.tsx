@@ -212,7 +212,7 @@ export function AnalyticsPage() {
     <div className="px-2 py-3 md:px-4 md:py-4">
       {/* Header row (matches screenshot: title left, date + buttons right) */}
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <div className="text-sm font-semibold text-zinc-900">Analytics</div>
+        <div className="!text-sm !font-semibold text-zinc-900">Analytics</div>
 
         <div className="flex flex-wrap items-center gap-2">
           <PresetDateRangePicker value={range} onApply={setRange} />

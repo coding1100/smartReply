@@ -151,7 +151,7 @@ export function PresetDateRangePicker({
                   base: "w-full",
                   content: "w-full",
                   headerWrapper: "px-2",
-                  title: "text-sm font-semibold text-zinc-900",
+                  title: "!text-sm !font-semibold text-zinc-900",
                 }}
                 focusedValue={focusedValue as any}
                 onFocusChange={setFocusedValue as any}

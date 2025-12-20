@@ -23,7 +23,7 @@ export function CustomerProfile({ customer }: CustomerProfileProps) {
                     className="h-12 w-12 rounded-full border border-zinc-200 object-cover"
                 />
                 <div className="min-w-0 flex-1">
-                    <h3 className="text-sm font-semibold text-zinc-900">{customer.name}</h3>
+                    <h3 className="!text-sm !font-semibold text-zinc-900">{customer.name}</h3>
                     <p className="text-xs text-zinc-500">
                         {customer.email || "No email on file"}
                     </p>

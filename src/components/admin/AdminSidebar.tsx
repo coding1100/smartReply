@@ -10,7 +10,7 @@ export function AdminSidebar() {
         <div className="flex items-center gap-1 px-4 py-4">
           <div className="h-9 w-9 rounded-xl bg-emerald-500/15 ring-1 ring-emerald-500/25" />
           <div>
-            <Link href="/dashboard" className="text-sm font-semibold text-zinc-900">
+            <Link href="/dashboard" className="!text-sm !font-semibold text-zinc-900">
               SmartReply
             </Link>
             <div className="text-xs text-zinc-500">AI Agent</div>

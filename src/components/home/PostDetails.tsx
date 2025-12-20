@@ -14,7 +14,7 @@ export function PostDetails() {
               name="Awais Jutt"
             />
             <div>
-              <div className="text-sm font-semibold text-zinc-900">Awais Jutt</div>
+              <div className="!text-sm !font-semibold text-zinc-900">Awais Jutt</div>
               <div className="text-xs text-zinc-500">No email on file</div>
             </div>
           </div>
@@ -37,7 +37,7 @@ export function PostDetails() {
 
         <div className="rounded-2xl bg-zinc-50 p-3">
           <div className="flex items-center justify-between">
-            <div className="text-sm font-semibold text-zinc-900">Notes</div>
+            <div className="!text-sm !font-semibold text-zinc-900">Notes</div>
             <Button size="sm" variant="light" className="text-indigo-600">
               Add note
             </Button>

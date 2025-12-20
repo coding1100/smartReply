@@ -21,7 +21,7 @@ export function ChatThread({
           <div className="flex items-center gap-3">
             <Avatar size="sm" name="A" className="bg-zinc-900 text-white" />
             <div>
-              <div className="text-sm font-semibold text-zinc-900">{title}</div>
+              <div className="!text-sm !font-semibold text-zinc-900">{title}</div>
               <div className="text-xs text-zinc-500">Ad ID:</div>
             </div>
           </div>

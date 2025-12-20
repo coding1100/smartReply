@@ -3,9 +3,10 @@ import { Message, MessageItem } from "./MessageItem";
 
 interface MessageListProps {
     messages: Message[];
+    isCommentMode?: boolean;
 }
 
-export function MessageList({ messages }: MessageListProps) {
+export function MessageList({ messages, isCommentMode }: MessageListProps) {
     // Use a ref to scroll to bottom effectively, though logic might need to be in parent or here
     const messagesEndRef = React.useRef<HTMLDivElement>(null);
 

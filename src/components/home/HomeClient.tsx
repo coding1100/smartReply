@@ -172,6 +172,7 @@ export default function HomeClient() {
           onComposerChange={setComposerText}
           onSend={handleSend}
           onManualAction={() => console.log("Manual action")}
+          isCommentMode={tab === "comments"}
         />
       }
       rightSidebar={<RightSidebar customer={currentCustomer} />}

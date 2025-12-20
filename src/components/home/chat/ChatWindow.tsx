@@ -4,6 +4,8 @@ import { MessageList } from "./MessageList";
 import { ChatFooter } from "./ChatFooter";
 import { Message } from "./MessageItem";
 
+import { ManualActionModal } from "./ManualActionModal";
+
 interface ChatWindowProps {
     messages: Message[];
     customerName: string;
@@ -16,6 +18,7 @@ interface ChatWindowProps {
     onComposerChange: (value: string) => void;
     onSend: () => void;
     onManualAction?: () => void;
+    isCommentMode?: boolean;
 }
 
 export function ChatWindow({
@@ -30,7 +33,20 @@ export function ChatWindow({
     onComposerChange,
     onSend,
     onManualAction,
+    isCommentMode = false,
 }: ChatWindowProps) {
+    const [isManualActionModalOpen, setIsManualActionModalOpen] = React.useState(false);
+
+    const handleSaveManualAction = () => {
+        // Here you would handle saving the manual action data
+        // For now, we'll just close the modal and call the optional prop functionality
+        console.log("Manual action saved");
+        if (onManualAction) {
+            onManualAction();
+        }
+        setIsManualActionModalOpen(false);
+    };
+
     return (
         <div className="flex flex-1 flex-col min-w-0 bg-white">
             {/* Loading Overlay (Hidden) */}
@@ -46,15 +62,22 @@ export function ChatWindow({
                     isOnline={isOnline}
                     autoReply={autoReply}
                     onAutoReplyChange={onAutoReplyChange}
+                    isCommentMode={isCommentMode}
                 />
-                <MessageList messages={messages} />
+                <MessageList messages={messages} isCommentMode={isCommentMode} />
                 <ChatFooter
                     value={composerValue}
                     onChange={onComposerChange}
                     onSend={onSend}
-                    onManualAction={onManualAction}
+                    onManualAction={() => setIsManualActionModalOpen(true)}
                 />
             </div>
+
+            <ManualActionModal
+                isOpen={isManualActionModalOpen}
+                onClose={() => setIsManualActionModalOpen(false)}
+                onSave={handleSaveManualAction}
+            />
         </div>
     );
 }
