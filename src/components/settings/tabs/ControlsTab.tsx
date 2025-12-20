@@ -23,7 +23,7 @@ function BootstrapSwitch({
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
         style={{
-          width: "3rem",
+          width: "2.25rem",
           height: "1.5rem",
           cursor: "pointer",
         }}
@@ -239,7 +239,7 @@ export function ControlsTab() {
       </div>
 
       <div className="col-12 mt-4">
-        <div className="text-center">
+        <div className="text-left">
           <button
             type="button"
             className="btn btn-primary px-5"

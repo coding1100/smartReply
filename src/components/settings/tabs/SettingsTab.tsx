@@ -3,7 +3,7 @@
 import * as React from "react";
 
 export function SettingsTab() {
-  const [activeAccordion, setActiveAccordion] = React.useState<string | null>("bizInfo");
+  const [activeAccordion, setActiveAccordion] = React.useState<string | null>("connect");
   const [goal, setGoal] = React.useState("sales");
   const [businessDescription, setBusinessDescription] = React.useState("");
   const [businessAddress, setBusinessAddress] = React.useState("");
@@ -44,6 +44,11 @@ export function SettingsTab() {
     console.log("Saving settings...");
   };
 
+  const openAccountMetaModal = () => {
+    // TODO: Implement account meta modal logic
+    console.log("Opening account meta modal...");
+  };
+
   return (
     <div className="container-fluid">
       <form onSubmit={handleSubmit}>
@@ -51,8 +56,8 @@ export function SettingsTab() {
           {/* 1. Connect Facebook page or Twitter Account */}
           <div className="card mb-3">
             <div
-              className=""
-              style={{ cursor: "pointer" }}
+              className="mb-3-header"
+              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("connect")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center" id="headingConnect">
@@ -65,14 +70,13 @@ export function SettingsTab() {
               id="collapseConnect"
               aria-labelledby="headingConnect"
             >
-              <div className="card-body">
+              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
                 <div className="text-success mb-2">Page selected, ID: 645232738675563</div>
                 <button
-                  type="button"
                   className="btn btn-primary"
                   onClick={(e) => {
                     e.preventDefault();
-                    // TODO: Open account modal
+                    openAccountMetaModal();
                   }}
                 >
                   Change Page
@@ -84,8 +88,8 @@ export function SettingsTab() {
           {/* 2. What's your Goal? */}
           <div className="card mb-3">
             <div
-              className=""
-              style={{ cursor: "pointer" }}
+              className="mb-3-header"
+              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("goal")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -97,7 +101,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "goal" ? "show" : ""}`}
               id="collapseGoal"
             >
-              <div className="card-body">
+              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
                 <div className="form-group">
                   <select
                     id="goal"
@@ -117,8 +121,8 @@ export function SettingsTab() {
           {/* 3. Business Information */}
           <div className="card mb-3">
             <div
-              className=""
-              style={{ cursor: "pointer" }}
+              className="mb-3-header"
+              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("bizInfo")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -130,7 +134,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "bizInfo" ? "show" : ""}`}
               id="collapseBizInfo"
             >
-              <div className="card-body">
+              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <h5 className="mb-0">Business Description</h5>
                   <button
@@ -179,8 +183,8 @@ export function SettingsTab() {
           {/* 4. Support Email */}
           <div className="card mb-3">
             <div
-              className=""
-              style={{ cursor: "pointer" }}
+              className="mb-3-header"
+              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("email")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -192,7 +196,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "email" ? "show" : ""}`}
               id="collapseEmail"
             >
-              <div className="card-body">
+              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
                 <input
                   type="email"
                   id="email"
@@ -208,8 +212,8 @@ export function SettingsTab() {
           {/* 5. Choose a personality for the agent */}
           <div className="card mb-3">
             <div
-              className=""
-              style={{ cursor: "pointer" }}
+              className="mb-3-header"
+              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("personality")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -221,7 +225,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "personality" ? "show" : ""}`}
               id="collapsePersonality"
             >
-              <div className="card-body">
+              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
                 <div className="form-group">
                   <select
                     id="personality"
@@ -243,8 +247,8 @@ export function SettingsTab() {
           {/* 6. Add Products (Up to 5) */}
           <div className="card mb-3">
             <div
-              className=""
-              style={{ cursor: "pointer" }}
+              className="mb-3-header"
+              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("products")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -255,7 +259,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "products" ? "show" : ""}`}
               id="collapseProducts"
             >
-              <div className="card-body">
+              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
                 <button
                   type="button"
                   className="btn btn-primary"
@@ -273,8 +277,8 @@ export function SettingsTab() {
           {/* 7. Add Calendar Schedule Link */}
           <div className="card mb-3">
             <div
-              className=""
-              style={{ cursor: "pointer" }}
+              className="mb-3-header"
+              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("calendar")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -285,7 +289,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "calendar" ? "show" : ""}`}
               id="collapseCalendar"
             >
-              <div className="card-body">
+              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
                 <h5 className="mb-2">Add Calendar Schedule Link</h5>
                 <input
                   type="text"
@@ -301,8 +305,8 @@ export function SettingsTab() {
           {/* 8. Promotion offers or discount codes */}
           <div className="card mb-3">
             <div
-              className=""
-              style={{ cursor: "pointer" }}
+              className="mb-3-header"
+              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("promotions")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -313,7 +317,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "promotions" ? "show" : ""}`}
               id="collapsePromotions"
             >
-              <div className="card-body">
+              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
                 <input
                   type="text"
                   id="promotionOffers"
@@ -329,8 +333,8 @@ export function SettingsTab() {
           {/* 9. Add Domain */}
           <div className="card mb-3">
             <div
-              className=""
-              style={{ cursor: "pointer" }}
+              className="mb-3-header"
+              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("domain")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -341,7 +345,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "domain" ? "show" : ""}`}
               id="collapseDomain"
             >
-              <div className="card-body">
+              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
                 <div className="mb-3 text-center">
                   <button
                     type="button"
@@ -369,8 +373,8 @@ export function SettingsTab() {
           {/* 10. Add FAQs */}
           <div className="card mb-3">
             <div
-              className=""
-              style={{ cursor: "pointer" }}
+              className="mb-3-header"
+              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("faqs")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -381,7 +385,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "faqs" ? "show" : ""}`}
               id="collapseFaqs"
             >
-              <div className="card-body">
+              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
                 {faqs.map((faq, index) => (
                   <div key={index} className="form-group mb-3">
                     <input
@@ -417,8 +421,8 @@ export function SettingsTab() {
           {/* 11. Policy Pages */}
           <div className="card mb-3">
             <div
-              className=""
-              style={{ cursor: "pointer" }}
+              className="mb-3-header"
+              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("policies")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -429,7 +433,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "policies" ? "show" : ""}`}
               id="collapsePolicyPages"
             >
-              <div className="card-body">
+              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
                 {/* Privacy Policy */}
                 <div className="mb-4">
                   <h5 className="mb-2">Privacy Policy URL</h5>
@@ -554,10 +558,10 @@ export function SettingsTab() {
 
           {/* Activate SmartReply */}
           <div className="card mb-3">
-            <div className="">
+            <div className="mb-3-header" style={{ backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}>
               <h6 className="mb-0">Activate SmartReply</h6>
             </div>
-            <div className="card-body">
+            <div className="mb-3-body">
               <div className="form-group mt-3 text-center">
                 <button
                   type="submit"

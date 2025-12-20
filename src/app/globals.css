@@ -33,7 +33,18 @@ html,
 body {
   height: 100%;
 }
-
+.collapse {
+  visibility: visible !important;
+}
+.card-header {
+  border-bottom: 0px solid #e5e7eb !important;
+}
+.collapse.show {
+  border-top: 1px solid #e5e7eb;
+}
+.mb-3-body{
+  padding: 1rem;
+}
 /* Bootstrap-style Switch Styling */
 .form-check-input {
   background-color: #e5e7eb;
@@ -74,4 +85,189 @@ body {
 .form-check.form-switch {
   padding-left: 0;
   margin-bottom: 0;
+}
+
+/* Card Component Styles */
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.15s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.card-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0.75rem 1.25rem;
+  color: #171717;
+}
+
+.card-body {
+  background-color: #ffffff;
+  padding: 1.25rem;
+  color: #171717;
+}
+
+/* Ensure text is visible on white backgrounds */
+.card-header h6,
+.card-body,
+.card-body * {
+  color: #171717;
+}
+
+.card-body .text-muted {
+  color: #6b7280 !important;
+}
+
+.card-body .text-success {
+  color: #10b981 !important;
+}
+
+/* Form Controls */
+.form-control {
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  color: #171717;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+  background-color: #ffffff;
+  border-color: #818cf8;
+  color: #171717;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.25);
+}
+
+.form-control::placeholder {
+  color: #9ca3af;
+}
+
+/* Buttons */
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: all 0.15s ease-in-out;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #4f46e5;
+  border-color: #4f46e5;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: #4338ca;
+  border-color: #4338ca;
+  color: #ffffff;
+}
+
+.btn-outline-primary {
+  background-color: transparent;
+  border-color: #4f46e5;
+  color: #4f46e5;
+}
+
+.btn-outline-primary:hover {
+  background-color: #4f46e5;
+  border-color: #4f46e5;
+  color: #ffffff;
+}
+
+/* Collapse Animation */
+.collapse {
+  transition: height 0.35s ease;
+}
+
+.collapse:not(.show) {
+  display: none;
+}
+
+.collapse.show {
+  display: block;
+}
+
+/* Smooth Transitions */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Utility Classes */
+.text-visible {
+  color: #171717 !important;
+}
+
+.bg-white {
+  background-color: #ffffff !important;
+}
+
+/* Ensure proper spacing */
+.container-fluid {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Link Styles */
+a {
+  color: #4f46e5;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out;
+}
+
+a:hover {
+  color: #4338ca;
+  text-decoration: underline;
+}
+
+/* Select Dropdown */
+select.form-control {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+  padding-right: 2.5rem;
+  appearance: none;
+}
+
+/* Textarea */
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Focus Visible for Accessibility */
+*:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
 }
