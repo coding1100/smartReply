@@ -55,7 +55,7 @@ function Section({
   const pathname = usePathname();
   const [open, setOpen] = React.useState(defaultOpen);
   return (
-    <div className="mt-5">
+    <div className="mt-3">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
