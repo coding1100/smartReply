@@ -4,11 +4,8 @@
 /* Bootstrap Icons */
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
-/* HeroUI base stylesheet (includes Tailwind v4 + theme layers) */
-@import "@heroui/styles/css";
-
-/* Tailwind utilities */
-@tailwind utilities;
+/* Tailwind CSS */
+@import "tailwindcss";
 
 :root {
   --background: #ffffff;

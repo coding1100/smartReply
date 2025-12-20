@@ -293,7 +293,7 @@ export default function CommentSelectorPage() {
           <div className="modal-dialog modal-dialog-centered" role="document" style={{ minWidth: '1000px' }}>
             <div className="modal-content">
               <div className="modal-header" style={{ alignItems: "center", justifyContent: "space-between" }}>
-                <div className="flex align-items-center" style={{ paddingLeft: "15px" }}>
+                <div className="" style={{ paddingLeft: "15px" }}>
                   <h3 className="modal-title" id="commentModalLabel">
                     Comments
                   </h3>
@@ -304,7 +304,7 @@ export default function CommentSelectorPage() {
                   <a href={postUrl} target="_blank" id="goToPostBtn" className="btn btn-outline-primary btn-sm">
                     Go to Post
                   </a>
-                  <button type="button" className="close" id="closeModalBtn" aria-label="Close" onClick={closeCommentModal}>
+                  <button type="button" className="close text-[30px] p-[10px]" id="closeModalBtn" aria-label="Close" onClick={closeCommentModal}>
                     <span aria-hidden="true">×</span>
                   </button>
                 </div>
@@ -400,7 +400,7 @@ export default function CommentSelectorPage() {
                           <p className="mt-2">that's awesome</p>
                           <div className="mt-3 d-flex align-items-center">
                             <p className="text-muted mb-0 mr-2">Actions:</p>
-                            <button className="icon-button mr-[10px]" title="Like" onClick={(e) => { e.stopPropagation(); saveActionReply('122146508888890127_2078759359617457', '122146508888890127_2078759359617457', 'like'); }}>
+                            <button className="icon-button mr-2.5" title="Like" onClick={(e) => { e.stopPropagation(); saveActionReply('122146508888890127_2078759359617457', '122146508888890127_2078759359617457', 'like'); }}>
                               <i className="bi bi-heart-fill text-danger"></i>
                             </button>
                             <button className="icon-button mr-4" title="Hide" onClick={(e) => { e.stopPropagation(); saveActionReply('122146508888890127_2078759359617457', '122146508888890127_2078759359617457', 'remove'); }}>
@@ -447,6 +447,40 @@ export default function CommentSelectorPage() {
                             </div>
                           </div>
                           <p className="mt-2">thats beautifull</p>
+                          <div className="mt-3 d-flex align-items-center">
+                            <p className="text-muted mb-0 mr-2">Actions:</p>
+                            <button className="icon-button mr-2.5" title="Like" onClick={(e) => { e.stopPropagation(); saveActionReply('122146508888890127_885430057309494', '122146508888890127_885430057309494', 'like'); }}>
+                              <i className="bi bi-heart-fill text-danger"></i>
+                            </button>
+                            <button className="icon-button mr-2.5" title="Hide" onClick={(e) => { e.stopPropagation(); saveActionReply('122146508888890127_885430057309494', '122146508888890127_885430057309494', 'remove'); }}>
+                              <i className="bi bi-x text-secondary"></i>
+                            </button>
+                            <button className="icon-button" title="Don't reply" onClick={(e) => { e.stopPropagation(); saveActionReply('122146508888890127_885430057309494', '122146508888890127_885430057309494', 'stop'); }}>
+                              <i className="bi bi-slash-circle text-danger"></i>
+                            </button>
+                          </div>
+                          <div className="mt-3">
+                            <button type="button" className="btn btn-outline-primary btn-sm" id="custom-reply-btn-122146508888890127_885430057309494" onClick={(e) => { e.stopPropagation(); showReplyBox('122146508888890127_885430057309494'); }}>
+                              Add Custom Reply
+                            </button>
+                            <div id="custom-reply-box-122146508888890127_885430057309494" className="mt-2" style={{ display: "none" }} onClick={(e) => e.stopPropagation()}>
+                              <input type="text" id="custom-reply-input-122146508888890127_885430057309494" className="form-control mb-2" placeholder="Type a custom reply…" onFocus={(e) => e.stopPropagation()} />
+                              <button type="button" className="btn btn-primary btn-sm" onClick={(e) => { e.stopPropagation(); saveCustomReply('122146508888890127_885430057309494', '122146508888890127_885430057309494', (document.getElementById('custom-reply-input-122146508888890127_885430057309494') as HTMLInputElement).value); }}>
+                                Save
+                              </button>
+                            </div>
+                          </div>
+                          <div className="mt-3">
+                            <button type="button" className="btn btn-outline-secondary btn-sm" id="custom-private-reply-btn-122146508888890127_885430057309494" onClick={(e) => { e.stopPropagation(); showPrivateReplyBox('122146508888890127_885430057309494'); }}>
+                              Add Custom <strong>Private</strong> Reply
+                            </button>
+                            <div id="custom-private-reply-box-122146508888890127_885430057309494" className="mt-2" style={{ display: "none" }} onClick={(e) => e.stopPropagation()}>
+                              <input type="text" id="custom-private-reply-input-122146508888890127_885430057309494" className="form-control mb-2" placeholder="Type a custom private reply…" onFocus={(e) => e.stopPropagation()} />
+                              <button type="button" className="btn btn-secondary btn-sm" onClick={(e) => { e.stopPropagation(); savePrivateReply('122146508888890127_885430057309494', '122146508888890127_885430057309494', (document.getElementById('custom-private-reply-input-122146508888890127_885430057309494') as HTMLInputElement).value); }}>
+                                Save
+                              </button>
+                            </div>
+                          </div>
                           <div className="private-reply-item mt-2 p-2" onClick={() => togglePrivateReply('122146508888890127_885430057309494','694112b5a7ebd')}>
                             <div className="d-flex align-items-center mb-1">
                               <i className="bi bi-send text-primary me-1"></i>
