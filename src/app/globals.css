@@ -230,7 +230,9 @@ body {
 .text-visible {
   color: #171717 !important;
 }
-
+ul{
+  padding-left: 0px;
+}
 .bg-white {
   background-color: #ffffff !important;
 }

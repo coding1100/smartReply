@@ -18,7 +18,7 @@ export function ContentLibraryPage() {
         <div>
           <div className="text-2xl font-bold text-zinc-900">Content Library</div>
           <div className="text-sm text-zinc-500">
-            Images, videos &amp; story mentions pulled from your chats and comments.
+            Images, videos & story mentions pulled from your chats and comments.
           </div>
         </div>
 
