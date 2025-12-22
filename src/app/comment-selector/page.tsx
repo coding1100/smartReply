@@ -362,7 +362,7 @@ export default function CommentSelectorPage() {
                             <p className="mt-2" style={{ maxWidth: "100%" }}>thats beautifull</p>
                           </div>
                           <div className="nested-comments ms-4 mt-3">
-                            <div className="reply-item mb-2 p-2 border-start" data-comment-id="122146508888890127_847883224511765" onClick={() => handleReplyClick('122146508888890127_885430057309494','122146508888890127_847883224511765')}>
+                            <div className="reply-item mb-2 p-2 border-start" data-comment-id="122146508888890127_847883224511765" onClick={() => handleReplyClick('122146508888890127_885430057309494', '122146508888890127_847883224511765')}>
                               <div className="d-flex align-items-start">
                                 <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" alt="Wise man" className="rounded-circle mr-2" width="40" height="40" />
                                 <div className="flex-grow-1">
@@ -400,7 +400,7 @@ export default function CommentSelectorPage() {
                           <p className="mt-2">that's awesome</p>
                           <div className="mt-3 d-flex align-items-center">
                             <p className="text-muted mb-0 mr-2">Actions:</p>
-                            <button className="icon-button mr-2.5" title="Like" onClick={(e) => { e.stopPropagation(); saveActionReply('122146508888890127_2078759359617457', '122146508888890127_2078759359617457', 'like'); }}>
+                            <button className="icon-button mr-2" title="Like" onClick={(e) => { e.stopPropagation(); saveActionReply('122146508888890127_2078759359617457', '122146508888890127_2078759359617457', 'like'); }}>
                               <i className="bi bi-heart-fill text-danger"></i>
                             </button>
                             <button className="icon-button mr-4" title="Hide" onClick={(e) => { e.stopPropagation(); saveActionReply('122146508888890127_2078759359617457', '122146508888890127_2078759359617457', 'remove'); }}>
@@ -481,7 +481,7 @@ export default function CommentSelectorPage() {
                               </button>
                             </div>
                           </div>
-                          <div className="private-reply-item mt-2 p-2" onClick={() => togglePrivateReply('122146508888890127_885430057309494','694112b5a7ebd')}>
+                          <div className="private-reply-item mt-2 p-2" onClick={() => togglePrivateReply('122146508888890127_885430057309494', '694112b5a7ebd')}>
                             <div className="d-flex align-items-center mb-1">
                               <i className="bi bi-send text-primary me-1"></i>
                               <small className="text-primary fw-bold">Private reply</small>
@@ -496,7 +496,7 @@ export default function CommentSelectorPage() {
                             </div>
                           </div>
                           <div className="nested-comments ms-4 mt-3">
-                            <div className="reply-item mb-2 p-2 border-start" data-comment-id="694112bd1da09" onClick={() => handleReplyClick('122146508888890127_885430057309494','694112bd1da09')}>
+                            <div className="reply-item mb-2 p-2 border-start" data-comment-id="694112bd1da09" onClick={() => handleReplyClick('122146508888890127_885430057309494', '694112bd1da09')}>
                               <div className="d-flex align-items-center">
                                 <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" alt="Mindrind" className="rounded-circle me-2" width="40" height="40" />
                                 <div>
