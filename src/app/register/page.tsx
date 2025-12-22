@@ -15,18 +15,18 @@ export default function RegisterPage() {
     return (
         <div className="min-h-screen flex flex-col bg-white">
             {/* Top Bar */}
-            <div className="flex items-center justify-between px-8 py-4 fixed top-0 left-0 right-0">
+            <div className="flex items-center justify-between px-8 py-4 fixed top-0 left-0 right-0 bg-white z-10">
                 <div className="text-xl font-bold text-zinc-900">SmartReply</div>
                 <div className="flex items-center gap-6">
                     <Link
                         href="https://smartreply.io"
-                        className="text-blue-600 hover:text-blue-900 !no-underline !hover:!no-underline text-sm"
+                        className="text-blue-600 hover:text-blue-900 no-underline text-sm"
                     >
                         Back
                     </Link>
                     <Link
                         href="/login"
-                        className="px-6 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-full hover:bg-blue-50 !hover:!no-underline transition-colors"
+                        className="px-6 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-full hover:bg-blue-50 no-underline transition-colors"
                     >
                         SIGN IN
                     </Link>
@@ -34,7 +34,7 @@ export default function RegisterPage() {
             </div>
 
             {/* Two Column Layout */}
-            <div className="flex-1 flex">
+            <div className="flex-1 flex pt-16">
                 {/* Left Column - Welcome Section */}
                 <div className="w-1/2 bg-white flex items-center justify-center p-12">
                     <div className="max-w-md">
@@ -64,7 +64,7 @@ export default function RegisterPage() {
                         {/* Google */}
                         <button
                             onClick={handleGoogleSignup}
-                            className=" mb-[12px] rounded-[12px] flex items-center w-full py-3 px-5 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all" style={{ borderRadius: '12px', marginBottom: '12px' }}
+                            className="flex items-center w-full py-3 px-5 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all"
                         >
                             <img
                                 src="https://app.smartreply.io/assets/images/google-icon.png"
@@ -82,7 +82,7 @@ export default function RegisterPage() {
                         {/* Instagram */}
                         <Link
                             href="/register/connect"
-                            className="flex items-center w-full !text-[#000] py-3 px-5 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all !no-underline !hover:!no-underline "
+                            className="flex items-center w-full py-3 px-5 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all no-underline text-zinc-900"
                         >
                             <img
                                 src="https://app.smartreply.io/assets/images/instagram-icon.svg"
@@ -90,7 +90,7 @@ export default function RegisterPage() {
                                 alt="Instagram Icon"
                             />
                             <div className="text-left flex-1">
-                                <h3 className="text-base font-semibold text-zinc-900 text-[#000]">
+                                <h3 className="text-base font-semibold text-zinc-900">
                                     Instagram
                                 </h3>
                                 <p className="text-xs text-zinc-600">
@@ -102,7 +102,7 @@ export default function RegisterPage() {
                         {/* Facebook Messenger */}
                         <Link
                             href="/register/connect"
-                            className="flex items-center !text-[#000] w-full py-3 px-5 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all !no-underline !hover:!no-underline"
+                            className="flex items-center w-full py-3 px-5 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all no-underline text-zinc-900"
                         >
                             <img
                                 src="https://app.smartreply.io/assets/images/messenger-icon.svg"
@@ -122,7 +122,7 @@ export default function RegisterPage() {
                         {/* WhatsApp */}
                         <Link
                             href="/register/connect"
-                            className="flex items-center !text-[#000] w-full py-3 px-5 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all !no-underline !hover:!no-underline"
+                            className="flex items-center w-full py-3 px-5 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all no-underline text-zinc-900"
                         >
                             <img
                                 src="https://app.smartreply.io/assets/images/whatsapp-icon.svg"
@@ -142,7 +142,7 @@ export default function RegisterPage() {
                         {/* Shopify */}
                         <Link
                             href="/register/connect/shopify"
-                            className="flex items-center !text-[#000] w-full py-3 px-5 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all !no-underline !hover:!no-underline"
+                            className="flex items-center w-full py-3 px-5 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all no-underline text-zinc-900"
                         >
                             <img
                                 src="https://app.smartreply.io/assets/images/shopify.svg"
@@ -160,7 +160,7 @@ export default function RegisterPage() {
                         {/* X/Twitter */}
                         <button
                             onClick={handleTwitterSignup}
-                            className="flex items-center !text-[#000] w-full py-3 px-5 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all" style={{ borderRadius: '12px', marginBottom: '12px' }}
+                            className="flex items-center w-full py-3 px-5 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all"
                         >
                             <img
                                 src="https://app.smartreply.io/assets/images/x-icon.svg"
@@ -178,7 +178,7 @@ export default function RegisterPage() {
                         {/* Email */}
                         <Link
                             href="/register/connect/email"
-                            className="flex items-center !text-[#000] w-full py-3 px-5 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all !no-underline !hover:!no-underline"
+                            className="flex items-center w-full py-3 px-5 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all no-underline text-zinc-900"
                         >
                             <img
                                 src="https://app.smartreply.io/assets/images/email-icon.svg"
@@ -193,8 +193,6 @@ export default function RegisterPage() {
                     </div>
                 </div>
             </div>
-
-
         </div>
     );
 }

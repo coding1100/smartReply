@@ -53,7 +53,7 @@ export default function LoginPage() {
                 <div className="w-1/2 bg-white flex items-center justify-center p-12 relative">
                     <Link
                         href="/register"
-                        className="px-6 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-full hover:bg-blue-50 !no-underline hover:!no-underline transition-colors absolute top-[20px] right-[20px]"
+                        className="px-6 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-full hover:bg-blue-50 no-underline hover:no-underline transition-colors absolute top-[20px] right-[20px]"
                     >
                         GET STARTED FREE
                     </Link>
@@ -197,22 +197,7 @@ export default function LoginPage() {
                 </div>
             </div>
 
-            {/* Chat Button */}
-            <button className="fixed bottom-6 right-6 w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-600 transition-colors">
-                <svg
-                    className="w-6 h-6 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                    />
-                </svg>
-            </button>
+
         </div>
     );
 }

@@ -8,6 +8,7 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
+  important: true, // Makes all Tailwind utilities use !important
   theme: {
     extend: {},
   },
