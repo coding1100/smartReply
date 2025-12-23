@@ -4,15 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
 import { cn } from "@heroui/react";
-import {
-  IconActions,
-  IconAnalytics,
-  IconDashboard,
-  IconHome,
-  IconLibrary,
-  IconSettings,
-  IconUsers,
-} from "./icons";
 
 type NavItem = {
   label: string;
@@ -47,12 +38,15 @@ function Section({
   title,
   items,
   defaultOpen = true,
+  icon,
+  pathname,
 }: {
   title: string;
   items: NavItem[];
   defaultOpen?: boolean;
+  icon?: React.ReactNode;
+  pathname: string;
 }) {
-  const pathname = usePathname();
   const [open, setOpen] = React.useState(defaultOpen);
   return (
     <div className="mt-3">
@@ -61,7 +55,10 @@ function Section({
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between px-3 text-left text-[11px] font-semibold tracking-wide text-zinc-500"
       >
-        <span>{title}</span>
+        <span className="flex items-center gap-2">
+          {icon}
+          {title}
+        </span>
         <Chevron open={open} />
       </button>
 
@@ -95,44 +92,131 @@ function Section({
 }
 
 export function SidebarNav() {
+  const pathname = usePathname();
+
   const main: NavItem[] = [
-    { label: "Dashboard", href: "/dashboard", icon: <IconDashboard /> },
-    { label: "Home", href: "/home", icon: <IconHome /> },
+    { label: "Dashboard", href: "/dashboard", icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-box link-icon"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+    ) },
+    { label: "Home", href: "/home", icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-activity link-icon"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+    ) },
     {
       label: "Content Library",
       href: "/content-library",
-      icon: <IconLibrary />,
-    },
-    { label: "Analytics", href: "/analytics", icon: <IconAnalytics /> },
-  ];
+      icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-book-open link-icon"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+    )},
+    { label: "Analytics", href: "/analytics", icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-bar-chart-2 link-icon"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
 
+    ) },
+  ];
   const actions: NavItem[] = [
-    { label: "All Actions", href: "/actions", icon: <IconActions />, disabled: true },
-    { label: "User Logs", href: "/user-logs", icon: <IconActions />, disabled: true },
+    { label: "All Actions", href: "/actions", icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
+        <path d="M7 12h10M12 7v10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      </svg>
+    ), disabled: true },
+    { label: "User Logs", href: "/user-logs", icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
+        <path d="M7 12h10M12 7v10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      </svg>
+    ), disabled: true },
   ];
 
   const customers: NavItem[] = [
-    { label: "Customer Profiles", href: "/customers", icon: <IconUsers />, disabled: true },
-    { label: "Block List", href: "/block-list", icon: <IconUsers />, disabled: true },
-    { label: "Audiences", href: "/audiences", icon: <IconUsers />, disabled: true },
+    { label: "Customer Profiles", href: "/customers", icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M22 21v-2a3.5 3.5 0 0 0-2.5-3.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M16.5 3.65a4 4 0 0 1 0 7.7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    ), disabled: true },
+    { label: "Block List", href: "/block-list", icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M22 21v-2a3.5 3.5 0 0 0-2.5-3.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M16.5 3.65a4 4 0 0 1 0 7.7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    ), disabled: true },
+    { label: "Audiences", href: "/audiences", icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M22 21v-2a3.5 3.5 0 0 0-2.5-3.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M16.5 3.65a4 4 0 0 1 0 7.7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    ), disabled: true },
   ];
 
   const settings: NavItem[] = [
-    { label: "Settings", href: "/settings", icon: <IconSettings />, disabled: true },
+    { label: "Settings", href: "/settings", icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
+        <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" strokeWidth="2" />
+        <path d="M19.4 15a7.9 7.9 0 0 0 .06-1 7.9 7.9 0 0 0-.06-1l2.1-1.64a.5.5 0 0 0 .12-.63l-2-3.46a.5.5 0 0 0-.6-.22l-2.48 1a8 8 0 0 0-1.73-1l-.38-2.65A.5.5 0 0 0 13.94 3h-3.9a.5.5 0 0 0-.49.42l-.38 2.65a8 8 0 0 0-1.73 1l-2.48-1a.5.5 0 0 0-.6.22l-2 3.46a.5.5 0 0 0 .12.63L4.6 13a7.9 7.9 0 0 0-.06 1 7.9 7.9 0 0 0 .06 1l-2.1 1.64a.5.5 0 0 0-.12.63l2 3.46a.5.5 0 0 0 .6.22l2.48-1a8 8 0 0 0 1.73 1l.38 2.65a.5.5 0 0 0 .49.42h3.9a.5.5 0 0 0 .49-.42l.38-2.65a8 8 0 0 0 1.73-1l2.48 1a.5.5 0 0 0 .6-.22l2-3.46a.5.5 0 0 0-.12-.63L19.4 15Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      </svg>
+    ), disabled: true },
     {
       label: "AI Agent Settings",
       href: "/ai-agent-settings",
-      icon: <IconSettings />,
+      icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
+        <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" strokeWidth="2" />
+        <path d="M19.4 15a7.9 7.9 0 0 0 .06-1 7.9 7.9 0 0 0-.06-1l2.1-1.64a.5.5 0 0 0 .12-.63l-2-3.46a.5.5 0 0 0-.6-.22l-2.48 1a8 8 0 0 0-1.73-1l-.38-2.65A.5.5 0 0 0 13.94 3h-3.9a.5.5 0 0 0-.49.42l-.38 2.65a8 8 0 0 0-1.73 1l-2.48-1a.5.5 0 0 0-.6.22l-2 3.46a.5.5 0 0 0 .12.63L4.6 13a7.9 7.9 0 0 0-.06 1 7.9 7.9 0 0 0 .06 1l-2.1 1.64a.5.5 0 0 0-.12.63l2 3.46a.5.5 0 0 0 .6.22l2.48-1a8 8 0 0 0 1.73 1l.38 2.65a.5.5 0 0 0 .49.42h3.9a.5.5 0 0 0 .49-.42l.38-2.65a8 8 0 0 0 1.73-1l2.48 1a.5.5 0 0 0 .6-.22l2-3.46a.5.5 0 0 0-.12-.63L19.4 15Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      </svg>
+    ),
       disabled: false,
     },
   ];
 
   return (
     <nav className="pb-6">
-      <Section title="MAIN" items={main} defaultOpen />
-      <Section title="ACTIONS" items={actions} defaultOpen={false} />
-      <Section title="CUSTOMERS" items={customers} defaultOpen={false} />
-      <Section title="SETTINGS" items={settings} defaultOpen={false} />
+      {main.map((item) => {
+        const active = pathname === item.href;
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            aria-disabled={item.disabled}
+            className={cn(
+              "flex items-center gap-1 rounded-lg px-3 py-2 text-sm transition-colors",
+              "hover:bg-zinc-100",
+              item.disabled && "opacity-60",
+              active ? "bg-zinc-100 font-medium text-zinc-900" : "text-zinc-700",
+            )}
+          >
+            <span className={cn("text-zinc-500", active && "text-zinc-900")}>
+              {item.icon}
+            </span>
+            <span>{item.label}</span>
+          </Link>
+        );
+      })}
+      <Section title="Actions" items={actions} defaultOpen={false} pathname={pathname} icon={
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
+          <path d="M7 12h10M12 7v10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+        </svg>
+      } />
+      <Section title="Customers" items={customers} defaultOpen={false} pathname={pathname} icon={
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+          <path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+          <path d="M22 21v-2a3.5 3.5 0 0 0-2.5-3.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M16.5 3.65a4 4 0 0 1 0 7.7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      } />
+      <Section title="Settings" items={settings} defaultOpen={false} pathname={pathname} icon={
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
+          <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" strokeWidth="2" />
+          <path d="M19.4 15a7.9 7.9 0 0 0 .06-1 7.9 7.9 0 0 0-.06-1l2.1-1.64a.5.5 0 0 0 .12-.63l-2-3.46a.5.5 0 0 0-.6-.22l-2.48 1a8 8 0 0 0-1.73-1l-.38-2.65A.5.5 0 0 0 13.94 3h-3.9a.5.5 0 0 0-.49.42l-.38 2.65a8 8 0 0 0-1.73 1l-2.48-1a.5.5 0 0 0-.6.22l-2 3.46a.5.5 0 0 0 .12.63L4.6 13a7.9 7.9 0 0 0-.06 1 7.9 7.9 0 0 0 .06 1l-2.1 1.64a.5.5 0 0 0-.12.63l2 3.46a.5.5 0 0 0 .6.22l2.48-1a8 8 0 0 0 1.73 1l.38 2.65a.5.5 0 0 0 .49.42h3.9a.5.5 0 0 0 .49-.42l.38-2.65a8 8 0 0 0 1.73-1l2.48 1a.5.5 0 0 0 .6-.22l2-3.46a.5.5 0 0 0-.12-.63L19.4 15Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+        </svg>
+      } />
     </nav>
   );
 }
