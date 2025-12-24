@@ -70,7 +70,7 @@ export function SettingsTab() {
               id="collapseConnect"
               aria-labelledby="headingConnect"
             >
-              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
+              <div className="mb-3-body" >
                 <div className="text-success mb-2">Page selected, ID: 645232738675563</div>
                 <button
                   className="btn btn-primary"
@@ -101,7 +101,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "goal" ? "show" : ""}`}
               id="collapseGoal"
             >
-              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
+              <div className="mb-3-body" >
                 <div className="form-group">
                   <select
                     id="goal"
@@ -134,7 +134,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "bizInfo" ? "show" : ""}`}
               id="collapseBizInfo"
             >
-              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
+              <div className="mb-3-body" >
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <h5 className="mb-0">Business Description</h5>
                   <button
@@ -196,7 +196,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "email" ? "show" : ""}`}
               id="collapseEmail"
             >
-              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
+              <div className="mb-3-body" >
                 <input
                   type="email"
                   id="email"
@@ -225,7 +225,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "personality" ? "show" : ""}`}
               id="collapsePersonality"
             >
-              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
+              <div className="mb-3-body" >
                 <div className="form-group">
                   <select
                     id="personality"
@@ -259,7 +259,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "products" ? "show" : ""}`}
               id="collapseProducts"
             >
-              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
+              <div className="mb-3-body" >
                 <button
                   type="button"
                   className="btn btn-primary"
@@ -289,7 +289,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "calendar" ? "show" : ""}`}
               id="collapseCalendar"
             >
-              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
+              <div className="mb-3-body" >
                 <h5 className="mb-2">Add Calendar Schedule Link</h5>
                 <input
                   type="text"
@@ -317,7 +317,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "promotions" ? "show" : ""}`}
               id="collapsePromotions"
             >
-              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
+              <div className="mb-3-body" >
                 <input
                   type="text"
                   id="promotionOffers"
@@ -345,7 +345,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "domain" ? "show" : ""}`}
               id="collapseDomain"
             >
-              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
+              <div className="mb-3-body" >
                 <div className="mb-3 text-center">
                   <button
                     type="button"
@@ -385,7 +385,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "faqs" ? "show" : ""}`}
               id="collapseFaqs"
             >
-              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
+              <div className="mb-3-body" >
                 {faqs.map((faq, index) => (
                   <div key={index} className="form-group mb-3">
                     <input
@@ -433,7 +433,7 @@ export function SettingsTab() {
               className={`collapse ${activeAccordion === "policies" ? "show" : ""}`}
               id="collapsePolicyPages"
             >
-              <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
+              <div className="mb-3-body" >
                 {/* Privacy Policy */}
                 <div className="mb-4">
                   <h5 className="mb-2">Privacy Policy URL</h5>

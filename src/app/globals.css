@@ -4,8 +4,8 @@
 /* Bootstrap Icons */
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
-*{
-    font-family: 'Roboto' !important;
+* {
+  font-family: 'Roboto' !important;
 }
 
 :root {
@@ -239,6 +239,10 @@ body {
 
 ul {
   padding-left: 0px;
+}
+
+hr {
+  opacity: 0.15 !important;
 }
 
 .bg-white {

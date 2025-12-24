@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { AdminLayout } from "@/components/admin/AdminLayout";
+import { motion, AnimatePresence } from "framer-motion";
 
 type TabKey = "posts" | "igposts";
 
@@ -289,249 +290,272 @@ export default function CommentSelectorPage() {
         </div>
 
         {/* Modal structure for showing comments */}
-        <div className={`modal fade ${isModalOpen ? "show" : ""}`} id="commentModal" tabIndex={-1} role="dialog" aria-labelledby="commentModalLabel" aria-hidden={!isModalOpen} style={{ display: isModalOpen ? "block" : "none" }}>
-          <div className="modal-dialog modal-dialog-centered" role="document" style={{ minWidth: '1000px' }}>
-            <div className="modal-content">
-              <div className="modal-header" style={{ alignItems: "center", justifyContent: "space-between" }}>
-                <div className="" style={{ paddingLeft: "15px" }}>
-                  <h3 className="modal-title" id="commentModalLabel">
-                    Comments
-                  </h3>
-                  <p className="form-text">Click on comments and replies on the left side to train your agent.</p>
-                  <small className="form-text text-muted">Click on the left to move to the right. Changes here don't effect the comments.</small>
-                </div>
-                <div style={{ alignItems: "end" }}>
-                  <a href={postUrl} target="_blank" id="goToPostBtn" className="btn btn-outline-primary btn-sm">
-                    Go to Post
-                  </a>
-                  <button type="button" className="close text-[30px] p-[10px]" id="closeModalBtn" aria-label="Close" onClick={closeCommentModal}>
-                    <span aria-hidden="true">×</span>
-                  </button>
-                </div>
-              </div>
+        <AnimatePresence>
+          {isModalOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={closeCommentModal}
+                className="fixed inset-0 z-[1050] bg-black/40 backdrop-blur-[2px]"
+              />
 
-              <div className="modal-body">
-                <div className="container-fluid px-0">
-                  <div className="row g-0">
-                    <div className="col-12 col-lg-6">
-                      <h5 className="sticky-header">Comments from Post</h5>
-                      <div id="comment-list" className="comment-list-container comment-list" data-has-next-page="false">
-                        <div id="skeleton-loader" style={{ display: "none" }}>
-                          {Array.from({ length: 5 }).map((_, index) => (
-                            <div key={index} className="page-item mb-3 p-3 border rounded">
-                              <div className="skeleton-loader-title skeleton-cell mb-2" style={{ width: "50%", height: "20px" }}></div>
-                              <div className="skeleton-loader-text skeleton-cell" style={{ width: "30%", height: "15px" }}></div>
-                            </div>
-                          ))}
+              {/* Modal Content */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="fixed inset-0 z-[1060] flex items-center justify-center p-4 pointer-events-none"
+              >
+                <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[90vh] flex flex-col pointer-events-auto overflow-hidden">
+                  {/* Enhanced Modal Header */}
+                  <div className="flex shrink-0 items-center justify-between border-b border-zinc-100 bg-zinc-50/50 px-8 py-6">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+                          <i className="bi bi-chat-dots-fill text-xl"></i>
                         </div>
-                        <div className={`comment-item mb-3 p-3 rounded ${selectedComments.includes('122146508888890127_2078759359617457') ? 'pinned-card is-selected' : ''}`} data-comment-id="122146508888890127_2078759359617457">
-                          <div onClick={() => handleCommentClick('122146508888890127_2078759359617457')}>
-                            <div className="d-flex align-items-start justify-content-between">
-                              <div className="d-flex">
-                                <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" alt="Wise man" className="rounded-circle mr-2" width="50" height="50" />
-                                <div>
-                                  <div className="d-flex align-items-center gap-2">
-                                    <h5 className="mb-1">Wise man</h5>
-                                  </div>
-                                  <small className="text-muted">Wed, Dec 17, 2025 12:13 PM</small>
-                                </div>
-                              </div>
-                              <div className="comment-checkbox ms-3" id="comment-checkbox-comment-122146508888890127_2078759359617457">
-                                <span className={selectedComments.includes('122146508888890127_2078759359617457') ? 'checked-circle' : 'unchecked-circle'}>{selectedComments.includes('122146508888890127_2078759359617457') ? '✓' : ''}</span>
-                              </div>
-                            </div>
-                            <p className="mt-2" style={{ maxWidth: "100%" }}>that's awesome</p>
+                        <div>
+                          <h3 className="text-xl font-bold text-zinc-900 leading-tight">Post Comments</h3>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-[13px] text-zinc-500">Train your AI agent by selecting relevant interactions below.</span>
                           </div>
                         </div>
-                        <div className={`comment-item mb-3 p-3 rounded ${selectedComments.includes('122146508888890127_885430057309494') ? 'pinned-card is-selected' : ''}`} data-comment-id="122146508888890127_885430057309494">
-                          <div onClick={() => handleCommentClick('122146508888890127_885430057309494')}>
-                            <div className="d-flex align-items-start justify-content-between">
-                              <div className="d-flex">
-                                <img src="https://platform-lookaside.fbsbx.com/platform/profilepic/?eai=Aa1GxIdmtnWAToazYI9jsad_QNO_NiAcL-T9bcT9-VUPvWQmh4B1blmSzbb18zib-IBYVlmnG_sJ&amp;psid=24362880443305426&amp;height=50&amp;width=50&amp;ext=1768817199&amp;hash=AT-PD-isvY1-MvfCzuvhJx1B" alt="Awais Jutt" className="rounded-circle mr-2" width="50" height="50" />
-                                <div>
-                                  <div className="d-flex align-items-center gap-2">
-                                    <h5 className="mb-1">Awais Jutt</h5>
-                                  </div>
-                                  <small className="text-muted">Tue, Dec 16, 2025 8:04 AM</small>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      <a
+                        href={postUrl}
+                        target="_blank"
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-indigo-600 bg-white border border-indigo-100 rounded-full shadow-sm hover:bg-indigo-50 hover:border-indigo-200 transition-all no-underline"
+                      >
+                        <i className="bi bi-box-arrow-up-right"></i>
+                        View Original Post
+                      </a>
+                      <button
+                        onClick={closeCommentModal}
+                        className="group flex h-10 w-10 items-center justify-center !rounded-lg !hover:rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 transition-all"
+                      >
+                        <i className="bi bi-x-lg text-lg group-hover:rotate-90 transition-transform duration-300"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex-1 overflow-hidden flex">
+                    {/* Left Panel: Post Comments */}
+                    <div className="flex-1 overflow-y-auto border-r border-zinc-100 p-4 custom-scrollbar">
+                      <div className="flex items-center justify-between mb-6">
+                        <h5 className="text-xs font-bold uppercase tracking-wider text-zinc-400">Available Comments</h5>
+                        <div className="px-2 py-0.5 rounded-full bg-indigo-50 text-[11px] font-bold text-indigo-600 uppercase">Interactive List</div>
+                      </div>
+
+                      <div id="comment-list" className="space-y-4">
+                        <div className={`group relative p-3 rounded-2xl border transition-all cursor-pointer ${selectedComments.includes('122146508888890127_2078759359617457') ? 'border-indigo-200 bg-indigo-50/30' : 'border-zinc-100 bg-white hover:border-indigo-100 hover:shadow-md'}`}
+                          onClick={() => handleCommentClick('122146508888890127_2078759359617457')}>
+                          <div className="flex items-start justify-between">
+                            <div className="flex gap-4">
+                              <div className="relative">
+                                <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" alt="Wise man" className="h-12 w-12 rounded-full border-2 border-white shadow-sm object-cover" />
+                                <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-white flex items-center justify-center border border-zinc-100 shadow-sm">
+                                  <i className="bi bi-facebook text-blue-600 text-[10px]"></i>
                                 </div>
                               </div>
-                              <div className="comment-checkbox ms-3" id="comment-checkbox-comment-122146508888890127_885430057309494">
-                                <span className={selectedComments.includes('122146508888890127_885430057309494') ? 'checked-circle' : 'unchecked-circle'}>{selectedComments.includes('122146508888890127_885430057309494') ? '✓' : ''}</span>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <h6 className="text-[15px] font-bold text-zinc-900 m-0">Wise man</h6>
+                                  {selectedComments.includes('122146508888890127_2078759359617457') && (
+                                    <span className="text-[10px] bg-indigo-600 text-white px-1.5 py-0.5 rounded-full">Pinned</span>
+                                  )}
+                                </div>
+                                <span className="text-[11px] text-zinc-500 block mt-0.5">Wed, Dec 17, 2025 • 12:13 PM</span>
                               </div>
                             </div>
-                            <p className="mt-2" style={{ maxWidth: "100%" }}>thats beautifull</p>
+                            <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all ${selectedComments.includes('122146508888890127_2078759359617457') ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-zinc-200 group-hover:border-indigo-300'}`}>
+                              {selectedComments.includes('122146508888890127_2078759359617457') && <i className="bi bi-check-lg text-xs"></i>}
+                            </div>
                           </div>
-                          <div className="nested-comments ms-4 mt-3">
-                            <div className="reply-item mb-2 p-2 border-start" data-comment-id="122146508888890127_847883224511765" onClick={() => handleReplyClick('122146508888890127_885430057309494', '122146508888890127_847883224511765')}>
-                              <div className="d-flex align-items-start">
-                                <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" alt="Wise man" className="rounded-circle mr-2" width="40" height="40" />
-                                <div className="flex-grow-1">
-                                  <div className="d-flex align-items-center gap-2">
-                                    <h6 className="mb-1">Wise man</h6>
-                                  </div>
-                                  <small className="text-muted">Tue, Dec 16, 2025 8:05 AM</small>
-                                </div>
-                                <div className="comment-checkbox ms-auto" id="comment-checkbox-reply-122146508888890127_847883224511765">
-                                  <span className="unchecked-circle"></span>
+                          <p className="mt-4 text-[14px] leading-relaxed text-zinc-700">that's awesome</p>
+                        </div>
+
+                        <div className={`group relative p-3 rounded-2xl border transition-all cursor-pointer ${selectedComments.includes('122146508888890127_885430057309494') ? 'border-indigo-200 bg-indigo-50/30' : 'border-zinc-100 bg-white hover:border-indigo-100 hover:shadow-md'}`}
+                          onClick={() => handleCommentClick('122146508888890127_885430057309494')}>
+                          <div className="flex items-start justify-between">
+                            <div className="flex gap-4">
+                              <div className="relative">
+                                <img src="https://platform-lookaside.fbsbx.com/platform/profilepic/?eai=Aa1GxIdmtnWAToazYI9jsad_QNO_NiAcL-T9bcT9-VUPvWQmh4B1blmSzbb18zib-IBYVlmnG_sJ&psid=24362880443305426&height=50&width=50&ext=1768817199&hash=AT-PD-isvY1-MvfCzuvhJx1B" alt="Awais Jutt" className="h-12 w-12 rounded-full border-2 border-white shadow-sm object-cover" />
+                                <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-white flex items-center justify-center border border-zinc-100 shadow-sm">
+                                  <i className="bi bi-facebook text-blue-600 text-[10px]"></i>
                                 </div>
                               </div>
-                              <p className="mt-1" style={{ maxWidth: "100%" }}>Awais Jutt Thanks so much!</p>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <h6 className="text-[15px] font-bold text-zinc-900 m-0">Awais Jutt</h6>
+                                </div>
+                                <span className="text-[11px] text-zinc-500 block mt-0.5">Tue, Dec 16, 2025 • 8:04 AM</span>
+                              </div>
+                            </div>
+                            <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all ${selectedComments.includes('122146508888890127_885430057309494') ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-zinc-200 group-hover:border-indigo-300'}`}>
+                              {selectedComments.includes('122146508888890127_885430057309494') && <i className="bi bi-check-lg text-xs"></i>}
+                            </div>
+                          </div>
+                          <p className="mt-4 text-[14px] leading-relaxed text-zinc-700">thats beautifull</p>
+
+                          {/* Nested Replies */}
+                          <div className="mt-6 pl-4 space-y-3 border-l-2 border-zinc-100">
+                            <div className="relative p-3 rounded-xl bg-zinc-50 border border-zinc-100 flex items-start gap-3">
+                              <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" alt="Wise man" className="h-8 w-8 rounded-full border border-white object-cover" />
+                              <div className="flex-1">
+                                <h6 className="text-[13px] font-bold text-zinc-800 m-0">Wise man</h6>
+                                <p className="text-[12px] text-zinc-600 mt-1 mb-0">Awais Jutt Thanks so much!</p>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className="col-12 col-lg-6">
-                      <h5 className="sticky-header">Selected Replies for AI Training</h5>
-                      <div className="selected-comments-container">
-                        {selectedComments.includes('122146508888890127_2078759359617457') && <div className="comment-item mb-3 p-3 rounded pinned-card is-selected" data-comment-id="122146508888890127_2078759359617457">
-                          <div className="d-flex align-items-center justify-content-between">
-                            <div className="d-flex align-items-center" role="button" onClick={() => handleCommentClick('122146508888890127_2078759359617457')}>
-                              <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" alt="Wise man" className="rounded-circle me-2" width="50" height="50" />
-                              <div>
-                                <h5 className="mb-1">Wise man</h5>
-                                <small className="text-muted">Wed, Dec 17, 2025 12:13 PM</small>
-                              </div>
-                            </div>
-                            <div className="comment-checkbox" id="comment-checkbox-comment-122146508888890127_2078759359617457">
-                              <span className="checked-circle">✓</span>
-                            </div>
-                          </div>
-                          <p className="mt-2">that's awesome</p>
-                          <div className="mt-3 d-flex align-items-center">
-                            <p className="text-muted mb-0 mr-2">Actions:</p>
-                            <button className="icon-button mr-2" title="Like" onClick={(e) => { e.stopPropagation(); saveActionReply('122146508888890127_2078759359617457', '122146508888890127_2078759359617457', 'like'); }}>
-                              <i className="bi bi-heart-fill text-danger"></i>
-                            </button>
-                            <button className="icon-button mr-4" title="Hide" onClick={(e) => { e.stopPropagation(); saveActionReply('122146508888890127_2078759359617457', '122146508888890127_2078759359617457', 'remove'); }}>
-                              <i className="bi bi-x text-secondary"></i>
-                            </button>
-                            <button className="icon-button" title="Don't reply" onClick={(e) => { e.stopPropagation(); saveActionReply('122146508888890127_2078759359617457', '122146508888890127_2078759359617457', 'stop'); }}>
-                              <i className="bi bi-slash-circle text-danger"></i>
-                            </button>
-                          </div>
-                          <div className="mt-3">
-                            <button type="button" className="btn btn-outline-primary btn-sm" id="custom-reply-btn-122146508888890127_2078759359617457" onClick={(e) => { e.stopPropagation(); showReplyBox('122146508888890127_2078759359617457'); }}>
-                              Add Custom Reply
-                            </button>
-                            <div id="custom-reply-box-122146508888890127_2078759359617457" className="mt-2" style={{ display: "none" }} onClick={(e) => e.stopPropagation()}>
-                              <input type="text" id="custom-reply-input-122146508888890127_2078759359617457" className="form-control mb-2" placeholder="Type a custom reply…" onFocus={(e) => e.stopPropagation()} />
-                              <button type="button" className="btn btn-primary btn-sm" onClick={(e) => { e.stopPropagation(); saveCustomReply('122146508888890127_2078759359617457', '122146508888890127_2078759359617457', (document.getElementById('custom-reply-input-122146508888890127_2078759359617457') as HTMLInputElement).value); }}>
-                                Save
-                              </button>
-                            </div>
-                          </div>
-                          <div className="mt-3">
-                            <button type="button" className="btn btn-outline-secondary btn-sm" id="custom-private-reply-btn-122146508888890127_2078759359617457" onClick={(e) => { e.stopPropagation(); showPrivateReplyBox('122146508888890127_2078759359617457'); }}>
-                              Add Custom <strong>Private</strong> Reply
-                            </button>
-                            <div id="custom-private-reply-box-122146508888890127_2078759359617457" className="mt-2" style={{ display: "none" }} onClick={(e) => e.stopPropagation()}>
-                              <input type="text" id="custom-private-reply-input-122146508888890127_2078759359617457" className="form-control mb-2" placeholder="Type a custom private reply…" onFocus={(e) => e.stopPropagation()} />
-                              <button type="button" className="btn btn-secondary btn-sm" onClick={(e) => { e.stopPropagation(); savePrivateReply('122146508888890127_2078759359617457', '122146508888890127_2078759359617457', (document.getElementById('custom-private-reply-input-122146508888890127_2078759359617457') as HTMLInputElement).value); }}>
-                                Save
-                              </button>
-                            </div>
-                          </div>
-                        </div>}
-                        {selectedComments.includes('122146508888890127_885430057309494') && <div className="comment-item mb-3 p-3 rounded pinned-card is-selected" data-comment-id="122146508888890127_885430057309494">
-                          <div className="d-flex align-items-center justify-content-between">
-                            <div className="d-flex align-items-center" role="button" onClick={() => handleCommentClick('122146508888890127_885430057309494')}>
-                              <img src="https://platform-lookaside.fbsbx.com/platform/profilepic/?eai=Aa2XedUv86wNAa_METJQMSFwbxb0Ab0LZQVZN0IPwOjnFR_Ja_ipTqc0CO8Ltr_iDxIWof2dUG8r&amp;psid=24362880443305426&amp;height=50&amp;width=50&amp;ext=1768813518&amp;hash=AT-yvH7nymK-TRxPC0QvDALX" alt="Awais Jutt" className="rounded-circle me-2" width="50" height="50" />
-                              <div>
-                                <h5 className="mb-1">Awais Jutt</h5>
-                                <small className="text-muted">Tue, Dec 16, 2025 8:04 AM</small>
-                              </div>
-                            </div>
-                            <div className="comment-checkbox" id="comment-checkbox-comment-122146508888890127_885430057309494">
-                              <span className="checked-circle">✓</span>
-                            </div>
-                          </div>
-                          <p className="mt-2">thats beautifull</p>
-                          <div className="mt-3 d-flex align-items-center">
-                            <p className="text-muted mb-0 mr-2">Actions:</p>
-                            <button className="icon-button mr-2.5" title="Like" onClick={(e) => { e.stopPropagation(); saveActionReply('122146508888890127_885430057309494', '122146508888890127_885430057309494', 'like'); }}>
-                              <i className="bi bi-heart-fill text-danger"></i>
-                            </button>
-                            <button className="icon-button mr-2.5" title="Hide" onClick={(e) => { e.stopPropagation(); saveActionReply('122146508888890127_885430057309494', '122146508888890127_885430057309494', 'remove'); }}>
-                              <i className="bi bi-x text-secondary"></i>
-                            </button>
-                            <button className="icon-button" title="Don't reply" onClick={(e) => { e.stopPropagation(); saveActionReply('122146508888890127_885430057309494', '122146508888890127_885430057309494', 'stop'); }}>
-                              <i className="bi bi-slash-circle text-danger"></i>
-                            </button>
-                          </div>
-                          <div className="mt-3">
-                            <button type="button" className="btn btn-outline-primary btn-sm" id="custom-reply-btn-122146508888890127_885430057309494" onClick={(e) => { e.stopPropagation(); showReplyBox('122146508888890127_885430057309494'); }}>
-                              Add Custom Reply
-                            </button>
-                            <div id="custom-reply-box-122146508888890127_885430057309494" className="mt-2" style={{ display: "none" }} onClick={(e) => e.stopPropagation()}>
-                              <input type="text" id="custom-reply-input-122146508888890127_885430057309494" className="form-control mb-2" placeholder="Type a custom reply…" onFocus={(e) => e.stopPropagation()} />
-                              <button type="button" className="btn btn-primary btn-sm" onClick={(e) => { e.stopPropagation(); saveCustomReply('122146508888890127_885430057309494', '122146508888890127_885430057309494', (document.getElementById('custom-reply-input-122146508888890127_885430057309494') as HTMLInputElement).value); }}>
-                                Save
-                              </button>
-                            </div>
-                          </div>
-                          <div className="mt-3">
-                            <button type="button" className="btn btn-outline-secondary btn-sm" id="custom-private-reply-btn-122146508888890127_885430057309494" onClick={(e) => { e.stopPropagation(); showPrivateReplyBox('122146508888890127_885430057309494'); }}>
-                              Add Custom <strong>Private</strong> Reply
-                            </button>
-                            <div id="custom-private-reply-box-122146508888890127_885430057309494" className="mt-2" style={{ display: "none" }} onClick={(e) => e.stopPropagation()}>
-                              <input type="text" id="custom-private-reply-input-122146508888890127_885430057309494" className="form-control mb-2" placeholder="Type a custom private reply…" onFocus={(e) => e.stopPropagation()} />
-                              <button type="button" className="btn btn-secondary btn-sm" onClick={(e) => { e.stopPropagation(); savePrivateReply('122146508888890127_885430057309494', '122146508888890127_885430057309494', (document.getElementById('custom-private-reply-input-122146508888890127_885430057309494') as HTMLInputElement).value); }}>
-                                Save
-                              </button>
-                            </div>
-                          </div>
-                          <div className="private-reply-item mt-2 p-2" onClick={() => togglePrivateReply('122146508888890127_885430057309494', '694112b5a7ebd')}>
-                            <div className="d-flex align-items-center mb-1">
-                              <i className="bi bi-send text-primary me-1"></i>
-                              <small className="text-primary fw-bold">Private reply</small>
-                            </div>
-                            <div className="d-flex align-items-start">
-                              <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" className="rounded-circle me-2" width="28" height="28" alt="Mindrind" />
-                              <div>
-                                <h6 className="mb-1">Mindrind</h6>
-                                <p className="mb-1">we think alike</p>
-                                <small className="text-muted">Tue, Dec 16, 2025 8:05 AM</small>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="nested-comments ms-4 mt-3">
-                            <div className="reply-item mb-2 p-2 border-start" data-comment-id="694112bd1da09" onClick={() => handleReplyClick('122146508888890127_885430057309494', '694112bd1da09')}>
-                              <div className="d-flex align-items-center">
-                                <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" alt="Mindrind" className="rounded-circle me-2" width="40" height="40" />
-                                <div>
-                                  <h6 className="mb-1">Mindrind</h6>
-                                  <small className="text-muted">Tue, Dec 16, 2025 8:05 AM</small>
+
+                    {/* Right Panel: Selected for Training */}
+                    <div className="flex-1 overflow-y-auto bg-zinc-50/30 p-4 custom-scrollbar">
+                      <div className="flex items-center justify-between mb-6">
+                        <h5 className="text-xs font-bold uppercase tracking-wider text-zinc-400">AI Training Selection</h5>
+                        <div className="px-2 py-0.5 rounded-full bg-emerald-50 text-[11px] font-bold text-emerald-600 uppercase">Training Ready</div>
+                      </div>
+
+                      <div className="space-y-6">
+                        <AnimatePresence>
+                          {selectedComments.map(id => {
+                            const isWiseMan = id.includes('2078759359617457');
+                            const name = isWiseMan ? "Wise man" : "Awais Jutt";
+                            const avatar = isWiseMan ? "https://app.smartreply.io/storage/company_logo/3552_1760582765.png" : "https://platform-lookaside.fbsbx.com/platform/profilepic/?eai=Aa1GxIdmtnWAToazYI9jsad_QNO_NiAcL-T9bcT9-VUPvWQmh4B1blmSzbb18zib-IBYVlmnG_sJ&psid=24362880443305426&height=50&width=50&ext=1768817199&hash=AT-PD-isvY1-MvfCzuvhJx1B";
+                            const time = isWiseMan ? "Wed, Dec 17, 2025 • 12:13 PM" : "Tue, Dec 16, 2025 • 8:04 AM";
+                            const text = isWiseMan ? "that's awesome" : "thats beautifull";
+
+                            return (
+                              <motion.div
+                                key={id}
+                                layout
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                className="bg-white rounded-2xl p-6 shadow-sm border border-zinc-100"
+                              >
+                                <div className="flex items-center justify-between mb-4">
+                                  <div className="flex items-center gap-3">
+                                    <img src={avatar} className="h-10 w-10 rounded-full border border-zinc-50 object-cover" alt={name} />
+                                    <div>
+                                      <h6 className="text-sm font-bold text-zinc-900 m-0">{name}</h6>
+                                      <span className="text-[11px] text-zinc-400">{time}</span>
+                                    </div>
+                                  </div>
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); handleCommentClick(id); }}
+                                    className="h-8 w-8 rounded-full bg-zinc-50 text-zinc-400 hover:bg-red-50 hover:text-red-500 transition-colors flex items-center justify-center"
+                                  >
+                                    <i className="bi bi-trash text-[13px]"></i>
+                                  </button>
                                 </div>
-                                <div className="comment-checkbox ms-auto" id="comment-checkbox-reply-694112bd1da09">
-                                  <span className="checked-circle">✓</span>
+                                <p className="text-[14px] text-zinc-800 bg-zinc-50/50 p-3 rounded-xl border border-dashed border-zinc-200 font-medium">{text}</p>
+
+                                <div className="mt-3 pt-3 border-t border-zinc-100">
+                                  <div className="flex items-center gap-4 mb-3">
+                                    <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">Define AI Response:</span>
+                                    <div className="flex gap-2">
+                                      <button onClick={() => saveActionReply(id, id, 'like')} className="flex items-center gap-2 px-3 py-1.5 !rounded-lg border border-zinc-100 bg-white text-zinc-600 hover:border-red-200 hover:bg-red-50 hover:text-red-500 transition-all text-xs font-semibold">
+                                        <i className="bi bi-heart-fill"></i> Like
+                                      </button>
+                                      <button onClick={() => saveActionReply(id, id, 'remove')} className="flex items-center gap-2 px-3 py-1.5 !rounded-lg border border-zinc-100 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-100 transition-all text-xs font-semibold">
+                                        <i className="bi bi-eye-slash"></i> Hide
+                                      </button>
+                                      <button onClick={() => saveActionReply(id, id, 'stop')} className="flex items-center gap-2 px-3 py-1.5 !rounded-lg border border-zinc-100 bg-white text-zinc-600 hover:border-red-200 hover:bg-red-50 hover:text-red-500 transition-all text-xs font-semibold text-nowrap">
+                                        <i className="bi bi-slash-circle"></i> Don't Reply
+                                      </button>
+                                    </div>
+                                  </div>
+
+                                  <div className="space-y-4">
+                                    <div className="space-y-2">
+                                      <label className="text-[12px] font-bold text-zinc-700">Custom AI Reply:</label>
+                                      <div className="flex gap-2">
+                                        <input
+                                          id={`custom-reply-input-${id}`}
+                                          className="flex-1 bg-white border border-zinc-200 rounded-xl px-4 py-2 text-sm focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 outline-none transition-all"
+                                          placeholder="How should the AI respond?"
+                                        />
+                                        <button
+                                          onClick={() => saveCustomReply(id, id, (document.getElementById(`custom-reply-input-${id}`) as HTMLInputElement).value)}
+                                          className="px-4 py-2 bg-indigo-600 text-white !rounded-lg text-xs font-bold hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100"
+                                        >
+                                          Save
+                                        </button>
+                                      </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                      <label className="text-[12px] font-bold text-zinc-700">Private AI Reply:</label>
+                                      <div className="flex gap-2">
+                                        <input
+                                          id={`custom-private-reply-input-${id}`}
+                                          className="flex-1 bg-white border border-zinc-200 rounded-xl px-4 py-2 text-sm focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 outline-none transition-all"
+                                          placeholder="Direct message response..."
+                                        />
+                                        <button
+                                          onClick={() => savePrivateReply(id, id, (document.getElementById(`custom-private-reply-input-${id}`) as HTMLInputElement).value)}
+                                          className="px-4 py-2 bg-zinc-800 text-white !rounded-lg text-xs font-bold hover:bg-black transition-all shadow-md shadow-zinc-200"
+                                        >
+                                          Save
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="d-flex align-items-center mt-2">
-                                <p className="text-muted mb-0 mr-2">Action:</p>
-                                <i className="bi bi-heart-fill text-danger mr-2"></i>
-                                <p className="text-muted mb-0">Like the message</p>
-                              </div>
+                              </motion.div>
+                            );
+                          })}
+                        </AnimatePresence>
+
+                        {selectedComments.length === 0 && (
+                          <div className="flex flex-col items-center justify-center py-20 text-center">
+                            <div className="h-16 w-16 rounded-full bg-zinc-50 flex items-center justify-center text-zinc-300 mb-4 border-2 border-dashed border-zinc-200">
+                              <i className="bi bi-plus-lg text-2xl"></i>
                             </div>
+                            <h6 className="text-zinc-600 font-bold m-0">No context selected</h6>
+                            <p className="text-xs text-zinc-400 mt-1">Select comments on the left to start training.</p>
                           </div>
-                        </div>}
+                        )}
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" id="closeModalBtn2" onClick={closeCommentModal}>
-                  Close
-                </button>
-                <button type="submit" onClick={saveComments} className="btn btn-primary">
-                  Save
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+                  {/* Enhanced Modal Footer */}
+                  <div className="shrink-0 px-8 py-3 bg-white border-t border-zinc-100 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-full bg-indigo-600 animate-pulse"></span>
+                      <span className="text-[12px] font-bold text-indigo-600 uppercase tracking-wider">Sync Active</span>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={closeCommentModal}
+                        className="px-8 py-2.5 rounded-lg text-sm font-bold text-zinc-500 hover:bg-zinc-50 hover:rounded-lg transition-all"
+                      >
+                        Discard Changes
+                      </button>
+                      <button
+                        onClick={saveComments}
+                        className="px-10 py-2.5 bg-indigo-600 text-white !rounded-lg text-sm font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:shadow-indigo-300 transform active:scale-95 transition-all"
+                      >
+                        Publish Training
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
     </AdminLayout>
   );

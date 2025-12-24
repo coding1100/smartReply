@@ -35,7 +35,7 @@ export function TrainingTab() {
             <div className="card mb-3">
               <div
                 className="mb-3-header"
-                style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
+                style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
                 role="tab"
                 id="headingCommentReplies"
                 onClick={() => toggleAccordion("commentReplies")}
@@ -51,7 +51,7 @@ export function TrainingTab() {
                 aria-labelledby="headingCommentReplies"
                 data-parent="#accordion"
               >
-                <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
+                <div className="mb-3-body" >
                   <p className="mb-2">
                     Customize what your agent comment replies by selecting previously comment reply examples.
                   </p>
@@ -59,8 +59,7 @@ export function TrainingTab() {
                   <div className="form-group mb-3">
                     <a
                       className="btn btn-primary"
-                      href="https://app.smartreply.io/smartreply/comment-selector"
-                      target="_blank"
+                      href="/smartreply/comment-selector"
                       rel="noopener noreferrer"
                     >
                       Open Comment Selector
@@ -79,7 +78,7 @@ export function TrainingTab() {
             <div className="card mb-3">
               <div
                 className="mb-3-header"
-                style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
+                style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
                 role="tab"
                 id="headingMessageReplies"
                 onClick={() => toggleAccordion("messageReplies")}
@@ -95,7 +94,7 @@ export function TrainingTab() {
                 aria-labelledby="headingMessageReplies"
                 data-parent="#accordion"
               >
-                <div className="mb-3-body" style={{ backgroundColor: "#fff" }}>
+                <div className="mb-3-body" >
                   <p className="mb-2">
                     Customize what your agent replies in dms by selecting previously message examples.
                   </p>
@@ -103,8 +102,7 @@ export function TrainingTab() {
                   <div className="form-group mb-3">
                     <a
                       className="btn btn-primary"
-                      href="https://app.smartreply.io/smartreply/message-selector"
-                      target="_blank"
+                      href="/smartreply/message-selector"
                       rel="noopener noreferrer"
                     >
                       Open Message Selector
