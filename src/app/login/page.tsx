@@ -2,21 +2,46 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://sme.namatechnologlies.com";
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Login attempt:", { email, password, rememberMe });
-    };
+        setError("");
+        setLoading(true);
 
-    const handleFacebookLogin = () => {
-        window.location.href = `${API_URL}/auth/login/facebook`;
+        try {
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem("accessToken", data.access_token);
+                localStorage.setItem("tokenType", data.token_type);
+                router.push("/smartreply/home");
+            } else {
+                setError(data.detail || "Login failed. Please check your credentials.");
+            }
+        } catch (err) {
+            setError("Something went wrong. Please try again later.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleGoogleLogin = () => {
@@ -60,20 +85,16 @@ export default function LoginPage() {
                         GET STARTED FREE
                     </Link>
                     <div className="w-full max-w-md space-y-4">
-                        {/* Social Login Buttons */}
-                        <button
-                            onClick={handleFacebookLogin}
-                            className="w-full flex items-center justify-center gap-3 mb-3 !rounded-lg py-3 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
-                        >
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                            </svg>
-                            Continue With Facebook
-                        </button>
+                        {error && (
+                            <div className="p-3 text-sm text-red-500 bg-red-50 border border-red-100 rounded-lg">
+                                {error}
+                            </div>
+                        )}
 
                         <button
                             onClick={handleGoogleLogin}
                             className="w-full flex items-center justify-center !rounded-lg gap-3 py-3 px-4 bg-white border border-zinc-300 text-zinc-900 rounded-lg hover:bg-zinc-50 transition-colors font-medium"
+                            disabled={loading}
                         >
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
                                 <path
@@ -166,9 +187,10 @@ export default function LoginPage() {
 
                             <button
                                 type="submit"
-                                className="w-full py-3 px-4 bg-indigo-600 text-white !rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+                                disabled={loading}
+                                className="w-full py-3 px-4 bg-indigo-600 text-white !rounded-lg hover:bg-indigo-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                LOGIN
+                                {loading ? "LOGGING IN..." : "LOGIN"}
                             </button>
                         </form>
 
