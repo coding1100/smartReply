@@ -5,7 +5,7 @@ export function Notes() {
         <div className="border-t border-zinc-100 p-4">
             <div className="mb-2 flex items-center justify-between">
                 <h4 className="!text-sm !font-semibold text-zinc-900">Notes</h4>
-                <button className="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline">
+                <button className="text-xs font-medium text-indigo-600 hover:text-indigo-700 hover:underline">
                     Add note
                 </button>
             </div>

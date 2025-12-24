@@ -30,8 +30,8 @@ export function ChatList({ chats, activeId, onSelectChat }: ChatListProps) {
                             <button
                                 onClick={() => onSelectChat(chat.id)}
                                 className={`flex w-full items-center justify-between border-l-4 px-4 py-3 transition-colors hover:bg-zinc-50 ${isActive
-                                        ? "border-blue-600 bg-blue-50/50"
-                                        : "border-transparent"
+                                    ? "border-indigo-600 bg-indigo-50/50"
+                                    : "border-transparent"
                                     }`}
                             >
                                 <div className="flex min-w-0 items-center gap-3">
@@ -59,7 +59,7 @@ export function ChatList({ chats, activeId, onSelectChat }: ChatListProps) {
 
                                     <div className="min-w-0 text-left">
                                         <div className="flex items-center gap-2">
-                                            <span className={`truncate text-sm font-semibold ${isActive ? "text-blue-900" : "text-zinc-900"}`}>
+                                            <span className={`truncate text-sm font-semibold ${isActive ? "text-indigo-900" : "text-zinc-900"}`}>
                                                 {chat.name}
                                             </span>
                                         </div>

@@ -47,7 +47,7 @@ export function ChatFooter({
             <div className="flex-grow">
                 <textarea
                     rows={1}
-                    className="block w-full resize-none rounded-full border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm focus:border-blue-500 focus:bg-white focus:ring-blue-500"
+                    className="block w-full resize-none rounded-full border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm focus:border-indigo-500 focus:bg-white focus:ring-indigo-500"
                     placeholder="Type a message"
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
@@ -57,7 +57,7 @@ export function ChatFooter({
 
             <button
                 type="button"
-                className="flex h-10 w-10 items-center justify-center !rounded-full bg-blue-600 text-white shadow-sm hover:bg-blue-700"
+                className="flex h-10 w-10 items-center justify-center !rounded-full bg-indigo-600 text-white shadow-sm hover:bg-indigo-700"
                 onClick={onSend}
             >
                 <svg

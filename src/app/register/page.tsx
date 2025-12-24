@@ -20,13 +20,13 @@ export default function RegisterPage() {
                 <div className="flex items-center gap-6">
                     <Link
                         href="https://smartreply.io"
-                        className="text-blue-600 hover:text-blue-900 no-underline text-sm"
+                        className="text-indigo-600 hover:text-indigo-900 no-underline text-sm"
                     >
                         Back
                     </Link>
                     <Link
                         href="/login"
-                        className="px-6 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-full hover:bg-blue-50 no-underline transition-colors"
+                        className="px-6 py-2 text-sm font-medium text-indigo-600 border border-indigo-600 rounded-full hover:bg-indigo-50 no-underline transition-colors"
                     >
                         SIGN IN
                     </Link>

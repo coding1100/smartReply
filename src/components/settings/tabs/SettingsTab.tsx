@@ -57,7 +57,7 @@ export function SettingsTab() {
           <div className="card mb-3">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("connect")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center" id="headingConnect">
@@ -89,7 +89,7 @@ export function SettingsTab() {
           <div className="card mb-3">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("goal")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -122,7 +122,7 @@ export function SettingsTab() {
           <div className="card mb-3">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("bizInfo")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -184,7 +184,7 @@ export function SettingsTab() {
           <div className="card mb-3">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("email")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -213,7 +213,7 @@ export function SettingsTab() {
           <div className="card mb-3">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("personality")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -248,7 +248,7 @@ export function SettingsTab() {
           <div className="card mb-3">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("products")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -278,7 +278,7 @@ export function SettingsTab() {
           <div className="card mb-3">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("calendar")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -306,7 +306,7 @@ export function SettingsTab() {
           <div className="card mb-3">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("promotions")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -334,7 +334,7 @@ export function SettingsTab() {
           <div className="card mb-3">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("domain")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -374,7 +374,7 @@ export function SettingsTab() {
           <div className="card mb-3">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("faqs")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -422,7 +422,7 @@ export function SettingsTab() {
           <div className="card mb-3">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
               onClick={() => toggleAccordion("policies")}
             >
               <h6 className="mb-0 d-flex justify-content-between align-items-center">
@@ -558,7 +558,7 @@ export function SettingsTab() {
 
           {/* Activate SmartReply */}
           <div className="card mb-3">
-            <div className="mb-3-header" style={{ backgroundColor: "#fff", padding: "0.75rem 1.25rem" }}>
+            <div className="mb-3-header" style={{ padding: "0.75rem 1.25rem" }}>
               <h6 className="mb-0">Activate SmartReply</h6>
             </div>
             <div className="mb-3-body">

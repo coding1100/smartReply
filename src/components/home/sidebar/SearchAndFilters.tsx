@@ -76,7 +76,7 @@ export function SearchAndFilters() {
                 </div>
                 <input
                     type="text"
-                    className="block w-full rounded-md border-0 bg-zinc-100 py-2 pl-9 pr-4 text-sm text-zinc-900 placeholder:text-zinc-500 focus:ring-2 focus:ring-inset focus:ring-blue-600"
+                    className="block w-full rounded-md border-0 bg-zinc-100 py-2 pl-9 pr-4 text-sm text-zinc-900 placeholder:text-zinc-500 outline-none"
                     placeholder="Search here..."
                 />
             </div>
@@ -89,11 +89,11 @@ export function SearchAndFilters() {
                     <div className="relative">
                         <button
                             onClick={() => toggleDropdown("filters")}
-                            className="group flex items-center gap-1 hover:text-blue-600"
+                            className="group flex items-center gap-1 hover:text-indigo-600 !text-[14px]"
                         >
-                            <i className="fa fa-filter text-zinc-400 group-hover:text-blue-500"></i>
+                            <i className="bi bi-funnel text-zinc-400 group-hover:text-indigo-500"></i>
                             <span className="font-medium">Filters:</span>
-                            <i className="fa fa-chevron-down text-[10px] text-zinc-400 group-hover:text-blue-500"></i>
+                            <i className="bi bi-chevron-down text-[10px] text-zinc-400 group-hover:text-indigo-500"></i>
                         </button>
                         {activeDropdown === "filters" && (
                             <div className="absolute left-0 top-full z-10 mt-1 w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5">
@@ -114,11 +114,11 @@ export function SearchAndFilters() {
                     <div className="relative">
                         <button
                             onClick={() => toggleDropdown("platform")}
-                            className="group flex items-center gap-1 hover:text-blue-600"
+                            className="group flex items-center gap-1 hover:text-indigo-600 !text-[14px]"
                         >
-                            <i className="fa fa-layer-group text-zinc-400 group-hover:text-blue-500"></i>
+                            <i className="bi bi-layers text-zinc-400 group-hover:text-indigo-500"></i>
                             <span className="font-medium">Platform:</span>
-                            <i className="fa fa-chevron-down text-[10px] text-zinc-400 group-hover:text-blue-500"></i>
+                            <i className="bi bi-chevron-down text-[10px] text-zinc-400 group-hover:text-indigo-500"></i>
                         </button>
                         {activeDropdown === "platform" && (
                             <div className="absolute left-0 top-full z-10 mt-1 w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5">
@@ -139,11 +139,11 @@ export function SearchAndFilters() {
                     <div className="relative">
                         <button
                             onClick={() => toggleDropdown("sentiment")}
-                            className="group flex items-center gap-1 hover:text-blue-600"
+                            className="group flex items-center gap-1 hover:text-indigo-600 !text-[14px]"
                         >
-                            <i className="fa fa-smile text-zinc-400 group-hover:text-blue-500"></i>
+                            <i className="bi bi-emoji-smile text-zinc-400 group-hover:text-indigo-500"></i>
                             <span className="font-medium">Sentiment:</span>
-                            <i className="fa fa-chevron-down text-[10px] text-zinc-400 group-hover:text-blue-500"></i>
+                            <i className="bi bi-chevron-down text-[10px] text-zinc-400 group-hover:text-indigo-500"></i>
                         </button>
                         {activeDropdown === "sentiment" && (
                             <div className="absolute left-0 top-full z-10 mt-1 w-32 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5">

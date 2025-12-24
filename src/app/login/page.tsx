@@ -8,17 +8,19 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
 
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         console.log("Login attempt:", { email, password, rememberMe });
     };
 
     const handleFacebookLogin = () => {
-        console.log("Facebook login clicked");
+        window.location.href = `${API_URL}/auth/login/facebook`;
     };
 
     const handleGoogleLogin = () => {
-        console.log("Google login clicked");
+        window.location.href = `${API_URL}/auth/login/google`;
     };
 
     return (
@@ -53,7 +55,7 @@ export default function LoginPage() {
                 <div className="w-1/2 bg-white flex items-center justify-center p-12 relative">
                     <Link
                         href="/register"
-                        className="px-6 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-full hover:bg-blue-50 no-underline hover:no-underline transition-colors absolute top-[20px] right-[20px]"
+                        className="px-6 py-2 text-sm font-medium text-indigo-600 border border-indigo-600 rounded-full hover:bg-indigo-50 no-underline hover:no-underline transition-colors absolute top-[20px] right-[20px]"
                     >
                         GET STARTED FREE
                     </Link>
@@ -61,7 +63,7 @@ export default function LoginPage() {
                         {/* Social Login Buttons */}
                         <button
                             onClick={handleFacebookLogin}
-                            className="w-full flex items-center justify-center gap-3 mb-3 !rounded-lg py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                            className="w-full flex items-center justify-center gap-3 mb-3 !rounded-lg py-3 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
                         >
                             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -120,7 +122,7 @@ export default function LoginPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="m.ovais@mindfind.com"
-                                    className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                    className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
                                 />
                             </div>
 
@@ -138,7 +140,7 @@ export default function LoginPage() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••••"
-                                    className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                    className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
                                 />
                             </div>
 
@@ -148,7 +150,7 @@ export default function LoginPage() {
                                         type="checkbox"
                                         checked={rememberMe}
                                         onChange={(e) => setRememberMe(e.target.checked)}
-                                        className="w-4 h-4 text-blue-600 border-zinc-300 rounded focus:ring-blue-500"
+                                        className="w-4 h-4 text-indigo-600 border-zinc-300 rounded focus:ring-indigo-500"
                                     />
                                     <span className="ml-2 text-sm text-zinc-700">
                                         Remember me
@@ -156,7 +158,7 @@ export default function LoginPage() {
                                 </label>
                                 <Link
                                     href="/forgot-password"
-                                    className="text-sm text-blue-600 hover:text-blue-700"
+                                    className="text-sm text-indigo-600 hover:text-indigo-700"
                                 >
                                     Forgot your password?
                                 </Link>
@@ -164,7 +166,7 @@ export default function LoginPage() {
 
                             <button
                                 type="submit"
-                                className="w-full py-3 px-4 bg-blue-600 text-white !rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                                className="w-full py-3 px-4 bg-indigo-600 text-white !rounded-lg hover:bg-indigo-700 transition-colors font-medium"
                             >
                                 LOGIN
                             </button>
@@ -173,7 +175,7 @@ export default function LoginPage() {
                         {/* Sign Up Link */}
                         <p className="text-center text-sm text-zinc-600 mt-6">
                             New to SmartReply?{" "}
-                            <Link href="/register" className="text-blue-600 hover:text-blue-700 font-medium">
+                            <Link href="/register" className="text-indigo-600 hover:text-indigo-700 font-medium">
                                 Sign up
                             </Link>
                         </p>
@@ -182,13 +184,13 @@ export default function LoginPage() {
                         <div className="flex justify-center gap-6 mt-8 text-sm">
                             <Link
                                 href="https://www.smartreply.io/policy-pages/terms-of-service"
-                                className="text-blue-600 hover:text-blue-700"
+                                className="text-indigo-600 hover:text-indigo-700"
                             >
                                 Terms of Service
                             </Link>
                             <Link
                                 href="https://www.smartreply.io/policy-pages/privacy-policy"
-                                className="text-blue-600 hover:text-blue-700"
+                                className="text-indigo-600 hover:text-indigo-700"
                             >
                                 Privacy Policy
                             </Link>

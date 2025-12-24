@@ -43,7 +43,7 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
 
                         {/* Bubble Row */}
                         <div className="flex items-center gap-3">
-                            <div className="bg-blue-50/50 rounded-xl px-4 py-2 text-sm text-zinc-800 shadow-sm border border-blue-100">
+                            <div className="bg-indigo-50/50 rounded-xl px-4 py-2 text-sm text-zinc-800 shadow-sm border border-indigo-100">
                                 <div dangerouslySetInnerHTML={{ __html: message.text }} />
                             </div>
 
@@ -71,10 +71,10 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
                         {/* Footer Row: Time, Reply link */}
                         <div className="flex items-center gap-3 mt-1 ml-1 text-xs text-zinc-400">
                             <span>{message.time}</span>
-                            <button className="font-medium text-blue-600 hover:underline">Send Reply</button>
+                            <button className="font-medium text-indigo-600 hover:underline">Send Reply</button>
                         </div>
                         <div className="ml-1 mt-0.5 text-xs">
-                            <button className="text-blue-500 hover:underline">Show Replies (1)</button>
+                            <button className="text-indigo-500 hover:underline">Show Replies (1)</button>
                         </div>
                     </div>
                 </div>
@@ -102,7 +102,7 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
                     <div className="mb-1 flex items-center gap-2">
                         <span className="text-xs font-medium text-zinc-900">{message.name}</span>
                         {message.isAi && (
-                            <span className="rounded bg-blue-100 px-1 py-0.5 text-[10px] font-bold text-blue-600">AI</span>
+                            <span className="rounded bg-indigo-100 px-1 py-0.5 text-[10px] font-bold text-indigo-600">AI</span>
                         )}
                         <span className="text-[10px] text-zinc-400">{message.time}</span>
                     </div>
@@ -112,7 +112,7 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
                         <div className="mb-2 text-xs text-zinc-500">
                             This was sent as a private message to a comment.
                             {message.commentUrl && (
-                                <a href={message.commentUrl} target="_blank" rel="noreferrer" className="ml-1 font-medium text-blue-600 hover:underline">View comment</a>
+                                <a href={message.commentUrl} target="_blank" rel="noreferrer" className="ml-1 font-medium text-indigo-600 hover:underline">View comment</a>
                             )}
                         </div>
                     )}
@@ -120,7 +120,7 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
                     {/* Bubble */}
                     <div
                         className={`rounded-2xl px-4 py-3 text-sm shadow-sm ${isMe
-                            ? "rounded-tr-sm bg-blue-600 text-white"
+                            ? "rounded-tr-sm bg-indigo-600 text-white"
                             : "rounded-tl-sm bg-zinc-100 text-zinc-800"
                             }`}
                     >

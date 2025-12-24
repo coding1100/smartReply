@@ -25,7 +25,7 @@ function Sparkline({ variant }: { variant?: "flat" | "bump" }) {
         <linearGradient id="sr-spark" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.45" />
           <stop offset="55%" stopColor="#10b981" stopOpacity="0.7" />
-          <stop offset="100%" stopColor="#2563eb" stopOpacity="0.55" />
+          <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.55" />
         </linearGradient>
       </defs>
       <polyline
@@ -85,7 +85,7 @@ function MetricTile({ title, delta, value, nodata, spark = "flat", icon }: Metri
 
 function IconFb() {
   return (
-    <div className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[11px] font-bold text-white">
+    <div className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-[11px] font-bold text-white">
       f
     </div>
   );

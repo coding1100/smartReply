@@ -7,12 +7,12 @@ interface MessageListProps {
 }
 
 export function MessageList({ messages, isCommentMode }: MessageListProps) {
-    // Use a ref to scroll to bottom effectively, though logic might need to be in parent or here
-    const messagesEndRef = React.useRef<HTMLDivElement>(null);
+    // Auto-scroll removed per request
+    // const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
-    React.useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages]);
+    // React.useEffect(() => {
+    //     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // }, [messages]);
 
     return (
         <div
@@ -42,7 +42,7 @@ export function MessageList({ messages, isCommentMode }: MessageListProps) {
                 {messages.map((msg) => (
                     <MessageItem key={msg.id} message={msg} />
                 ))}
-                <div ref={messagesEndRef} />
+                {/* <div ref={messagesEndRef} /> */}
             </ul>
         </div>
     );

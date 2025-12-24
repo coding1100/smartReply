@@ -48,10 +48,10 @@ export function ChatWindow({
     };
 
     return (
-        <div className="flex flex-1 flex-col min-w-0 bg-white">
+        <div className="flex flex-1 flex-col min-w-0 bg-white h-full overflow-hidden">
             {/* Loading Overlay (Hidden) */}
             <div className="hidden absolute inset-0 items-center justify-center bg-white/50 z-50">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-600 border-t-transparent"></div>
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-indigo-600 border-t-transparent"></div>
             </div>
 
             <div className="flex flex-col h-full overflow-hidden relative">
