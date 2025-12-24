@@ -72,13 +72,15 @@ function Section({
                 href={item.href}
                 aria-disabled={item.disabled}
                 className={cn(
-                  "flex items-center gap-1 rounded-lg px-3 py-2 text-sm transition-colors !text-[15px] !font-semibold !no-underline !text-zinc-700  mt-[10px]",
-                  "hover:bg-zinc-100",
-                  item.disabled && "opacity-60",
-                  active ? "bg-zinc-100 font-medium text-zinc-900" : "text-zinc-700",
+                  "group flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-all duration-200 !text-[15px] !font-semibold !no-underline mt-[10px]",
+                  "hover:!bg-[#4f46e5]/10 hover:!text-[#4f46e5]",
+                  item.disabled && "opacity-60 cursor-not-allowed",
+                  active
+                    ? "bg-[#4f46e5]/10 text-[#4f46e5]"
+                    : "!text-[#8188a5]",
                 )}
               >
-                <span className={cn("text-zinc-500", active && "text-zinc-900")}>
+                <span className={cn("text-zinc-400 transition-colors group-hover:text-[#4f46e5]", active && "text-[#4f46e5]")}>
                   {item.icon}
                 </span>
                 <span>{item.label}</span>
@@ -122,18 +124,12 @@ export function SidebarNav() {
   const actions: NavItem[] = [
     {
       label: "All Actions", href: "/actions", icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
-          <path d="M7 12h10M12 7v10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-        </svg>
+        <div className="h-1.5 w-1.5 rounded-full bg-current" />
       ), disabled: true
     },
     {
       label: "User Logs", href: "/user-logs", icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
-          <path d="M7 12h10M12 7v10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-        </svg>
+        <div className="h-1.5 w-1.5 rounded-full bg-current" />
       ), disabled: true
     },
   ];
@@ -141,32 +137,17 @@ export function SidebarNav() {
   const customers: NavItem[] = [
     {
       label: "Customer Profiles", href: "/customers", icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-          <path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-          <path d="M22 21v-2a3.5 3.5 0 0 0-2.5-3.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <path d="M16.5 3.65a4 4 0 0 1 0 7.7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
+        <div className="h-1.5 w-1.5 rounded-full bg-current" />
       ), disabled: true
     },
     {
       label: "Block List", href: "/block-list", icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-          <path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-          <path d="M22 21v-2a3.5 3.5 0 0 0-2.5-3.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <path d="M16.5 3.65a4 4 0 0 1 0 7.7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
+        <div className="h-1.5 w-1.5 rounded-full bg-current" />
       ), disabled: true
     },
     {
       label: "Audiences", href: "/audiences", icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-          <path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-          <path d="M22 21v-2a3.5 3.5 0 0 0-2.5-3.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <path d="M16.5 3.65a4 4 0 0 1 0 7.7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
+        <div className="h-1.5 w-1.5 rounded-full bg-current" />
       ), disabled: true
     },
   ];
@@ -174,20 +155,14 @@ export function SidebarNav() {
   const settings: NavItem[] = [
     {
       label: "Settings", href: "/settings", icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
-          <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" strokeWidth="2" />
-          <path d="M19.4 15a7.9 7.9 0 0 0 .06-1 7.9 7.9 0 0 0-.06-1l2.1-1.64a.5.5 0 0 0 .12-.63l-2-3.46a.5.5 0 0 0-.6-.22l-2.48 1a8 8 0 0 0-1.73-1l-.38-2.65A.5.5 0 0 0 13.94 3h-3.9a.5.5 0 0 0-.49.42l-.38 2.65a8 8 0 0 0-1.73 1l-2.48-1a.5.5 0 0 0-.6.22l-2 3.46a.5.5 0 0 0 .12.63L4.6 13a7.9 7.9 0 0 0-.06 1 7.9 7.9 0 0 0 .06 1l-2.1 1.64a.5.5 0 0 0-.12.63l2 3.46a.5.5 0 0 0 .6.22l2.48-1a8 8 0 0 0 1.73 1l.38 2.65a.5.5 0 0 0 .49.42h3.9a.5.5 0 0 0 .49-.42l.38-2.65a8 8 0 0 0 1.73-1l2.48 1a.5.5 0 0 0 .6-.22l2-3.46a.5.5 0 0 0-.12-.63L19.4 15Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-        </svg>
+        <div className="h-1.5 w-1.5 rounded-full bg-current" />
       ), disabled: true
     },
     {
       label: "AI Agent Settings",
       href: "/ai-agent-settings",
       icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
-          <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" strokeWidth="2" />
-          <path d="M19.4 15a7.9 7.9 0 0 0 .06-1 7.9 7.9 0 0 0-.06-1l2.1-1.64a.5.5 0 0 0 .12-.63l-2-3.46a.5.5 0 0 0-.6-.22l-2.48 1a8 8 0 0 0-1.73-1l-.38-2.65A.5.5 0 0 0 13.94 3h-3.9a.5.5 0 0 0-.49.42l-.38 2.65a8 8 0 0 0-1.73 1l-2.48-1a.5.5 0 0 0-.6.22l-2 3.46a.5.5 0 0 0 .12.63L4.6 13a7.9 7.9 0 0 0-.06 1 7.9 7.9 0 0 0 .06 1l-2.1 1.64a.5.5 0 0 0-.12.63l2 3.46a.5.5 0 0 0 .6.22l2.48-1a8 8 0 0 0 1.73 1l.38 2.65a.5.5 0 0 0 .49.42h3.9a.5.5 0 0 0 .49-.42l.38-2.65a8 8 0 0 0 1.73-1l2.48 1a.5.5 0 0 0 .6-.22l2-3.46a.5.5 0 0 0-.12-.63L19.4 15Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-        </svg>
+        <div className="h-1.5 w-1.5 rounded-full bg-current" />
       ),
       disabled: false,
     },
@@ -203,13 +178,15 @@ export function SidebarNav() {
             href={item.href}
             aria-disabled={item.disabled}
             className={cn(
-              "flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors !font-semibold !text-[15px] !no-underline !text-zinc-700 mr-[5px] ml-[5px] mt-3",
-              "hover:bg-zinc-100",
-              item.disabled && "opacity-60",
-              active ? "bg-zinc-100 font-medium text-zinc-500" : "text-zinc-700",
+              "group flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-all duration-200 !font-semibold !text-[15px] !no-underline mr-[5px] ml-[5px] mt-3",
+              "hover:!bg-[#4f46e5]/10 hover:!text-[#4f46e5]",
+              item.disabled && "opacity-60 cursor-not-allowed",
+              active
+                ? "bg-[#4f46e5]/10 text-[#4f46e5]"
+                : "!text-[#8188a5]",
             )}
           >
-            <span className={cn("text-zinc-500", active && "text-zinc-900")}>
+            <span className={cn("text-zinc-400 transition-colors group-hover:text-[#4f46e5]", active && "text-[#4f46e5]")}>
               {item.icon}
             </span>
             <span>{item.label}</span>
