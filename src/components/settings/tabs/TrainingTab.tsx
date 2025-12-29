@@ -59,7 +59,7 @@ export function TrainingTab() {
                   <div className="form-group mb-3">
                     <a
                       className="btn btn-primary"
-                      href="/smartreply/comment-selector"
+                      href="/comment-selector"
                       rel="noopener noreferrer"
                     >
                       Open Comment Selector
@@ -102,7 +102,7 @@ export function TrainingTab() {
                   <div className="form-group mb-3">
                     <a
                       className="btn btn-primary"
-                      href="/smartreply/message-selector"
+                      href="/message-selector"
                       rel="noopener noreferrer"
                     >
                       Open Message Selector

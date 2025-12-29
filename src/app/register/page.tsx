@@ -45,9 +45,12 @@ export default function RegisterPage() {
             if (response.ok) {
                 localStorage.setItem("accessToken", data.access_token);
                 localStorage.setItem("tokenType", data.token_type);
-                router.push("/smartreply/home");
+                router.push("/home");
             } else {
-                setError(data.detail || "Registration failed. Please try again.");
+                const errorMsg = typeof data.detail === 'string'
+                    ? data.detail
+                    : JSON.stringify(data.detail) || "Registration failed. Please try again.";
+                setError(errorMsg);
             }
         } catch (err) {
             setError("Something went wrong. Please try again later.");

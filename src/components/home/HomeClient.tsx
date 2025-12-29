@@ -126,7 +126,7 @@ export default function HomeClient() {
     if (token) {
       localStorage.setItem("accessToken", token);
       // Remove the token from the URL for cleaner UI
-      router.replace("/smartreply/home");
+      router.replace("/home");
     }
   }, [searchParams, router]);
 

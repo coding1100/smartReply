@@ -20,12 +20,16 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
+            const formData = new URLSearchParams();
+            formData.append("username", email);
+            formData.append("password", password);
+
             const response = await fetch(`${API_URL}/auth/login`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/x-www-form-urlencoded",
                 },
-                body: JSON.stringify({ email, password }),
+                body: formData.toString(),
             });
 
             const data = await response.json();
@@ -33,9 +37,12 @@ export default function LoginPage() {
             if (response.ok) {
                 localStorage.setItem("accessToken", data.access_token);
                 localStorage.setItem("tokenType", data.token_type);
-                router.push("/smartreply/home");
+                router.push("/home");
             } else {
-                setError(data.detail || "Login failed. Please check your credentials.");
+                const errorMsg = typeof data.detail === 'string'
+                    ? data.detail
+                    : JSON.stringify(data.detail) || "Login failed. Please check your credentials.";
+                setError(errorMsg);
             }
         } catch (err) {
             setError("Something went wrong. Please try again later.");
