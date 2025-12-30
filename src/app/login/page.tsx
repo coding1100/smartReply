@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -11,8 +12,81 @@ export default function LoginPage() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const { data: session, status } = useSession();
 
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://sme.namatechnologlies.com";
+
+    // Redirect if already logged in and sync data to localStorage
+    useEffect(() => {
+        if (status === "authenticated" && session) {
+            // Store backend token in localStorage for API calls
+            if (session.accessToken) {
+                localStorage.setItem("accessToken", session.accessToken);
+                localStorage.setItem("tokenType", session.tokenType || "Bearer");
+            }
+            
+            // Store user information in localStorage
+            if (session.user) {
+                if (session.user.id) {
+                    localStorage.setItem("userId", session.user.id);
+                }
+                if (session.user.email) {
+                    localStorage.setItem("userEmail", session.user.email);
+                }
+                if (session.user.name) {
+                    localStorage.setItem("userName", session.user.name);
+                }
+                if (session.user.image) {
+                    localStorage.setItem("userImage", session.user.image);
+                }
+            }
+            
+            // Store backend user ID if available
+            if (session.backendUserId) {
+                localStorage.setItem("backendUserId", session.backendUserId);
+            }
+            
+            router.push("/home");
+        }
+    }, [session, status, router]);
+    
+    // Additional effect to sync token when it becomes available (handles delayed token loading)
+    useEffect(() => {
+        if (status === "authenticated" && session?.accessToken) {
+            localStorage.setItem("accessToken", session.accessToken);
+            localStorage.setItem("tokenType", session.tokenType || "Bearer");
+        }
+    }, [session?.accessToken, session?.tokenType, status]);
+
+    // Handle error from URL params
+    useEffect(() => {
+        const errorParam = new URLSearchParams(window.location.search).get('error');
+        if (errorParam) {
+            switch (errorParam) {
+                case 'OAuthSignin':
+                case 'OAuthCallback':
+                case 'OAuthCreateAccount':
+                case 'EmailCreateAccount':
+                case 'Callback':
+                    setError('Google authentication failed. Please try again.');
+                    break;
+                case 'OAuthAccountNotLinked':
+                    setError('An account with this email already exists. Please sign in with your original method.');
+                    break;
+                case 'EmailSignin':
+                    setError('Check your email for the sign in link.');
+                    break;
+                case 'CredentialsSignin':
+                    setError('Invalid credentials. Please check your email and password.');
+                    break;
+                case 'SessionRequired':
+                    setError('Please sign in to access this page.');
+                    break;
+                default:
+                    setError('An error occurred. Please try again.');
+            }
+        }
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -51,8 +125,24 @@ export default function LoginPage() {
         }
     };
 
-    const handleGoogleLogin = () => {
-        window.location.href = `${API_URL}/auth/login/google`;
+    const handleGoogleLogin = async () => {
+        setError("");
+        setLoading(true);
+        
+        try {
+            const result = await signIn("google", {
+                callbackUrl: "/home",
+                redirect: true,
+            });
+
+            if (result?.error) {
+                setError("Google authentication failed. Please try again.");
+                setLoading(false);
+            }
+        } catch (err) {
+            setError("Something went wrong. Please try again later.");
+            setLoading(false);
+        }
     };
 
     return (

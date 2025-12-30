@@ -1,11 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 
 export default function RegisterPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const { data: session, status } = useSession();
     const [showEmailForm, setShowEmailForm] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
@@ -17,8 +20,108 @@ export default function RegisterPage() {
 
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://sme.namatechnologlies.com";
 
-    const handleGoogleSignup = () => {
-        window.location.href = `${API_URL}/auth/login/google`;
+    // Redirect if already logged in (only when authenticated, not during loading)
+    useEffect(() => {
+        // Only redirect if we have a confirmed authenticated session
+        // Don't redirect during loading state
+        if (status === "authenticated" && session) {
+            // Store backend token in localStorage for API calls
+            if (session.accessToken) {
+                localStorage.setItem("accessToken", session.accessToken);
+                localStorage.setItem("tokenType", session.tokenType || "Bearer");
+            }
+            
+            // Store user information in localStorage
+            if (session.user) {
+                if (session.user.id) {
+                    localStorage.setItem("userId", session.user.id);
+                }
+                if (session.user.email) {
+                    localStorage.setItem("userEmail", session.user.email);
+                }
+                if (session.user.name) {
+                    localStorage.setItem("userName", session.user.name);
+                }
+                if (session.user.image) {
+                    localStorage.setItem("userImage", session.user.image);
+                }
+            }
+            
+            // Store backend user ID if available
+            if (session.backendUserId) {
+                localStorage.setItem("backendUserId", session.backendUserId);
+            }
+            
+            router.push("/home");
+        }
+        // If status is "unauthenticated" or "loading", do nothing - user can stay on register page
+    }, [session, status, router]);
+    
+    // Additional effect to sync token when it becomes available (handles delayed token loading)
+    useEffect(() => {
+        if (status === "authenticated" && session?.accessToken) {
+            localStorage.setItem("accessToken", session.accessToken);
+            localStorage.setItem("tokenType", session.tokenType || "Bearer");
+        }
+    }, [session?.accessToken, session?.tokenType, status]);
+
+    // Handle error from URL params
+    useEffect(() => {
+        const errorParam = searchParams.get('error');
+        if (errorParam) {
+            switch (errorParam) {
+                case 'OAuthSignin':
+                case 'OAuthCallback':
+                case 'OAuthCreateAccount':
+                case 'EmailCreateAccount':
+                case 'Callback':
+                    setError('Google authentication failed. Please try again.');
+                    break;
+                case 'OAuthAccountNotLinked':
+                    setError('An account with this email already exists. Please sign in instead.');
+                    break;
+                case 'EmailSignin':
+                    setError('Check your email for the sign in link.');
+                    break;
+                case 'CredentialsSignin':
+                    setError('Invalid credentials. Please check your email and password.');
+                    break;
+                case 'SessionRequired':
+                    setError('Please sign in to access this page.');
+                    break;
+                default:
+                    setError('An error occurred. Please try again.');
+            }
+        }
+    }, [searchParams]);
+
+    const handleGoogleSignup = async () => {
+        setError("");
+        setLoading(true);
+        
+        try {
+            // Use redirect: false to handle the redirect manually
+            const result = await signIn("google", {
+                callbackUrl: "/home",
+                redirect: false,
+            });
+
+            if (result?.error) {
+                setError("Google authentication failed. Please try again.");
+                setLoading(false);
+            } else if (result?.ok) {
+                // If successful, the session will be updated and useEffect will handle redirect
+                // Don't set loading to false here as the redirect will happen
+            } else {
+                // If URL is returned, redirect to it (this handles the OAuth flow)
+                if (result?.url) {
+                    window.location.href = result.url;
+                }
+            }
+        } catch (err) {
+            setError("Something went wrong. Please try again later.");
+            setLoading(false);
+        }
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
