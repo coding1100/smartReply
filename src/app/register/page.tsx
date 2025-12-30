@@ -12,11 +12,17 @@ export default function RegisterPage() {
     const [showEmailForm, setShowEmailForm] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
+        first_name: "",
+        last_name: "",
+        domain: "",
+        phone: "",
+        company_name: "",
         password: "",
-        company_name: ""
+        confirm_password: ""
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://sme.namatechnologlies.com";
 
@@ -170,31 +176,80 @@ export default function RegisterPage() {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+        
+        // Clear validation error for this field when user starts typing
+        if (validationErrors[name]) {
+            setValidationErrors(prev => {
+                const newErrors = { ...prev };
+                delete newErrors[name];
+                return newErrors;
+            });
+        }
+    };
+
+    const validateForm = (): boolean => {
+        const errors: Record<string, string> = {};
+
+        // Required fields validation
+        if (!formData.email.trim()) {
+            errors.email = "Email is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            errors.email = "Please enter a valid email address";
+        }
+
+        if (!formData.first_name.trim()) {
+            errors.first_name = "First Name is required";
+        }
+
+        if (!formData.password) {
+            errors.password = "Password is required";
+        } else if (formData.password.length < 6) {
+            errors.password = "Password must be at least 6 characters";
+        }
+
+        if (!formData.confirm_password) {
+            errors.confirm_password = "Please confirm your password";
+        } else if (formData.password !== formData.confirm_password) {
+            errors.confirm_password = "Passwords do not match";
+        }
+
+        setValidationErrors(errors);
+        return Object.keys(errors).length === 0;
     };
 
     const handleEmailSignup = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+        setValidationErrors({});
+        
+        // Validate form before submission
+        if (!validateForm()) {
+            return;
+        }
+
         setLoading(true);
 
         try {
+            // Prepare data for API (exclude confirm_password)
+            const { confirm_password, ...apiData } = formData;
+            
             const response = await fetch(`${API_URL}/auth/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(apiData),
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                localStorage.setItem("accessToken", data.access_token);
-                localStorage.setItem("tokenType", data.token_type);
+                // Don't store tokens on registration - user needs to login
+                // Redirect to login page after successful registration
                 if (!hasRedirected.current) {
-                hasRedirected.current = true;
-                router.replace("/home");
-            }
+                    hasRedirected.current = true;
+                    router.replace("/login");
+                }
             } else {
                 const errorMsg = typeof data.detail === 'string'
                     ? data.detail
@@ -215,12 +270,41 @@ export default function RegisterPage() {
                 <div className="text-xl font-bold text-zinc-900">SmartReply</div>
                 <div className="flex items-center gap-6">
                     {showEmailForm ? (
-                        <button
-                            onClick={() => setShowEmailForm(false)}
-                            className="text-indigo-600 hover:text-indigo-900 no-underline text-sm font-medium"
-                        >
-                            Back
-                        </button>
+                        <>
+                            {/* Show user info in sticky bar when filling email form */}
+                            {(formData.first_name || formData.email || formData.company_name) && (
+                                <div className="flex items-center gap-3 text-sm">
+                                    {formData.first_name && (
+                                        <span className="font-semibold text-zinc-900">
+                                            {formData.first_name}
+                                            {formData.last_name && ` ${formData.last_name}`}
+                                        </span>
+                                    )}
+                                    {formData.email && (
+                                        <>
+                                            {formData.first_name && <span className="text-zinc-300">|</span>}
+                                            <span className="text-zinc-600">
+                                                {formData.email}
+                                            </span>
+                                        </>
+                                    )}
+                                    {formData.company_name && (
+                                        <>
+                                            {(formData.first_name || formData.email) && <span className="text-zinc-300">|</span>}
+                                            <span className="text-zinc-600">
+                                                {formData.company_name}
+                                            </span>
+                                        </>
+                                    )}
+                                </div>
+                            )}
+                            <button
+                                onClick={() => setShowEmailForm(false)}
+                                className="text-indigo-600 hover:text-indigo-900 no-underline text-sm font-medium"
+                            >
+                                Back
+                            </button>
+                        </>
                     ) : (
                         <Link
                             href="https://smartreply.io"
@@ -264,8 +348,8 @@ export default function RegisterPage() {
                 </div>
 
                 {/* Right Column - Form/Options Section */}
-                <div className="w-1/2 bg-zinc-50 flex items-center justify-center p-24">
-                    <div className="w-full max-w-md">
+                <div className="w-1/2 bg-zinc-50 flex items-center justify-center p-24 overflow-y-auto">
+                    <div className="w-full max-w-md py-8">
                         {error && (
                             <div className="mb-4 p-3 text-sm text-red-500 bg-red-50 border border-red-100 rounded-lg">
                                 {error}
@@ -277,7 +361,7 @@ export default function RegisterPage() {
                                 {/* Google */}
                                 <button
                                     onClick={handleGoogleSignup}
-                                    className="flex items-center w-full py-4 px-6 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all !no-underline !text-zinc-900 mb-4"
+                                    className="flex items-center w-full py-4 px-6 bg-white border border-zinc-200 !rounded-xl shadow-sm hover:shadow-md transition-all !no-underline !text-zinc-900 mb-4"
                                 >
                                     <img
                                         src="https://app.smartreply.io/assets/images/google-icon.png"
@@ -295,7 +379,7 @@ export default function RegisterPage() {
                                 {/* Email */}
                                 <button
                                     onClick={() => setShowEmailForm(true)}
-                                    className="flex items-center w-full py-4 px-6 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-all !no-underline !text-zinc-900"
+                                    className="flex items-center w-full py-4 px-6 bg-white border border-zinc-200 !rounded-xl shadow-sm hover:shadow-md transition-all !no-underline !text-zinc-900"
                                 >
                                     <img
                                         src="https://app.smartreply.io/assets/images/email-icon.svg"
@@ -310,20 +394,11 @@ export default function RegisterPage() {
                             </div>
                         ) : (
                             <form onSubmit={handleEmailSignup} className="space-y-4">
+                                {/* Email */}
                                 <div>
-                                    <label className="block text-sm font-medium text-zinc-700 mb-1">Company Name</label>
-                                    <input
-                                        type="text"
-                                        name="company_name"
-                                        required
-                                        value={formData.company_name}
-                                        onChange={handleInputChange}
-                                        placeholder="Acme Inc."
-                                        className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-zinc-700 mb-1">Email Address</label>
+                                    <label className="block text-sm font-medium text-zinc-700 mb-1">
+                                        Enter your email <span className="text-red-500">*</span>
+                                    </label>
                                     <input
                                         type="email"
                                         name="email"
@@ -331,11 +406,95 @@ export default function RegisterPage() {
                                         value={formData.email}
                                         onChange={handleInputChange}
                                         placeholder="m.ovais@mindfind.com"
+                                        className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all ${
+                                            validationErrors.email ? "border-red-300" : "border-zinc-300"
+                                        }`}
+                                    />
+                                    {validationErrors.email && (
+                                        <p className="mt-1 text-xs text-red-500">{validationErrors.email}</p>
+                                    )}
+                                </div>
+
+                                {/* First Name and Last Name in a row */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-zinc-700 mb-1">
+                                            First Name <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="first_name"
+                                            required
+                                            value={formData.first_name}
+                                            onChange={handleInputChange}
+                                            placeholder="John"
+                                            className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all ${
+                                                validationErrors.first_name ? "border-red-300" : "border-zinc-300"
+                                            }`}
+                                        />
+                                        {validationErrors.first_name && (
+                                            <p className="mt-1 text-xs text-red-500">{validationErrors.first_name}</p>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-zinc-700 mb-1">
+                                            Last Name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="last_name"
+                                            value={formData.last_name}
+                                            onChange={handleInputChange}
+                                            placeholder="Doe"
+                                            className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Domain */}
+                                <div>
+                                    <label className="block text-sm font-medium text-zinc-700 mb-1">Domain</label>
+                                    <input
+                                        type="text"
+                                        name="domain"
+                                        value={formData.domain}
+                                        onChange={handleInputChange}
+                                        placeholder="example.com"
                                         className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
                                     />
                                 </div>
+
+                                {/* Phone */}
                                 <div>
-                                    <label className="block text-sm font-medium text-zinc-700 mb-1">Password</label>
+                                    <label className="block text-sm font-medium text-zinc-700 mb-1">Phone</label>
+                                    <input
+                                        type="tel"
+                                        name="phone"
+                                        value={formData.phone}
+                                        onChange={handleInputChange}
+                                        placeholder="+1 234 567 8900"
+                                        className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+                                    />
+                                </div>
+
+                                {/* Company Name */}
+                                <div>
+                                    <label className="block text-sm font-medium text-zinc-700 mb-1">Company Name</label>
+                                    <input
+                                        type="text"
+                                        name="company_name"
+                                        value={formData.company_name}
+                                        onChange={handleInputChange}
+                                        placeholder="Acme Inc."
+                                        className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+                                    />
+                                </div>
+
+                                {/* Password */}
+                                <div>
+                                    <label className="block text-sm font-medium text-zinc-700 mb-1">
+                                        Password <span className="text-red-500">*</span>
+                                    </label>
                                     <input
                                         type="password"
                                         name="password"
@@ -343,13 +502,40 @@ export default function RegisterPage() {
                                         value={formData.password}
                                         onChange={handleInputChange}
                                         placeholder="••••••••••"
-                                        className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+                                        className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all ${
+                                            validationErrors.password ? "border-red-300" : "border-zinc-300"
+                                        }`}
                                     />
+                                    {validationErrors.password && (
+                                        <p className="mt-1 text-xs text-red-500">{validationErrors.password}</p>
+                                    )}
                                 </div>
+
+                                {/* Confirm Password */}
+                                <div>
+                                    <label className="block text-sm font-medium text-zinc-700 mb-1">
+                                        Confirm Password <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="password"
+                                        name="confirm_password"
+                                        required
+                                        value={formData.confirm_password}
+                                        onChange={handleInputChange}
+                                        placeholder="••••••••••"
+                                        className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all ${
+                                            validationErrors.confirm_password ? "border-red-300" : "border-zinc-300"
+                                        }`}
+                                    />
+                                    {validationErrors.confirm_password && (
+                                        <p className="mt-1 text-xs text-red-500">{validationErrors.confirm_password}</p>
+                                    )}
+                                </div>
+
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full py-3 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                                    className="w-full py-3 px-4 bg-indigo-600 text-white !rounded-lg hover:bg-indigo-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                                 >
                                     {loading ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
                                 </button>
