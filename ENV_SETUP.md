@@ -6,8 +6,9 @@ Create a `.env.local` file in the root of your project with the following variab
 
 ```env
 # Google OAuth Credentials (from Google Cloud Console)
-GOOGLE_CLIENT_ID=234259137960-ib6rpcv6qdg9ubm7gklmu2otf9i7m26m.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
+# Get these from: https://console.cloud.google.com/apis/credentials
+GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-google-client-secret
 
 # NextAuth Configuration
 NEXTAUTH_SECRET=your-random-secret-key-here
