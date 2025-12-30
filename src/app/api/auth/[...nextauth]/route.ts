@@ -99,6 +99,11 @@ export const authOptions: NextAuthOptions = {
         // Store Google account info
         token.provider = account.provider;
         token.providerAccountId = account.providerAccountId;
+        
+        // Store Google OAuth access_token
+        if (account.access_token) {
+          token.googleAccessToken = account.access_token;
+        }
 
         // Try to get backend token from the live API
         try {
@@ -158,6 +163,11 @@ export const authOptions: NextAuthOptions = {
         }
         if (token.backendUserId) {
           session.backendUserId = token.backendUserId as string;
+        }
+        
+        // Store Google OAuth access_token in session
+        if (token.googleAccessToken) {
+          session.googleAccessToken = token.googleAccessToken as string;
         }
         
         // Log in development to verify token is being set

@@ -16,8 +16,43 @@ export default function LoginPage() {
 
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://sme.namatechnologlies.com";
 
+    // Track redirect state to prevent loops
+    const hasRedirected = React.useRef(false);
+    const isChecking = React.useRef(false);
+
+    // Check if already logged in (has accessToken) - redirect to home
+    // Only check once on mount to prevent loops
+    useEffect(() => {
+        if (isChecking.current) return;
+        isChecking.current = true;
+        
+        // Wait a bit to ensure we're not in a redirect loop
+        const timeoutId = setTimeout(() => {
+            // Check if we're still on login page (not already redirected)
+            if (window.location.pathname !== "/login" || hasRedirected.current) {
+                return; // Already redirected, don't do anything
+            }
+            
+            const accessToken = localStorage.getItem("accessToken");
+            const googleAccessToken = localStorage.getItem("googleAccessToken");
+            // User is authenticated if they have either token
+            const isAuthenticated = accessToken || googleAccessToken;
+            
+            if (isAuthenticated && !hasRedirected.current) {
+                hasRedirected.current = true;
+                // Only redirect if we have a token and we're actually on the login page
+                router.replace("/home");
+            }
+        }, 500);
+        
+        return () => clearTimeout(timeoutId);
+    }, [router]);
+
     // Redirect if already logged in and sync data to localStorage
     useEffect(() => {
+        // Prevent redirect if already redirected
+        if (hasRedirected.current) return;
+        
         if (status === "authenticated" && session) {
             // Store backend token in localStorage for API calls
             if (session.accessToken) {
@@ -46,7 +81,16 @@ export default function LoginPage() {
                 localStorage.setItem("backendUserId", session.backendUserId);
             }
             
-            router.push("/home");
+            // Store Google OAuth access_token if available
+            if (session.googleAccessToken) {
+                localStorage.setItem("googleAccessToken", session.googleAccessToken);
+            }
+            
+            // Only redirect if we have accessToken and haven't redirected yet
+            if (session.accessToken && !hasRedirected.current) {
+                hasRedirected.current = true;
+                router.replace("/home");
+            }
         }
     }, [session, status, router]);
     
@@ -111,7 +155,10 @@ export default function LoginPage() {
             if (response.ok) {
                 localStorage.setItem("accessToken", data.access_token);
                 localStorage.setItem("tokenType", data.token_type);
-                router.push("/home");
+                if (!hasRedirected.current) {
+                hasRedirected.current = true;
+                router.replace("/home");
+            }
             } else {
                 const errorMsg = typeof data.detail === 'string'
                     ? data.detail

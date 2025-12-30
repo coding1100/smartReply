@@ -43,6 +43,11 @@ export function SessionSync() {
       if (session.backendUserId) {
         localStorage.setItem("backendUserId", session.backendUserId);
       }
+
+      // Store Google OAuth access_token if available
+      if (session.googleAccessToken) {
+        localStorage.setItem("googleAccessToken", session.googleAccessToken);
+      }
     } else if (status === "unauthenticated") {
       // Clear localStorage when user logs out
       localStorage.removeItem("accessToken");
@@ -52,6 +57,7 @@ export function SessionSync() {
       localStorage.removeItem("userName");
       localStorage.removeItem("userImage");
       localStorage.removeItem("backendUserId");
+      localStorage.removeItem("googleAccessToken");
     }
   }, [session, status]);
 

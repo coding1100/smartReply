@@ -1,10 +1,95 @@
 "use client";
 
 import * as React from "react";
+import { useEffect, useState, useRef } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { AdminHeader } from "./AdminHeader";
 import { AdminSidebar } from "./AdminSidebar";
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
+  const hasChecked = useRef(false);
+  const isRedirecting = useRef(false);
+
+  useEffect(() => {
+    // Only check once on mount
+    if (hasChecked.current || isRedirecting.current) return;
+    
+    // Wait for window to be available
+    if (typeof window === "undefined") {
+      return;
+    }
+    
+    // Check current pathname - don't protect public routes
+    const currentPath = window.location.pathname;
+    const publicRoutes = ["/login", "/register", "/error"];
+    
+    if (publicRoutes.includes(currentPath)) {
+      hasChecked.current = true;
+      setIsAuthorized(true);
+      return;
+    }
+    
+    // Check for accessToken in localStorage
+    const checkAuth = () => {
+      // Prevent multiple redirects
+      if (isRedirecting.current) return;
+      
+      const accessToken = localStorage.getItem("accessToken");
+      const googleAccessToken = localStorage.getItem("googleAccessToken");
+      // User is authenticated if they have either token
+      const isAuthenticated = accessToken || googleAccessToken;
+      
+      const currentPathNow = window.location.pathname;
+      
+      // Double-check we're not on a public route
+      if (publicRoutes.includes(currentPathNow)) {
+        hasChecked.current = true;
+        setIsAuthorized(true);
+        return;
+      }
+      
+      if (!isAuthenticated) {
+        // If no token and not already on login, redirect to login
+        if (currentPathNow !== "/login" && !isRedirecting.current) {
+          isRedirecting.current = true;
+          hasChecked.current = true;
+          setIsAuthorized(false);
+          router.replace("/login");
+        } else {
+          hasChecked.current = true;
+          setIsAuthorized(false);
+        }
+      } else {
+        hasChecked.current = true;
+        setIsAuthorized(true);
+      }
+    };
+    
+    // Check after a delay to avoid race conditions
+    const timeoutId = setTimeout(checkAuth, 300);
+    
+    return () => clearTimeout(timeoutId);
+  }, []); // Only run once on mount
+
+  // Show loading state while checking
+  if (isAuthorized === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zinc-900 mx-auto"></div>
+          <p className="mt-4 text-zinc-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If not authorized, don't render the layout
+  if (isAuthorized === false) {
+    return null;
+  }
+
   return (
     <div className="h-dvh bg-zinc-50">
       <div className="mx-auto flex h-full w-full items-stretch">
