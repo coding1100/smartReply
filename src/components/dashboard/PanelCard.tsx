@@ -15,10 +15,10 @@ export function PanelCard({
   className?: string;
 }) {
   return (
-    <Card shadow="sm" className={["rounded-2xl bg-white shadow-sm", className].filter(Boolean).join(" ")}>
-      <CardBody className="gap-4">
+    <Card shadow="sm" className={["rounded-xl bg-white shadow-sm border border-zinc-100 hover:shadow-md transition-all", className].filter(Boolean).join(" ")}>
+      <CardBody className="gap-4 p-6">
         <div className="flex items-center justify-between">
-          <div className="text-xs font-semibold tracking-wide text-zinc-800">
+          <div className="text-xs font-bold tracking-wider text-zinc-600 uppercase">
             {title}
           </div>
           {right ? <div>{right}</div> : null}

@@ -85,18 +85,18 @@ export default function MessageSelectorPage() {
                         <div className="mb-6 flex gap-3">
                             <button
                                 onClick={() => setPlatform("facebook")}
-                                className={`px-6 py-2.5 rounded-full text-sm font-medium transition-colors ${platform === "facebook"
-                                        ? "bg-[#5A6BF2] text-white shadow-sm"
-                                        : "bg-white border border-blue-200 text-[#5A6BF2] hover:bg-blue-50"
+                                className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all ${platform === "facebook"
+                                        ? "bg-indigo-600 text-white shadow-md shadow-indigo-100"
+                                        : "bg-white border border-zinc-200 text-zinc-600 hover:bg-indigo-50 hover:border-indigo-200"
                                     }`}
                             >
                                 Facebook
                             </button>
                             <button
                                 onClick={() => setPlatform("instagram")}
-                                className={`px-6 py-2.5 rounded-full text-sm font-medium transition-colors ${platform === "instagram"
-                                        ? "bg-[#5A6BF2] text-white shadow-sm"
-                                        : "bg-white border border-blue-200 text-[#5A6BF2] hover:bg-blue-50"
+                                className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all ${platform === "instagram"
+                                        ? "bg-indigo-600 text-white shadow-md shadow-indigo-100"
+                                        : "bg-white border border-zinc-200 text-zinc-600 hover:bg-indigo-50 hover:border-indigo-200"
                                     }`}
                             >
                                 Instagram

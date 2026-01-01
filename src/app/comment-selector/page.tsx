@@ -115,14 +115,14 @@ export default function CommentSelectorPage() {
             <div className="btn-group">
               <button
                 onClick={() => showContent("posts")}
-                className={`btn btn-sm ${activeTab === "posts" ? "btn-primary" : "btn-outline-primary"}`}
+                className={`btn btn-sm rounded-lg transition-all ${activeTab === "posts" ? "btn-primary shadow-md shadow-indigo-100" : "btn-outline-primary hover:bg-indigo-50"}`}
                 id="tab-posts"
               >
                 Facebook Posts
               </button>
               <button
                 onClick={() => showContent("igposts")}
-                className={`btn btn-sm ${activeTab === "igposts" ? "btn-primary" : "btn-outline-primary"}`}
+                className={`btn btn-sm rounded-lg transition-all ${activeTab === "igposts" ? "btn-primary shadow-md shadow-indigo-100" : "btn-outline-primary hover:bg-indigo-50"}`}
                 id="tab-ig-posts"
               >
                 Instagram Posts
@@ -170,24 +170,24 @@ export default function CommentSelectorPage() {
                           flex: "1 1 0%",
                           maxWidth: "calc(20%)",
                           padding: "15px",
-                          borderRadius: "20px",
-                          transition: "transform 0.3s, box-shadow 0.3s",
+                          borderRadius: "16px",
+                          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                           transform: "scale(1)"
                         }}
                         onMouseOver={(e) => {
-                          e.currentTarget.style.transform = "scale(1.05)";
-                          e.currentTarget.style.boxShadow = "0 4px 10px rgba(0, 123, 255, 0.3)";
+                          e.currentTarget.style.transform = "scale(1.03) translateY(-2px)";
+                          e.currentTarget.style.boxShadow = "0 8px 16px rgba(79, 70, 229, 0.2)";
                         }}
                         onMouseOut={(e) => {
                           e.currentTarget.style.transform = "scale(1)";
-                          e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
+                          e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.1)";
                         }}
                       >
                         <div className="card">
                           <div
                             className="custom-card"
                             onClick={() => openModalWithLoader("645232738675563_122146508888890127", "https://facebook.com/645232738675563_122146508888890127", "Facebook")}
-                            style={{ cursor: "pointer", borderRadius: "15px" }}
+                            style={{ cursor: "pointer", borderRadius: "12px" }}
                             role="button"
                             tabIndex={0}
                             onKeyPress={(e) => {
@@ -217,24 +217,24 @@ export default function CommentSelectorPage() {
                           flex: "1 1 0%",
                           maxWidth: "calc(20%)",
                           padding: "15px",
-                          borderRadius: "20px",
-                          transition: "transform 0.3s, box-shadow 0.3s",
+                          borderRadius: "16px",
+                          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                           transform: "scale(1)"
                         }}
                         onMouseOver={(e) => {
-                          e.currentTarget.style.transform = "scale(1.05)";
-                          e.currentTarget.style.boxShadow = "0 4px 10px rgba(0, 123, 255, 0.3)";
+                          e.currentTarget.style.transform = "scale(1.03) translateY(-2px)";
+                          e.currentTarget.style.boxShadow = "0 8px 16px rgba(79, 70, 229, 0.2)";
                         }}
                         onMouseOut={(e) => {
                           e.currentTarget.style.transform = "scale(1)";
-                          e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
+                          e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.1)";
                         }}
                       >
                         <div className="card">
                           <div
                             className="custom-card"
                             onClick={() => openModalWithLoader("645232738675563_122105647052890127", "https://facebook.com/645232738675563_122105647052890127", "Facebook")}
-                            style={{ cursor: "pointer", borderRadius: "15px" }}
+                            style={{ cursor: "pointer", borderRadius: "12px" }}
                             role="button"
                             tabIndex={0}
                             onKeyPress={(e) => {
@@ -267,7 +267,7 @@ export default function CommentSelectorPage() {
                     type="button"
                     data-bs-target="#postsCarousel"
                     data-bs-slide="prev"
-                    style={{ position: "absolute", left: "-25px", top: "50%", transform: "translateY(-50%)", width: "50px", height: "50px", borderRadius: "50%" }}
+                    style={{ position: "absolute", left: "-25px", top: "50%", transform: "translateY(-50%)", width: "50px", height: "50px", borderRadius: "50%", boxShadow: "0 4px 6px rgba(79, 70, 229, 0.2)" }}
                   >
                     ←
                   </button>
@@ -277,7 +277,7 @@ export default function CommentSelectorPage() {
                     type="button"
                     data-bs-target="#postsCarousel"
                     data-bs-slide="next"
-                    style={{ position: "absolute", right: "-25px", top: "50%", transform: "translateY(-50%)", width: "50px", height: "50px", borderRadius: "50%" }}
+                    style={{ position: "absolute", right: "-25px", top: "50%", transform: "translateY(-50%)", width: "50px", height: "50px", borderRadius: "50%", boxShadow: "0 4px 6px rgba(79, 70, 229, 0.2)" }}
                   >
                     →
                   </button>

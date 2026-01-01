@@ -53,7 +53,7 @@ function Section({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between px-3 text-left !font-semibold text-[15px] tracking-wide text-zinc-500"
+        className="flex w-full items-center justify-between px-3 py-2 text-left !font-semibold text-[13px] tracking-wider text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50 rounded-lg transition-all"
       >
         <span className="flex items-center gap-2">
           {icon}
@@ -72,15 +72,15 @@ function Section({
                 href={item.href}
                 aria-disabled={item.disabled}
                 className={cn(
-                  "group flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-all duration-200 !text-[15px] !font-semibold !no-underline mt-[10px]",
-                  "hover:!bg-[#4f46e5]/10 hover:!text-[#4f46e5]",
-                  item.disabled && "opacity-60 cursor-not-allowed",
+                  "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 !text-[14px] !font-semibold !no-underline mt-1",
+                  "hover:!bg-indigo-50 hover:!text-indigo-600",
+                  item.disabled && "opacity-50 cursor-not-allowed",
                   active
-                    ? "bg-[#4f46e5]/10 text-[#4f46e5]"
-                    : "!text-[#8188a5]",
+                    ? "bg-indigo-50 text-indigo-600 shadow-sm"
+                    : "!text-zinc-600",
                 )}
               >
-                <span className={cn("text-zinc-400 transition-colors group-hover:text-[#4f46e5]", active && "text-[#4f46e5]")}>
+                <span className={cn("text-zinc-400 transition-colors group-hover:text-indigo-600", active && "text-indigo-600")}>
                   {item.icon}
                 </span>
                 <span>{item.label}</span>
@@ -178,15 +178,15 @@ export function SidebarNav() {
             href={item.href}
             aria-disabled={item.disabled}
             className={cn(
-              "group flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-all duration-200 !font-semibold !text-[15px] !no-underline mr-[5px] ml-[5px] mt-3",
-              "hover:!bg-[#4f46e5]/10 hover:!text-[#4f46e5]",
-              item.disabled && "opacity-60 cursor-not-allowed",
+              "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 !font-semibold !text-[14px] !no-underline mr-[5px] ml-[5px] mt-3",
+              "hover:!bg-indigo-50 hover:!text-indigo-600",
+              item.disabled && "opacity-50 cursor-not-allowed",
               active
-                ? "bg-[#4f46e5]/10 text-[#4f46e5]"
-                : "!text-[#8188a5]",
+                ? "bg-indigo-50 text-indigo-600 shadow-sm"
+                : "!text-zinc-600",
             )}
           >
-            <span className={cn("text-zinc-400 transition-colors group-hover:text-[#4f46e5]", active && "text-[#4f46e5]")}>
+            <span className={cn("text-zinc-400 transition-colors group-hover:text-indigo-600", active && "text-indigo-600")}>
               {item.icon}
             </span>
             <span>{item.label}</span>

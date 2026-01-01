@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
+import { motion } from "framer-motion";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -247,22 +248,39 @@ export default function LoginPage() {
 
                 {/* Right Column - Form Section (White Background) */}
                 <div className="w-1/2 bg-white flex items-center justify-center p-12 relative">
-                    <Link
-                        href="/register"
-                        className="px-6 py-2 text-sm font-medium text-indigo-600 border border-indigo-600 rounded-full hover:bg-indigo-50 no-underline hover:no-underline transition-colors absolute top-[20px] right-[20px]"
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
                     >
-                        GET STARTED FREE
-                    </Link>
-                    <div className="w-full max-w-md space-y-4">
+                        <Link
+                            href="/register"
+                            className="px-6 py-2 text-sm font-medium text-indigo-600 border border-indigo-600 rounded-full hover:bg-indigo-50 hover:shadow-sm no-underline hover:no-underline transition-all absolute top-[20px] right-[20px]"
+                        >
+                            GET STARTED FREE
+                        </Link>
+                    </motion.div>
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="w-full max-w-md space-y-4"
+                    >
                         {error && (
-                            <div className="p-3 text-sm text-red-500 bg-red-50 border border-red-100 rounded-lg">
+                            <motion.div 
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="p-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl shadow-sm"
+                            >
                                 {error}
-                            </div>
+                            </motion.div>
                         )}
 
-                        <button
+                        <motion.button
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.99 }}
                             onClick={handleGoogleLogin}
-                            className="w-full mb-2 flex items-center justify-center !rounded-lg gap-3 py-3 px-4 bg-white border border-zinc-300 text-zinc-900 rounded-lg hover:bg-zinc-50 transition-colors font-medium"
+                            className="w-full mb-2 flex items-center justify-center rounded-xl gap-3 py-3 px-4 bg-white border border-zinc-200 text-zinc-900 shadow-sm hover:shadow-md hover:border-zinc-300 transition-all font-medium"
                             disabled={loading}
                         >
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -284,18 +302,20 @@ export default function LoginPage() {
                                 />
                             </svg>
                             Sign In With Google
-                        </button>
+                        </motion.button>
 
-                        <button
+                        <motion.button
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.99 }}
                             onClick={handleFacebookLogin}
-                            className="w-full flex items-center justify-center !rounded-lg gap-3 py-3 px-4 bg-white border border-zinc-300 text-zinc-900 rounded-lg hover:bg-zinc-50 transition-colors font-medium"
+                            className="w-full flex items-center justify-center rounded-xl gap-3 py-3 px-4 bg-white border border-zinc-200 text-zinc-900 shadow-sm hover:shadow-md hover:border-zinc-300 transition-all font-medium"
                             disabled={loading}
                         >
                             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#1877F2">
                                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                             </svg>
                             Sign In With Facebook
-                        </button>
+                        </motion.button>
 
                         {/* Divider */}
                         <div className="relative my-6">
@@ -323,7 +343,7 @@ export default function LoginPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="m.ovais@mindfind.com"
-                                    className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+                                    className="w-full px-4 py-2.5 border border-zinc-200 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
                                 />
                             </div>
 
@@ -341,7 +361,7 @@ export default function LoginPage() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••••"
-                                    className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+                                    className="w-full px-4 py-2.5 border border-zinc-200 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
                                 />
                             </div>
 
@@ -365,13 +385,15 @@ export default function LoginPage() {
                                 </Link>
                             </div>
 
-                            <button
+                            <motion.button
+                                whileHover={{ scale: loading ? 1 : 1.01 }}
+                                whileTap={{ scale: loading ? 1 : 0.99 }}
                                 type="submit"
                                 disabled={loading}
-                                className="w-full py-3 px-4 bg-indigo-600 text-white !rounded-lg hover:bg-indigo-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full py-3 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow-md shadow-indigo-100 hover:shadow-lg hover:shadow-indigo-200 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {loading ? "LOGGING IN..." : "LOGIN"}
-                            </button>
+                            </motion.button>
                         </form>
 
                         {/* Sign Up Link */}
@@ -397,7 +419,7 @@ export default function LoginPage() {
                                 Privacy Policy
                             </Link>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
 

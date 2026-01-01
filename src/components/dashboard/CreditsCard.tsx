@@ -4,9 +4,9 @@ import { Button, Card, CardBody } from "@heroui/react";
 
 export function CreditsCard() {
   return (
-    <Card shadow="sm" className="col-span-12 rounded-2xl bg-white shadow-sm lg:col-span-4">
-      <CardBody className="gap-5">
-        <div className="text-[11px] font-semibold tracking-wide text-zinc-500">
+    <Card shadow="sm" className="col-span-12 rounded-xl bg-white shadow-sm border border-zinc-100 hover:shadow-md transition-all lg:col-span-4">
+      <CardBody className="gap-5 p-6">
+        <div className="text-[11px] font-bold tracking-wider text-zinc-500 uppercase">
           CREDITS
         </div>
 
@@ -40,7 +40,7 @@ export function CreditsCard() {
           </div>
         </div>
 
-        <Button color="primary" className="w-full">
+        <Button color="primary" className="w-full rounded-lg shadow-md shadow-indigo-100 hover:shadow-lg hover:shadow-indigo-200">
           Upgrade plan
         </Button>
       </CardBody>

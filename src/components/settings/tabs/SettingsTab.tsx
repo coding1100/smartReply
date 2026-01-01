@@ -54,15 +54,15 @@ export function SettingsTab() {
       <form onSubmit={handleSubmit}>
         <div id="custom-accordion">
           {/* 1. Connect Facebook page or Twitter Account */}
-          <div className="card mb-3">
+          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
               onClick={() => toggleAccordion("connect")}
             >
-              <h6 className="mb-0 d-flex justify-content-between align-items-center" id="headingConnect">
+              <h6 className="mb-0 d-flex justify-content-between align-items-center font-semibold" id="headingConnect">
                 <span>1. Connect Facebook page or Twitter Account</span>
-                <span className="text-success">✓</span>
+                <span className="text-emerald-600 font-bold">✓</span>
               </h6>
             </div>
             <div
@@ -86,15 +86,15 @@ export function SettingsTab() {
           </div>
 
           {/* 2. What's your Goal? */}
-          <div className="card mb-3">
+          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
               onClick={() => toggleAccordion("goal")}
             >
-              <h6 className="mb-0 d-flex justify-content-between align-items-center">
+              <h6 className="mb-0 d-flex justify-content-between align-items-center font-semibold">
                 <span>2. What's your Goal?</span>
-                <span className="text-success">✓</span>
+                <span className="text-emerald-600 font-bold">✓</span>
               </h6>
             </div>
             <div
@@ -119,15 +119,15 @@ export function SettingsTab() {
           </div>
 
           {/* 3. Business Information */}
-          <div className="card mb-3">
+          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
               onClick={() => toggleAccordion("bizInfo")}
             >
-              <h6 className="mb-0 d-flex justify-content-between align-items-center">
+              <h6 className="mb-0 d-flex justify-content-between align-items-center font-semibold">
                 <span>3. Business Information</span>
-                <span className="text-success">✓</span>
+                <span className="text-emerald-600 font-bold">✓</span>
               </h6>
             </div>
             <div
@@ -181,15 +181,15 @@ export function SettingsTab() {
           </div>
 
           {/* 4. Support Email */}
-          <div className="card mb-3">
+          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
               onClick={() => toggleAccordion("email")}
             >
-              <h6 className="mb-0 d-flex justify-content-between align-items-center">
+              <h6 className="mb-0 d-flex justify-content-between align-items-center font-semibold">
                 <span>4. Support Email</span>
-                <span className="text-success">✓</span>
+                <span className="text-emerald-600 font-bold">✓</span>
               </h6>
             </div>
             <div
@@ -210,15 +210,15 @@ export function SettingsTab() {
           </div>
 
           {/* 5. Choose a personality for the agent */}
-          <div className="card mb-3">
+          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
               onClick={() => toggleAccordion("personality")}
             >
-              <h6 className="mb-0 d-flex justify-content-between align-items-center">
+              <h6 className="mb-0 d-flex justify-content-between align-items-center font-semibold">
                 <span>5. Choose a personality for the agent</span>
-                <span className="text-success">✓</span>
+                <span className="text-emerald-600 font-bold">✓</span>
               </h6>
             </div>
             <div
@@ -245,13 +245,13 @@ export function SettingsTab() {
           </div>
 
           {/* 6. Add Products (Up to 5) */}
-          <div className="card mb-3">
+          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
               onClick={() => toggleAccordion("products")}
             >
-              <h6 className="mb-0 d-flex justify-content-between align-items-center">
+              <h6 className="mb-0 d-flex justify-content-between align-items-center font-semibold">
                 <span>6. Add Products (Up to 5)</span>
               </h6>
             </div>
@@ -275,13 +275,13 @@ export function SettingsTab() {
           </div>
 
           {/* 7. Add Calendar Schedule Link */}
-          <div className="card mb-3">
+          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
               onClick={() => toggleAccordion("calendar")}
             >
-              <h6 className="mb-0 d-flex justify-content-between align-items-center">
+              <h6 className="mb-0 d-flex justify-content-between align-items-center font-semibold">
                 <span>7. Add Calendar Schedule Link</span>
               </h6>
             </div>
@@ -303,13 +303,13 @@ export function SettingsTab() {
           </div>
 
           {/* 8. Promotion offers or discount codes */}
-          <div className="card mb-3">
+          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
               onClick={() => toggleAccordion("promotions")}
             >
-              <h6 className="mb-0 d-flex justify-content-between align-items-center">
+              <h6 className="mb-0 d-flex justify-content-between align-items-center font-semibold">
                 <span>8. Promotion offers or discount codes (Optional)</span>
               </h6>
             </div>
@@ -331,13 +331,13 @@ export function SettingsTab() {
           </div>
 
           {/* 9. Add Domain */}
-          <div className="card mb-3">
+          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
               onClick={() => toggleAccordion("domain")}
             >
-              <h6 className="mb-0 d-flex justify-content-between align-items-center">
+              <h6 className="mb-0 d-flex justify-content-between align-items-center font-semibold">
                 <span>9. Add Domain</span>
               </h6>
             </div>
@@ -371,13 +371,13 @@ export function SettingsTab() {
           </div>
 
           {/* 10. Add FAQs */}
-          <div className="card mb-3">
+          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
               onClick={() => toggleAccordion("faqs")}
             >
-              <h6 className="mb-0 d-flex justify-content-between align-items-center">
+              <h6 className="mb-0 d-flex justify-content-between align-items-center font-semibold">
                 <span>10. Add FAQs</span>
               </h6>
             </div>
@@ -419,13 +419,13 @@ export function SettingsTab() {
           </div>
 
           {/* 11. Policy Pages */}
-          <div className="card mb-3">
+          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
-              style={{ cursor: "pointer", padding: "0.75rem 1.25rem" }}
+              style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
               onClick={() => toggleAccordion("policies")}
             >
-              <h6 className="mb-0 d-flex justify-content-between align-items-center">
+              <h6 className="mb-0 d-flex justify-content-between align-items-center font-semibold">
                 <span>11. Policy Pages</span>
               </h6>
             </div>
