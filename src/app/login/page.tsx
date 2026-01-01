@@ -255,7 +255,7 @@ export default function LoginPage() {
                     >
                         <Link
                             href="/register"
-                            className="px-6 py-2 text-sm font-medium text-indigo-600 border border-indigo-600 rounded-full hover:bg-indigo-50 hover:shadow-sm no-underline hover:no-underline transition-all absolute top-[20px] right-[20px]"
+                            className="px-6 py-2 text-sm font-medium text-indigo-600 border border-indigo-600 !rounded-xl hover:bg-indigo-50 hover:shadow-sm !no-underline hover:!no-underline absolute top-[20px] right-[20px]"
                         >
                             GET STARTED FREE
                         </Link>
@@ -270,7 +270,7 @@ export default function LoginPage() {
                             <motion.div 
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="p-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl shadow-sm"
+                                className="p-4 text-sm text-red-600 bg-red-50 border border-red-200 !rounded-xl shadow-sm"
                             >
                                 {error}
                             </motion.div>
@@ -280,7 +280,7 @@ export default function LoginPage() {
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
                             onClick={handleGoogleLogin}
-                            className="w-full mb-2 flex items-center justify-center rounded-xl gap-3 py-3 px-4 bg-white border border-zinc-200 text-zinc-900 shadow-sm hover:shadow-md hover:border-zinc-300 transition-all font-medium"
+                            className="w-full mb-2 flex items-center justify-center !rounded-xl gap-3 py-3 px-4 bg-white border border-zinc-200 text-zinc-900 shadow-sm hover:shadow-md hover:border-zinc-300 transition-all font-medium"
                             disabled={loading}
                         >
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -308,7 +308,7 @@ export default function LoginPage() {
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
                             onClick={handleFacebookLogin}
-                            className="w-full flex items-center justify-center rounded-xl gap-3 py-3 px-4 bg-white border border-zinc-200 text-zinc-900 shadow-sm hover:shadow-md hover:border-zinc-300 transition-all font-medium"
+                            className="w-full flex items-center justify-center !rounded-xl gap-3 py-3 px-4 bg-white border border-zinc-200 text-zinc-900 shadow-sm hover:shadow-md hover:border-zinc-300 transition-all font-medium"
                             disabled={loading}
                         >
                             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#1877F2">
@@ -343,7 +343,7 @@ export default function LoginPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="m.ovais@mindfind.com"
-                                    className="w-full px-4 py-2.5 border border-zinc-200 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
+                                    className="w-full px-4 py-2.5 border border-zinc-200 !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
                                 />
                             </div>
 
@@ -361,7 +361,7 @@ export default function LoginPage() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••••"
-                                    className="w-full px-4 py-2.5 border border-zinc-200 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
+                                    className="w-full px-4 py-2.5 border border-zinc-200 !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
                                 />
                             </div>
 
@@ -390,7 +390,7 @@ export default function LoginPage() {
                                 whileTap={{ scale: loading ? 1 : 0.99 }}
                                 type="submit"
                                 disabled={loading}
-                                className="w-full py-3 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow-md shadow-indigo-100 hover:shadow-lg hover:shadow-indigo-200 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full py-3 px-4 bg-indigo-600 text-white !rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-100 hover:shadow-lg hover:shadow-indigo-200 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {loading ? "LOGGING IN..." : "LOGIN"}
                             </motion.button>

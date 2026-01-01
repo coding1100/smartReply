@@ -45,12 +45,12 @@ export function ChatHeader({
                     <div className="relative">
                         <img
                             src={customerAvatar}
-                            className="h-11 w-11 rounded-full object-cover border-2 border-zinc-100 shadow-sm"
+                            className="h-11 w-11 !rounded-xl object-cover border-2 border-zinc-100 shadow-sm"
                             alt="avatar"
                         />
                         {/* Show online status only if NOT comment mode? Or keep it? keeping it for now */}
                         {isOnline && (
-                            <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-emerald-500 shadow-sm"></div>
+                            <div className="absolute bottom-0 right-0 h-3 w-3 !rounded-xl border-2 border-white bg-emerald-500 shadow-sm"></div>
                         )}
                     </div>
                     <div>
@@ -60,7 +60,7 @@ export function ChatHeader({
                 </div>
 
                 {!isCommentMode && (
-                    <div className="ml-4 flex items-center gap-2 rounded-full px-3 py-1.5">
+                    <div className="ml-4 flex items-center gap-2 !rounded-xl px-3 py-1.5">
                         <BootstrapSwitch
                             checked={autoReply}
                             onChange={onAutoReplyChange}

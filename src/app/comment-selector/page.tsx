@@ -115,14 +115,14 @@ export default function CommentSelectorPage() {
             <div className="btn-group">
               <button
                 onClick={() => showContent("posts")}
-                className={`btn btn-sm rounded-lg transition-all ${activeTab === "posts" ? "btn-primary shadow-md shadow-indigo-100" : "btn-outline-primary hover:bg-indigo-50"}`}
+                className={`btn btn-sm !rounded-xl transition-all ${activeTab === "posts" ? "btn-primary shadow-md shadow-indigo-100" : "btn-outline-primary hover:bg-indigo-50"}`}
                 id="tab-posts"
               >
                 Facebook Posts
               </button>
               <button
                 onClick={() => showContent("igposts")}
-                className={`btn btn-sm rounded-lg transition-all ${activeTab === "igposts" ? "btn-primary shadow-md shadow-indigo-100" : "btn-outline-primary hover:bg-indigo-50"}`}
+                className={`btn btn-sm !rounded-xl transition-all ${activeTab === "igposts" ? "btn-primary shadow-md shadow-indigo-100" : "btn-outline-primary hover:bg-indigo-50"}`}
                 id="tab-ig-posts"
               >
                 Instagram Posts
@@ -314,7 +314,7 @@ export default function CommentSelectorPage() {
                   <div className="flex shrink-0 items-center justify-between border-b border-zinc-100 bg-zinc-50/50 px-8 py-6">
                     <div className="flex-1">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+                        <div className="h-10 w-10 !rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-200">
                           <i className="bi bi-chat-dots-fill text-xl"></i>
                         </div>
                         <div>
@@ -330,14 +330,14 @@ export default function CommentSelectorPage() {
                       <a
                         href={postUrl}
                         target="_blank"
-                        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-indigo-600 bg-white border border-indigo-100 rounded-full shadow-sm hover:bg-indigo-50 hover:border-indigo-200 transition-all no-underline"
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-indigo-600 bg-white border border-indigo-100 !rounded-xl shadow-sm hover:bg-indigo-50 hover:border-indigo-200 transition-all !no-underline"
                       >
                         <i className="bi bi-box-arrow-up-right"></i>
                         View Original Post
                       </a>
                       <button
                         onClick={closeCommentModal}
-                        className="group flex h-10 w-10 items-center justify-center !rounded-lg !hover:rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 transition-all"
+                        className="group flex h-10 w-10 items-center justify-center !!rounded-xl !hover:!rounded-xl text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 transition-all"
                       >
                         <i className="bi bi-x-lg text-lg group-hover:rotate-90 transition-transform duration-300"></i>
                       </button>
@@ -349,7 +349,7 @@ export default function CommentSelectorPage() {
                     <div className="flex-1 overflow-y-auto border-r border-zinc-100 p-4 custom-scrollbar">
                       <div className="flex items-center justify-between mb-6">
                         <h5 className="text-xs font-bold uppercase tracking-wider text-zinc-400">Available Comments</h5>
-                        <div className="px-2 py-0.5 rounded-full bg-indigo-50 text-[11px] font-bold text-indigo-600 uppercase">Interactive List</div>
+                        <div className="px-2 py-0.5 !rounded-xl bg-indigo-50 text-[11px] font-bold text-indigo-600 uppercase">Interactive List</div>
                       </div>
 
                       <div id="comment-list" className="space-y-4">
@@ -358,8 +358,8 @@ export default function CommentSelectorPage() {
                           <div className="flex items-start justify-between">
                             <div className="flex gap-4">
                               <div className="relative">
-                                <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" alt="Wise man" className="h-12 w-12 rounded-full border-2 border-white shadow-sm object-cover" />
-                                <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-white flex items-center justify-center border border-zinc-100 shadow-sm">
+                                <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" alt="Wise man" className="h-12 w-12 !rounded-xl border-2 border-white shadow-sm object-cover" />
+                                <div className="absolute -bottom-1 -right-1 h-5 w-5 !rounded-xl bg-white flex items-center justify-center border border-zinc-100 shadow-sm">
                                   <i className="bi bi-facebook text-blue-600 text-[10px]"></i>
                                 </div>
                               </div>
@@ -367,13 +367,13 @@ export default function CommentSelectorPage() {
                                 <div className="flex items-center gap-2">
                                   <h6 className="text-[15px] font-bold text-zinc-900 m-0">Wise man</h6>
                                   {selectedComments.includes('122146508888890127_2078759359617457') && (
-                                    <span className="text-[10px] bg-indigo-600 text-white px-1.5 py-0.5 rounded-full">Pinned</span>
+                                    <span className="text-[10px] bg-indigo-600 text-white px-1.5 py-0.5 !rounded-xl">Pinned</span>
                                   )}
                                 </div>
                                 <span className="text-[11px] text-zinc-500 block mt-0.5">Wed, Dec 17, 2025 • 12:13 PM</span>
                               </div>
                             </div>
-                            <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all ${selectedComments.includes('122146508888890127_2078759359617457') ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-zinc-200 group-hover:border-indigo-300'}`}>
+                            <div className={`h-6 w-6 !rounded-xl border-2 flex items-center justify-center transition-all ${selectedComments.includes('122146508888890127_2078759359617457') ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-zinc-200 group-hover:border-indigo-300'}`}>
                               {selectedComments.includes('122146508888890127_2078759359617457') && <i className="bi bi-check-lg text-xs"></i>}
                             </div>
                           </div>
@@ -385,8 +385,8 @@ export default function CommentSelectorPage() {
                           <div className="flex items-start justify-between">
                             <div className="flex gap-4">
                               <div className="relative">
-                                <img src="https://platform-lookaside.fbsbx.com/platform/profilepic/?eai=Aa1GxIdmtnWAToazYI9jsad_QNO_NiAcL-T9bcT9-VUPvWQmh4B1blmSzbb18zib-IBYVlmnG_sJ&psid=24362880443305426&height=50&width=50&ext=1768817199&hash=AT-PD-isvY1-MvfCzuvhJx1B" alt="Awais Jutt" className="h-12 w-12 rounded-full border-2 border-white shadow-sm object-cover" />
-                                <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-white flex items-center justify-center border border-zinc-100 shadow-sm">
+                                <img src="https://platform-lookaside.fbsbx.com/platform/profilepic/?eai=Aa1GxIdmtnWAToazYI9jsad_QNO_NiAcL-T9bcT9-VUPvWQmh4B1blmSzbb18zib-IBYVlmnG_sJ&psid=24362880443305426&height=50&width=50&ext=1768817199&hash=AT-PD-isvY1-MvfCzuvhJx1B" alt="Awais Jutt" className="h-12 w-12 !rounded-xl border-2 border-white shadow-sm object-cover" />
+                                <div className="absolute -bottom-1 -right-1 h-5 w-5 !rounded-xl bg-white flex items-center justify-center border border-zinc-100 shadow-sm">
                                   <i className="bi bi-facebook text-blue-600 text-[10px]"></i>
                                 </div>
                               </div>
@@ -397,7 +397,7 @@ export default function CommentSelectorPage() {
                                 <span className="text-[11px] text-zinc-500 block mt-0.5">Tue, Dec 16, 2025 • 8:04 AM</span>
                               </div>
                             </div>
-                            <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all ${selectedComments.includes('122146508888890127_885430057309494') ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-zinc-200 group-hover:border-indigo-300'}`}>
+                            <div className={`h-6 w-6 !rounded-xl border-2 flex items-center justify-center transition-all ${selectedComments.includes('122146508888890127_885430057309494') ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-zinc-200 group-hover:border-indigo-300'}`}>
                               {selectedComments.includes('122146508888890127_885430057309494') && <i className="bi bi-check-lg text-xs"></i>}
                             </div>
                           </div>
@@ -405,8 +405,8 @@ export default function CommentSelectorPage() {
 
                           {/* Nested Replies */}
                           <div className="mt-6 pl-4 space-y-3 border-l-2 border-zinc-100">
-                            <div className="relative p-3 rounded-xl bg-zinc-50 border border-zinc-100 flex items-start gap-3">
-                              <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" alt="Wise man" className="h-8 w-8 rounded-full border border-white object-cover" />
+                            <div className="relative p-3 !rounded-xl bg-zinc-50 border border-zinc-100 flex items-start gap-3">
+                              <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" alt="Wise man" className="h-8 w-8 !rounded-xl border border-white object-cover" />
                               <div className="flex-1">
                                 <h6 className="text-[13px] font-bold text-zinc-800 m-0">Wise man</h6>
                                 <p className="text-[12px] text-zinc-600 mt-1 mb-0">Awais Jutt Thanks so much!</p>
@@ -421,7 +421,7 @@ export default function CommentSelectorPage() {
                     <div className="flex-1 overflow-y-auto bg-zinc-50/30 p-4 custom-scrollbar">
                       <div className="flex items-center justify-between mb-6">
                         <h5 className="text-xs font-bold uppercase tracking-wider text-zinc-400">AI Training Selection</h5>
-                        <div className="px-2 py-0.5 rounded-full bg-emerald-50 text-[11px] font-bold text-emerald-600 uppercase">Training Ready</div>
+                        <div className="px-2 py-0.5 !rounded-xl bg-emerald-50 text-[11px] font-bold text-emerald-600 uppercase">Training Ready</div>
                       </div>
 
                       <div className="space-y-6">
@@ -444,7 +444,7 @@ export default function CommentSelectorPage() {
                               >
                                 <div className="flex items-center justify-between mb-4">
                                   <div className="flex items-center gap-3">
-                                    <img src={avatar} className="h-10 w-10 rounded-full border border-zinc-50 object-cover" alt={name} />
+                                    <img src={avatar} className="h-10 w-10 !rounded-xl border border-zinc-50 object-cover" alt={name} />
                                     <div>
                                       <h6 className="text-sm font-bold text-zinc-900 m-0">{name}</h6>
                                       <span className="text-[11px] text-zinc-400">{time}</span>
@@ -452,24 +452,24 @@ export default function CommentSelectorPage() {
                                   </div>
                                   <button
                                     onClick={(e) => { e.stopPropagation(); handleCommentClick(id); }}
-                                    className="h-8 w-8 rounded-full bg-zinc-50 text-zinc-400 hover:bg-red-50 hover:text-red-500 transition-colors flex items-center justify-center"
+                                    className="h-8 w-8 !rounded-xl bg-zinc-50 text-zinc-400 hover:bg-red-50 hover:text-red-500 transition-colors flex items-center justify-center"
                                   >
                                     <i className="bi bi-trash text-[13px]"></i>
                                   </button>
                                 </div>
-                                <p className="text-[14px] text-zinc-800 bg-zinc-50/50 p-3 rounded-xl border border-dashed border-zinc-200 font-medium">{text}</p>
+                                <p className="text-[14px] text-zinc-800 bg-zinc-50/50 p-3 !rounded-xl border border-dashed border-zinc-200 font-medium">{text}</p>
 
                                 <div className="mt-3 pt-3 border-t border-zinc-100">
                                   <div className="flex items-center gap-4 mb-3">
                                     <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">Define AI Response:</span>
                                     <div className="flex gap-2">
-                                      <button onClick={() => saveActionReply(id, id, 'like')} className="flex items-center gap-2 px-3 py-1.5 !rounded-lg border border-zinc-100 bg-white text-zinc-600 hover:border-red-200 hover:bg-red-50 hover:text-red-500 transition-all text-xs font-semibold">
+                                      <button onClick={() => saveActionReply(id, id, 'like')} className="flex items-center gap-2 px-3 py-1.5 !!rounded-xl border border-zinc-100 bg-white text-zinc-600 hover:border-red-200 hover:bg-red-50 hover:text-red-500 transition-all text-xs font-semibold">
                                         <i className="bi bi-heart-fill"></i> Like
                                       </button>
-                                      <button onClick={() => saveActionReply(id, id, 'remove')} className="flex items-center gap-2 px-3 py-1.5 !rounded-lg border border-zinc-100 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-100 transition-all text-xs font-semibold">
+                                      <button onClick={() => saveActionReply(id, id, 'remove')} className="flex items-center gap-2 px-3 py-1.5 !!rounded-xl border border-zinc-100 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-100 transition-all text-xs font-semibold">
                                         <i className="bi bi-eye-slash"></i> Hide
                                       </button>
-                                      <button onClick={() => saveActionReply(id, id, 'stop')} className="flex items-center gap-2 px-3 py-1.5 !rounded-lg border border-zinc-100 bg-white text-zinc-600 hover:border-red-200 hover:bg-red-50 hover:text-red-500 transition-all text-xs font-semibold text-nowrap">
+                                      <button onClick={() => saveActionReply(id, id, 'stop')} className="flex items-center gap-2 px-3 py-1.5 !!rounded-xl border border-zinc-100 bg-white text-zinc-600 hover:border-red-200 hover:bg-red-50 hover:text-red-500 transition-all text-xs font-semibold text-nowrap">
                                         <i className="bi bi-slash-circle"></i> Don't Reply
                                       </button>
                                     </div>
@@ -481,12 +481,12 @@ export default function CommentSelectorPage() {
                                       <div className="flex gap-2">
                                         <input
                                           id={`custom-reply-input-${id}`}
-                                          className="flex-1 bg-white border border-zinc-200 rounded-xl px-4 py-2 text-sm focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 outline-none transition-all"
+                                          className="flex-1 bg-white border border-zinc-200 !rounded-xl px-4 py-2 text-sm focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 outline-none transition-all"
                                           placeholder="How should the AI respond?"
                                         />
                                         <button
                                           onClick={() => saveCustomReply(id, id, (document.getElementById(`custom-reply-input-${id}`) as HTMLInputElement).value)}
-                                          className="px-4 py-2 bg-indigo-600 text-white !rounded-lg text-xs font-bold hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100"
+                                          className="px-4 py-2 bg-indigo-600 text-white !!rounded-xl text-xs font-bold hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100"
                                         >
                                           Save
                                         </button>
@@ -498,12 +498,12 @@ export default function CommentSelectorPage() {
                                       <div className="flex gap-2">
                                         <input
                                           id={`custom-private-reply-input-${id}`}
-                                          className="flex-1 bg-white border border-zinc-200 rounded-xl px-4 py-2 text-sm focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 outline-none transition-all"
+                                          className="flex-1 bg-white border border-zinc-200 !rounded-xl px-4 py-2 text-sm focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 outline-none transition-all"
                                           placeholder="Direct message response..."
                                         />
                                         <button
                                           onClick={() => savePrivateReply(id, id, (document.getElementById(`custom-private-reply-input-${id}`) as HTMLInputElement).value)}
-                                          className="px-4 py-2 bg-zinc-800 text-white !rounded-lg text-xs font-bold hover:bg-black transition-all shadow-md shadow-zinc-200"
+                                          className="px-4 py-2 bg-zinc-800 text-white !!rounded-xl text-xs font-bold hover:bg-black transition-all shadow-md shadow-zinc-200"
                                         >
                                           Save
                                         </button>
@@ -518,7 +518,7 @@ export default function CommentSelectorPage() {
 
                         {selectedComments.length === 0 && (
                           <div className="flex flex-col items-center justify-center py-20 text-center">
-                            <div className="h-16 w-16 rounded-full bg-zinc-50 flex items-center justify-center text-zinc-300 mb-4 border-2 border-dashed border-zinc-200">
+                            <div className="h-16 w-16 !rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-300 mb-4 border-2 border-dashed border-zinc-200">
                               <i className="bi bi-plus-lg text-2xl"></i>
                             </div>
                             <h6 className="text-zinc-600 font-bold m-0">No context selected</h6>
@@ -532,20 +532,20 @@ export default function CommentSelectorPage() {
                   {/* Enhanced Modal Footer */}
                   <div className="shrink-0 px-8 py-3 bg-white border-t border-zinc-100 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-indigo-600 animate-pulse"></span>
+                      <span className="h-2 w-2 !rounded-xl bg-indigo-600 animate-pulse"></span>
                       <span className="text-[12px] font-bold text-indigo-600 uppercase tracking-wider">Sync Active</span>
                     </div>
 
                     <div className="flex items-center gap-3">
                       <button
                         onClick={closeCommentModal}
-                        className="px-8 py-2.5 rounded-lg text-sm font-bold text-zinc-500 hover:bg-zinc-50 hover:rounded-lg transition-all"
+                        className="px-8 py-2.5 !rounded-xl text-sm font-bold text-zinc-500 hover:bg-zinc-50 hover:!rounded-xl transition-all"
                       >
                         Discard Changes
                       </button>
                       <button
                         onClick={saveComments}
-                        className="px-10 py-2.5 bg-indigo-600 text-white !rounded-lg text-sm font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:shadow-indigo-300 transform active:scale-95 transition-all"
+                        className="px-10 py-2.5 bg-indigo-600 text-white !!rounded-xl text-sm font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:shadow-indigo-300 transform active:scale-95 transition-all"
                       >
                         Publish Training
                       </button>

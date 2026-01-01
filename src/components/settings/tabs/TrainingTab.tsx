@@ -58,7 +58,7 @@ export function TrainingTab() {
 
                   <div className="form-group mb-3">
                     <a
-                      className="btn btn-primary"
+                      className="btn btn-primary !no-underline"
                       href="/comment-selector"
                       rel="noopener noreferrer"
                     >
@@ -101,7 +101,7 @@ export function TrainingTab() {
 
                   <div className="form-group mb-3">
                     <a
-                      className="btn btn-primary"
+                      className="btn btn-primary !no-underline"
                       href="/message-selector"
                       rel="noopener noreferrer"
                     >

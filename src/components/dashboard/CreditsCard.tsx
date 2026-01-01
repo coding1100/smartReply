@@ -4,7 +4,7 @@ import { Button, Card, CardBody } from "@heroui/react";
 
 export function CreditsCard() {
   return (
-    <Card shadow="sm" className="col-span-12 rounded-xl bg-white shadow-sm border border-zinc-100 hover:shadow-md transition-all lg:col-span-4">
+    <Card shadow="sm" className="col-span-12 !rounded-xl bg-white shadow-sm border border-zinc-100 hover:shadow-md transition-all lg:col-span-4">
       <CardBody className="gap-5 p-6">
         <div className="text-[11px] font-bold tracking-wider text-zinc-500 uppercase">
           CREDITS
@@ -12,9 +12,9 @@ export function CreditsCard() {
 
         <div className="flex items-center justify-center">
           <div className="relative h-40 w-40">
-            <div className="absolute inset-0 rounded-full border-[10px] border-zinc-100" />
+            <div className="absolute inset-0 !rounded-xl border-[10px] border-zinc-100" />
             <div
-              className="absolute inset-0 rounded-full border-[10px] border-indigo-500"
+              className="absolute inset-0 !rounded-xl border-[10px] border-indigo-500"
               style={{ clipPath: "inset(0 0 85% 0)" }}
             />
             <div className="absolute inset-0 grid place-items-center text-center">
@@ -40,7 +40,7 @@ export function CreditsCard() {
           </div>
         </div>
 
-        <Button color="primary" className="w-full rounded-lg shadow-md shadow-indigo-100 hover:shadow-lg hover:shadow-indigo-200">
+        <Button color="primary" className="w-full !rounded-xl shadow-md shadow-indigo-100 hover:shadow-lg hover:shadow-indigo-200">
           Upgrade plan
         </Button>
       </CardBody>

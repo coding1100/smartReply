@@ -54,7 +54,7 @@ export function SettingsTab() {
       <form onSubmit={handleSubmit}>
         <div id="custom-accordion">
           {/* 1. Connect Facebook page or Twitter Account */}
-          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
+          <div className="card mb-3 !rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
               style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
@@ -86,7 +86,7 @@ export function SettingsTab() {
           </div>
 
           {/* 2. What's your Goal? */}
-          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
+          <div className="card mb-3 !rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
               style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
@@ -119,7 +119,7 @@ export function SettingsTab() {
           </div>
 
           {/* 3. Business Information */}
-          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
+          <div className="card mb-3 !rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
               style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
@@ -181,7 +181,7 @@ export function SettingsTab() {
           </div>
 
           {/* 4. Support Email */}
-          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
+          <div className="card mb-3 !rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
               style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
@@ -210,7 +210,7 @@ export function SettingsTab() {
           </div>
 
           {/* 5. Choose a personality for the agent */}
-          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
+          <div className="card mb-3 !rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
               style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
@@ -245,7 +245,7 @@ export function SettingsTab() {
           </div>
 
           {/* 6. Add Products (Up to 5) */}
-          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
+          <div className="card mb-3 !rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
               style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
@@ -275,7 +275,7 @@ export function SettingsTab() {
           </div>
 
           {/* 7. Add Calendar Schedule Link */}
-          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
+          <div className="card mb-3 !rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
               style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
@@ -303,7 +303,7 @@ export function SettingsTab() {
           </div>
 
           {/* 8. Promotion offers or discount codes */}
-          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
+          <div className="card mb-3 !rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
               style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
@@ -331,7 +331,7 @@ export function SettingsTab() {
           </div>
 
           {/* 9. Add Domain */}
-          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
+          <div className="card mb-3 !rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
               style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
@@ -371,7 +371,7 @@ export function SettingsTab() {
           </div>
 
           {/* 10. Add FAQs */}
-          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
+          <div className="card mb-3 !rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
               style={{ cursor: "pointer", padding: "1rem 1.5rem" }}
@@ -419,7 +419,7 @@ export function SettingsTab() {
           </div>
 
           {/* 11. Policy Pages */}
-          <div className="card mb-3 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
+          <div className="card mb-3 !rounded-xl border border-zinc-100 shadow-sm hover:shadow-md transition-all">
             <div
               className="mb-3-header"
               style={{ cursor: "pointer", padding: "1rem 1.5rem" }}

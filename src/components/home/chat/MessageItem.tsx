@@ -32,7 +32,7 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
                     <div className="flex-shrink-0">
                         <img
                             src={message.avatarUrl}
-                            className="h-10 w-10 rounded-full border border-zinc-200 object-cover"
+                            className="h-10 w-10 !rounded-xl border border-zinc-200 object-cover"
                             alt="avatar"
                         />
                     </div>
@@ -57,7 +57,7 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
                                     <i className="fas fa-ellipsis-h"></i>
                                 </button>
                                 {showMenu && (
-                                    <div className="absolute left-0 top-full mt-2 w-40 bg-white rounded-xl shadow-xl border border-zinc-100 z-10 py-1 overflow-hidden">
+                                    <div className="absolute left-0 top-full mt-2 w-40 bg-white !rounded-xl shadow-xl border border-zinc-100 z-10 py-1 overflow-hidden">
                                         <button className="block w-full text-left px-4 py-2 text-xs text-zinc-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-medium">Open Training</button>
                                         <button className="block w-full text-left px-4 py-2 text-xs text-zinc-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-medium">Reprocess</button>
                                         <button className="block w-full text-left px-4 py-2 text-xs text-zinc-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-medium">Go to Profile</button>
@@ -91,7 +91,7 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
                 <div className="flex-shrink-0">
                     <img
                         src={message.avatarUrl}
-                        className="h-8 w-8 rounded-full border border-zinc-200 object-cover"
+                        className="h-8 w-8 !rounded-xl border border-zinc-200 object-cover"
                         alt="avatar"
                     />
                 </div>

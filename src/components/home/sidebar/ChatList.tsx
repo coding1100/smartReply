@@ -39,7 +39,7 @@ export function ChatList({ chats, activeId, onSelectChat }: ChatListProps) {
                                         <img
                                             src={chat.platformIcon}
                                             alt="Platform"
-                                            className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border border-white"
+                                            className="absolute -bottom-1 -right-1 h-4 w-4 !rounded-xl border border-white"
                                         />
                                         {/* Using avatarUrl if available, or placeholder/icon if that's what was intended. 
                          Snippet used platformIcon as main image in some places, but let's assume standard avatar. 
@@ -53,7 +53,7 @@ export function ChatList({ chats, activeId, onSelectChat }: ChatListProps) {
                                         <img
                                             src={chat.avatarUrl}
                                             alt={chat.name}
-                                            className="h-10 w-10 rounded-full object-cover border border-zinc-200 shadow-sm"
+                                            className="h-10 w-10 !rounded-xl object-cover border border-zinc-200 shadow-sm"
                                         />
                                     </div>
 

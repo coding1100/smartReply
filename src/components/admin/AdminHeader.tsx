@@ -78,17 +78,17 @@ export function AdminHeader() {
           {/* Avatar with Dropdown */}
           <button
             onClick={() => setShowDropdown(!showDropdown)}
-            className="flex items-center focus:outline-none rounded-full hover:ring-2 hover:ring-indigo-100 transition-all"
+            className="flex items-center focus:outline-none !rounded-full hover:ring-2 hover:ring-indigo-100 transition-all"
             aria-label="User menu"
           >
             {userImage ? (
               <img
                 src={userImage}
                 alt={userName || "User"}
-                className="h-9 w-9 rounded-full object-cover border-2 border-zinc-200 hover:border-indigo-300 transition-all cursor-pointer shadow-sm"
+                className="h-9 w-9 !rounded-full object-cover border-2 border-zinc-200 hover:border-indigo-300 transition-all cursor-pointer shadow-sm"
               />
             ) : (
-              <div className="h-9 w-9 rounded-full bg-gradient-to-br from-indigo-100 to-indigo-200 flex items-center justify-center text-indigo-700 text-xs font-semibold border-2 border-zinc-200 hover:border-indigo-300 transition-all cursor-pointer shadow-sm">
+              <div className="h-9 w-9 !rounded-full bg-gradient-to-br from-indigo-100 to-indigo-200 flex items-center justify-center text-indigo-700 text-xs font-semibold border-2 border-zinc-200 hover:border-indigo-300 transition-all cursor-pointer shadow-sm">
                 {userName ? userName.charAt(0).toUpperCase() : "U"}
               </div>
             )}
@@ -96,7 +96,7 @@ export function AdminHeader() {
 
           {/* Dropdown Menu */}
           {showDropdown && (
-            <div className="absolute right-0 top-full mt-2 w-56 rounded-xl bg-white shadow-xl border border-zinc-100 focus:outline-none z-50 overflow-hidden">
+            <div className="absolute right-0 top-full mt-2 w-56 !rounded-xl bg-white shadow-xl border border-zinc-100 focus:outline-none z-50 overflow-hidden">
               <div className="py-1">
                 {userName && (
                   <div className="px-4 py-3 text-sm text-zinc-700 border-b border-zinc-100 bg-zinc-50/50">

@@ -15,7 +15,7 @@ export function PanelCard({
   className?: string;
 }) {
   return (
-    <Card shadow="sm" className={["rounded-xl bg-white shadow-sm border border-zinc-100 hover:shadow-md transition-all", className].filter(Boolean).join(" ")}>
+    <Card shadow="sm" className={["!rounded-xl bg-white shadow-sm border border-zinc-100 hover:shadow-md transition-all", className].filter(Boolean).join(" ")}>
       <CardBody className="gap-4 p-6">
         <div className="flex items-center justify-between">
           <div className="text-xs font-bold tracking-wider text-zinc-600 uppercase">

@@ -53,7 +53,7 @@ function Section({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between px-3 py-2 text-left !font-semibold text-[13px] tracking-wider text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50 rounded-lg transition-all"
+        className="flex w-full items-center justify-between px-3 py-2 text-left !font-semibold text-[13px] tracking-wider text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50 !rounded-xl transition-all"
       >
         <span className="flex items-center gap-2">
           {icon}
@@ -72,7 +72,7 @@ function Section({
                 href={item.href}
                 aria-disabled={item.disabled}
                 className={cn(
-                  "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 !text-[14px] !font-semibold !no-underline mt-1",
+                  "group flex items-center gap-3 !rounded-xl px-3 py-2.5 text-sm transition-all duration-200 !text-[14px] !font-semibold !no-underline mt-1",
                   "hover:!bg-indigo-50 hover:!text-indigo-600",
                   item.disabled && "opacity-50 cursor-not-allowed",
                   active
@@ -124,12 +124,12 @@ export function SidebarNav() {
   const actions: NavItem[] = [
     {
       label: "All Actions", href: "/actions", icon: (
-        <div className="h-1.5 w-1.5 rounded-full bg-current" />
+        <div className="h-1.5 w-1.5 !rounded-xl bg-current" />
       ), disabled: true
     },
     {
       label: "User Logs", href: "/user-logs", icon: (
-        <div className="h-1.5 w-1.5 rounded-full bg-current" />
+        <div className="h-1.5 w-1.5 !rounded-xl bg-current" />
       ), disabled: true
     },
   ];
@@ -137,17 +137,17 @@ export function SidebarNav() {
   const customers: NavItem[] = [
     {
       label: "Customer Profiles", href: "/customers", icon: (
-        <div className="h-1.5 w-1.5 rounded-full bg-current" />
+        <div className="h-1.5 w-1.5 !rounded-xl bg-current" />
       ), disabled: true
     },
     {
       label: "Block List", href: "/block-list", icon: (
-        <div className="h-1.5 w-1.5 rounded-full bg-current" />
+        <div className="h-1.5 w-1.5 !rounded-xl bg-current" />
       ), disabled: true
     },
     {
       label: "Audiences", href: "/audiences", icon: (
-        <div className="h-1.5 w-1.5 rounded-full bg-current" />
+        <div className="h-1.5 w-1.5 !rounded-xl bg-current" />
       ), disabled: true
     },
   ];
@@ -155,14 +155,14 @@ export function SidebarNav() {
   const settings: NavItem[] = [
     {
       label: "Settings", href: "/settings", icon: (
-        <div className="h-1.5 w-1.5 rounded-full bg-current" />
+        <div className="h-1.5 w-1.5 !rounded-xl bg-current" />
       ), disabled: true
     },
     {
       label: "AI Agent Settings",
       href: "/ai-agent-settings",
       icon: (
-        <div className="h-1.5 w-1.5 rounded-full bg-current" />
+        <div className="h-1.5 w-1.5 !rounded-xl bg-current" />
       ),
       disabled: false,
     },
@@ -178,7 +178,7 @@ export function SidebarNav() {
             href={item.href}
             aria-disabled={item.disabled}
             className={cn(
-              "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 !font-semibold !text-[14px] !no-underline mr-[5px] ml-[5px] mt-3",
+              "group flex items-center gap-3 !rounded-xl px-3 py-2.5 text-sm transition-all duration-200 !font-semibold !text-[14px] !no-underline mr-[5px] ml-[5px] mt-3",
               "hover:!bg-indigo-50 hover:!text-indigo-600",
               item.disabled && "opacity-50 cursor-not-allowed",
               active

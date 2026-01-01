@@ -336,7 +336,7 @@ export default function RegisterPage() {
                             )}
                             <button
                                 onClick={() => setShowEmailForm(false)}
-                                className="text-indigo-600 hover:text-indigo-900 no-underline text-sm font-medium"
+                                className="text-indigo-600 hover:text-indigo-900 !no-underline text-sm font-medium"
                             >
                                 Back
                             </button>
@@ -344,14 +344,14 @@ export default function RegisterPage() {
                     ) : (
                         <Link
                             href="https://smartreply.io"
-                            className="text-indigo-600 hover:text-indigo-900 no-underline text-sm font-medium"
+                            className="text-indigo-600 hover:text-indigo-900 !no-underline text-sm font-medium"
                         >
                             Back
                         </Link>
                     )}
                     <Link
                         href="/login"
-                        className="px-6 py-2 text-sm font-medium text-indigo-600 border border-indigo-600 rounded-full hover:bg-indigo-50 hover:shadow-sm no-underline transition-all"
+                        className="px-6 py-2 text-sm font-medium text-indigo-600 border border-indigo-600 !rounded-xl hover:bg-indigo-50 hover:shadow-sm !no-underline transition-all"
                     >
                         SIGN IN
                     </Link>
@@ -395,7 +395,7 @@ export default function RegisterPage() {
                             <motion.div 
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="mb-4 p-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl shadow-sm"
+                                className="mb-4 p-4 text-sm text-red-600 bg-red-50 border border-red-200 !rounded-xl shadow-sm"
                             >
                                 {error}
                             </motion.div>
@@ -408,7 +408,7 @@ export default function RegisterPage() {
                                     whileHover={{ scale: 1.01, y: -1 }}
                                     whileTap={{ scale: 0.99 }}
                                     onClick={handleGoogleSignup}
-                                    className="flex items-center w-full py-4 px-6 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md hover:border-zinc-300 transition-all !no-underline !text-zinc-900 mb-4"
+                                    className="flex items-center w-full py-4 px-6 bg-white border border-zinc-200 !rounded-xl shadow-sm hover:shadow-md hover:border-zinc-300 transition-all !no-underline !text-zinc-900 mb-4"
                                 >
                                     <img
                                         src="https://app.smartreply.io/assets/images/google-icon.png"
@@ -428,7 +428,7 @@ export default function RegisterPage() {
                                     whileHover={{ scale: 1.01, y: -1 }}
                                     whileTap={{ scale: 0.99 }}
                                     onClick={handleFacebookSignup}
-                                    className="flex items-center w-full py-4 px-6 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md hover:border-zinc-300 transition-all !no-underline !text-zinc-900 mb-4"
+                                    className="flex items-center w-full py-4 px-6 bg-white border border-zinc-200 !rounded-xl shadow-sm hover:shadow-md hover:border-zinc-300 transition-all !no-underline !text-zinc-900 mb-4"
                                 >
                                     <svg className="w-8 h-8 mr-4" viewBox="0 0 24 24" fill="#1877F2">
                                         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -446,7 +446,7 @@ export default function RegisterPage() {
                                     whileHover={{ scale: 1.01, y: -1 }}
                                     whileTap={{ scale: 0.99 }}
                                     onClick={() => setShowEmailForm(true)}
-                                    className="flex items-center w-full py-4 px-6 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md hover:border-zinc-300 transition-all !no-underline !text-zinc-900"
+                                    className="flex items-center w-full py-4 px-6 bg-white border border-zinc-200 !rounded-xl shadow-sm hover:shadow-md hover:border-zinc-300 transition-all !no-underline !text-zinc-900"
                                 >
                                     <img
                                         src="https://app.smartreply.io/assets/images/email-icon.svg"
@@ -473,7 +473,7 @@ export default function RegisterPage() {
                                         value={formData.email}
                                         onChange={handleInputChange}
                                         placeholder="m.ovais@mindfind.com"
-                                        className={`w-full px-4 py-2.5 border rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${
+                                        className={`w-full px-4 py-2.5 border !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${
                                             validationErrors.email ? "border-red-300" : "border-zinc-200"
                                         }`}
                                     />
@@ -495,7 +495,7 @@ export default function RegisterPage() {
                                             value={formData.first_name}
                                             onChange={handleInputChange}
                                             placeholder="John"
-                                            className={`w-full px-4 py-2.5 border rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${
+                                            className={`w-full px-4 py-2.5 border !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${
                                                 validationErrors.first_name ? "border-red-300" : "border-zinc-200"
                                             }`}
                                         />
@@ -513,7 +513,7 @@ export default function RegisterPage() {
                                             value={formData.last_name}
                                             onChange={handleInputChange}
                                             placeholder="Doe"
-                                            className="w-full px-4 py-2.5 border border-zinc-200 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
+                                            className="w-full px-4 py-2.5 border border-zinc-200 !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
                                         />
                                     </div>
                                 </div>
@@ -527,7 +527,7 @@ export default function RegisterPage() {
                                         value={formData.domain}
                                         onChange={handleInputChange}
                                         placeholder="example.com"
-                                        className="w-full px-4 py-2.5 border border-zinc-200 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
+                                        className="w-full px-4 py-2.5 border border-zinc-200 !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
                                     />
                                 </div>
 
@@ -540,7 +540,7 @@ export default function RegisterPage() {
                                         value={formData.phone}
                                         onChange={handleInputChange}
                                         placeholder="+1 234 567 8900"
-                                        className="w-full px-4 py-2.5 border border-zinc-200 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
+                                        className="w-full px-4 py-2.5 border border-zinc-200 !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
                                     />
                                 </div>
 
@@ -553,7 +553,7 @@ export default function RegisterPage() {
                                         value={formData.company_name}
                                         onChange={handleInputChange}
                                         placeholder="Acme Inc."
-                                        className="w-full px-4 py-2.5 border border-zinc-200 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
+                                        className="w-full px-4 py-2.5 border border-zinc-200 !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
                                     />
                                 </div>
 
@@ -569,7 +569,7 @@ export default function RegisterPage() {
                                         value={formData.password}
                                         onChange={handleInputChange}
                                         placeholder="••••••••••"
-                                        className={`w-full px-4 py-2.5 border rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${
+                                        className={`w-full px-4 py-2.5 border !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${
                                             validationErrors.password ? "border-red-300" : "border-zinc-200"
                                         }`}
                                     />
@@ -590,7 +590,7 @@ export default function RegisterPage() {
                                         value={formData.confirm_password}
                                         onChange={handleInputChange}
                                         placeholder="••••••••••"
-                                        className={`w-full px-4 py-2.5 border rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${
+                                        className={`w-full px-4 py-2.5 border !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${
                                             validationErrors.confirm_password ? "border-red-300" : "border-zinc-200"
                                         }`}
                                     />
@@ -604,7 +604,7 @@ export default function RegisterPage() {
                                     whileTap={{ scale: loading ? 1 : 0.99 }}
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full py-3 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow-md shadow-indigo-100 hover:shadow-lg hover:shadow-indigo-200 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                                    className="w-full py-3 px-4 bg-indigo-600 text-white !rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-100 hover:shadow-lg hover:shadow-indigo-200 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                                 >
                                     {loading ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
                                 </motion.button>

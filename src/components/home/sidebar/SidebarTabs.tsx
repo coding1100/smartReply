@@ -72,7 +72,7 @@ export function SidebarTabs({ activeTab, onTabChange }: SidebarTabsProps) {
     ];
 
     return (
-        <div className="flex space-x-1 rounded-lg bg-zinc-100 p-1">
+        <div className="flex space-x-1 !rounded-xl bg-zinc-100 p-1">
             {tabs.map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
@@ -80,7 +80,7 @@ export function SidebarTabs({ activeTab, onTabChange }: SidebarTabsProps) {
                         key={tab.id}
                         type="button"
                         onClick={() => onTabChange(tab.id)}
-                        className={`flex flex-1 items-center justify-center gap-2 !rounded-lg py-1.5 text-sm font-medium transition-all ${isActive
+                        className={`flex flex-1 items-center justify-center gap-2 !!rounded-xl py-1.5 text-sm font-medium transition-all ${isActive
                             ? "bg-white text-indigo-600 shadow-sm"
                             : "text-zinc-500 hover:text-zinc-700"
                             }`}

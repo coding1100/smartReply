@@ -9,7 +9,7 @@ export function AdSpendCard() {
         Ad Spend refers to the total amount spent on advertising campaigns over a
         specific period.
       </div>
-      <div className="mt-2 h-[220px] w-full rounded-xl bg-zinc-50 border border-zinc-100">
+      <div className="mt-2 h-[220px] w-full !rounded-xl bg-zinc-50 border border-zinc-100">
         <div className="flex h-full items-center justify-center text-sm text-zinc-400 font-medium">
           No Data
         </div>

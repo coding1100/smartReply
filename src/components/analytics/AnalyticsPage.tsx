@@ -51,7 +51,7 @@ type MetricTileProps = {
 
 function MetricTile({ title, delta, value, nodata, spark = "flat", icon }: MetricTileProps) {
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white px-3 py-3 shadow-sm">
+    <div className="!rounded-xl border border-zinc-200 bg-white px-3 py-3 shadow-sm">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
@@ -85,7 +85,7 @@ function MetricTile({ title, delta, value, nodata, spark = "flat", icon }: Metri
 
 function IconFb() {
   return (
-    <div className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-[11px] font-bold text-white">
+    <div className="inline-flex h-5 w-5 items-center justify-center !rounded-xl bg-indigo-600 text-[11px] font-bold text-white">
       f
     </div>
   );
@@ -93,7 +93,7 @@ function IconFb() {
 
 function IconIg() {
   return (
-    <div className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-fuchsia-600 text-[11px] font-bold text-white">
+    <div className="inline-flex h-5 w-5 items-center justify-center !rounded-xl bg-fuchsia-600 text-[11px] font-bold text-white">
       ig
     </div>
   );
@@ -101,7 +101,7 @@ function IconIg() {
 
 function IconTt() {
   return (
-    <div className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-black text-[11px] font-bold text-white">
+    <div className="inline-flex h-5 w-5 items-center justify-center !rounded-xl bg-black text-[11px] font-bold text-white">
       t
     </div>
   );
@@ -278,7 +278,7 @@ export function AnalyticsPage() {
       </div>
 
       {/* Source Analysis panel (large, bottom) */}
-      <div className="mt-6 rounded-xl border border-zinc-200 bg-white shadow-sm">
+      <div className="mt-6 !rounded-xl border border-zinc-200 bg-white shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-zinc-100 px-3 py-3">
           <div className="text-[11px] font-semibold uppercase tracking-wide text-zinc-700">
             Source Analysis
