@@ -45,7 +45,7 @@ export function ChatHeader({
                     <div className="relative">
                         <img
                             src={customerAvatar}
-                            className="h-11 w-11 !rounded-xl object-cover border-2 border-zinc-100 shadow-sm"
+                            className="h-11 w-11 !rounded-full object-cover border-2 border-zinc-100 shadow-sm"
                             alt="avatar"
                         />
                         {/* Show online status only if NOT comment mode? Or keep it? keeping it for now */}

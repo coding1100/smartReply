@@ -80,7 +80,7 @@ export function SidebarTabs({ activeTab, onTabChange }: SidebarTabsProps) {
                         key={tab.id}
                         type="button"
                         onClick={() => onTabChange(tab.id)}
-                        className={`flex flex-1 items-center justify-center gap-2 !!rounded-xl py-1.5 text-sm font-medium transition-all ${isActive
+                        className={`flex flex-1 items-center justify-center gap-2 !rounded-xl py-1.5 text-sm font-medium transition-all ${isActive
                             ? "bg-white text-indigo-600 shadow-sm"
                             : "text-zinc-500 hover:text-zinc-700"
                             }`}

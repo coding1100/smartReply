@@ -20,7 +20,7 @@ export function CustomerProfile({ customer }: CustomerProfileProps) {
                 <img
                     src={customer.avatarUrl}
                     alt={customer.name}
-                    className="h-12 w-12 !rounded-xl border border-zinc-200 object-cover"
+                    className="h-12 w-12 !rounded-full border border-zinc-200 object-cover"
                 />
                 <div className="min-w-0 flex-1">
                     <h3 className="!text-sm !font-semibold text-zinc-900">{customer.name}</h3>

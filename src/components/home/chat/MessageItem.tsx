@@ -91,7 +91,7 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
                 <div className="flex-shrink-0">
                     <img
                         src={message.avatarUrl}
-                        className="h-8 w-8 !rounded-xl border border-zinc-200 object-cover"
+                        className="h-8 w-8 !rounded-full border border-zinc-200 object-cover"
                         alt="avatar"
                     />
                 </div>
