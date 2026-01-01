@@ -1,5 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import FacebookProvider from "next-auth/providers/facebook";
 import { NextRequest, NextResponse } from "next/server";
 
 // Always use the live API URL
@@ -28,16 +29,21 @@ const baseUrl = getBaseUrl();
 // Construct the redirect URI using NextAuth's direct callback path
 // For local: http://localhost:3000/api/auth/callback/google
 // For production: https://sme.namatechnologlies.com/api/auth/callback/google
-const redirectUri = `${baseUrl}/api/auth/callback/google`;
+const googleRedirectUri = `${baseUrl}/api/auth/callback/google`;
+const facebookRedirectUri = `${baseUrl}/api/auth/callback/facebook`;
 
-export const authOptions: NextAuthOptions = {
-  providers: [
+// Build providers array conditionally based on available credentials
+const providers = [];
+
+// Add Google provider if credentials are available
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
-          redirect_uri: redirectUri,
+          redirect_uri: googleRedirectUri,
           prompt: "consent",
           access_type: "offline",
           response_type: "code",
@@ -45,8 +51,36 @@ export const authOptions: NextAuthOptions = {
       },
       // Ensure proper scopes
       checks: ["pkce", "state"],
-    }),
-  ],
+    })
+  );
+} else {
+  console.warn("Warning: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET is not set. Google login will not be available.");
+}
+
+// Add Facebook provider if credentials are available
+if (process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET) {
+  providers.push(
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      authorization: {
+        params: {
+          redirect_uri: facebookRedirectUri,
+        },
+      },
+    })
+  );
+} else {
+  console.warn("Warning: FACEBOOK_CLIENT_ID or FACEBOOK_CLIENT_SECRET is not set. Facebook login will not be available.");
+}
+
+// Ensure at least one provider is configured
+if (providers.length === 0) {
+  console.error("Error: No OAuth providers configured. Please set at least GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET or FACEBOOK_CLIENT_ID/FACEBOOK_CLIENT_SECRET in your environment variables.");
+}
+
+export const authOptions: NextAuthOptions = {
+  providers,
   session: {
     strategy: "jwt",
   },
@@ -85,6 +119,40 @@ export const authOptions: NextAuthOptions = {
           return true;
         }
       }
+      
+      if (account?.provider === "facebook") {
+        try {
+          // Send user data to backend API for registration/login
+          const response = await fetch(`${API_URL}/auth/facebook/callback`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              access_token: account.access_token,
+              email: user.email,
+              name: user.name,
+              image: user.image,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Backend authentication failed:", response.status, errorText);
+            // Don't fail the OAuth flow if backend fails - allow user to sign in
+            // The backend token will be fetched in the jwt callback
+            return true;
+          }
+
+          return true;
+        } catch (error) {
+          console.error("Error during sign in:", error);
+          // Don't fail the OAuth flow if backend is unreachable
+          // Allow the user to sign in, backend token will be handled in jwt callback
+          return true;
+        }
+      }
+      
       return true;
     },
     async jwt({ token, user, account }) {
@@ -96,30 +164,49 @@ export const authOptions: NextAuthOptions = {
         token.name = user.name || "";
         token.image = user.image || "";
         
-        // Store Google account info
+        // Store provider account info
         token.provider = account.provider;
         token.providerAccountId = account.providerAccountId;
         
-        // Store Google OAuth access_token
-        if (account.access_token) {
+        // Store provider-specific OAuth access_token
+        if (account.provider === "google" && account.access_token) {
           token.googleAccessToken = account.access_token;
+        }
+        if (account.provider === "facebook" && account.access_token) {
+          token.facebookAccessToken = account.access_token;
         }
 
         // Try to get backend token from the live API
         try {
-          console.log("Calling live API:", `${API_URL}/auth/google/callback`);
-          const response = await fetch(`${API_URL}/auth/google/callback`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
+          let apiEndpoint = "";
+          let requestBody: any = {};
+          
+          if (account.provider === "google") {
+            apiEndpoint = `${API_URL}/auth/google/callback`;
+            requestBody = {
               access_token: account.access_token,
               id_token: account.id_token,
               email: user.email,
               name: user.name,
               image: user.image,
-            }),
+            };
+          } else if (account.provider === "facebook") {
+            apiEndpoint = `${API_URL}/auth/facebook/callback`;
+            requestBody = {
+              access_token: account.access_token,
+              email: user.email,
+              name: user.name,
+              image: user.image,
+            };
+          }
+          
+          console.log("Calling live API:", apiEndpoint);
+          const response = await fetch(apiEndpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
           });
 
           if (response.ok) {
@@ -165,9 +252,12 @@ export const authOptions: NextAuthOptions = {
           session.backendUserId = token.backendUserId as string;
         }
         
-        // Store Google OAuth access_token in session
+        // Store provider-specific OAuth access_token in session
         if (token.googleAccessToken) {
           session.googleAccessToken = token.googleAccessToken as string;
+        }
+        if (token.facebookAccessToken) {
+          session.facebookAccessToken = token.facebookAccessToken as string;
         }
         
         // Log in development to verify token is being set

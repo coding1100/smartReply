@@ -35,8 +35,9 @@ export default function LoginPage() {
             
             const accessToken = localStorage.getItem("accessToken");
             const googleAccessToken = localStorage.getItem("googleAccessToken");
-            // User is authenticated if they have either token
-            const isAuthenticated = accessToken || googleAccessToken;
+            const facebookAccessToken = localStorage.getItem("facebookAccessToken");
+            // User is authenticated if they have any token
+            const isAuthenticated = accessToken || googleAccessToken || facebookAccessToken;
             
             if (isAuthenticated && !hasRedirected.current) {
                 hasRedirected.current = true;
@@ -81,13 +82,17 @@ export default function LoginPage() {
                 localStorage.setItem("backendUserId", session.backendUserId);
             }
             
-            // Store Google OAuth access_token if available
+            // Store provider-specific OAuth access_token if available
             if (session.googleAccessToken) {
                 localStorage.setItem("googleAccessToken", session.googleAccessToken);
             }
+            if (session.facebookAccessToken) {
+                localStorage.setItem("facebookAccessToken", session.facebookAccessToken);
+            }
             
             // Only redirect if we have accessToken and haven't redirected yet
-            if (session.accessToken && !hasRedirected.current) {
+            const hasToken = session.accessToken || session.googleAccessToken || session.facebookAccessToken;
+            if (hasToken && !hasRedirected.current) {
                 hasRedirected.current = true;
                 router.replace("/home");
             }
@@ -112,7 +117,7 @@ export default function LoginPage() {
                 case 'OAuthCreateAccount':
                 case 'EmailCreateAccount':
                 case 'Callback':
-                    setError('Google authentication failed. Please try again.');
+                    setError('OAuth authentication failed. Please try again.');
                     break;
                 case 'OAuthAccountNotLinked':
                     setError('An account with this email already exists. Please sign in with your original method.');
@@ -192,6 +197,26 @@ export default function LoginPage() {
         }
     };
 
+    const handleFacebookLogin = async () => {
+        setError("");
+        setLoading(true);
+        
+        try {
+            const result = await signIn("facebook", {
+                callbackUrl: "/home",
+                redirect: true,
+            });
+
+            if (result?.error) {
+                setError("Facebook authentication failed. Please try again.");
+                setLoading(false);
+            }
+        } catch (err) {
+            setError("Something went wrong. Please try again later.");
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="min-h-screen flex flex-col">
             {/* Top Bar */}
@@ -237,7 +262,7 @@ export default function LoginPage() {
 
                         <button
                             onClick={handleGoogleLogin}
-                            className="w-full flex items-center justify-center !rounded-lg gap-3 py-3 px-4 bg-white border border-zinc-300 text-zinc-900 rounded-lg hover:bg-zinc-50 transition-colors font-medium"
+                            className="w-full mb-2 flex items-center justify-center !rounded-lg gap-3 py-3 px-4 bg-white border border-zinc-300 text-zinc-900 rounded-lg hover:bg-zinc-50 transition-colors font-medium"
                             disabled={loading}
                         >
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -259,6 +284,17 @@ export default function LoginPage() {
                                 />
                             </svg>
                             Sign In With Google
+                        </button>
+
+                        <button
+                            onClick={handleFacebookLogin}
+                            className="w-full flex items-center justify-center !rounded-lg gap-3 py-3 px-4 bg-white border border-zinc-300 text-zinc-900 rounded-lg hover:bg-zinc-50 transition-colors font-medium"
+                            disabled={loading}
+                        >
+                            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#1877F2">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            Sign In With Facebook
                         </button>
 
                         {/* Divider */}

@@ -12,12 +12,13 @@ export default function Home() {
     if (hasRedirected.current) return;
     hasRedirected.current = true;
     
-    // Check for accessToken or googleAccessToken in localStorage
+    // Check for accessToken or provider tokens in localStorage
     const accessToken = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
     const googleAccessToken = typeof window !== "undefined" ? localStorage.getItem("googleAccessToken") : null;
+    const facebookAccessToken = typeof window !== "undefined" ? localStorage.getItem("facebookAccessToken") : null;
     
-    // User is authenticated if they have either token
-    const isAuthenticated = accessToken || googleAccessToken;
+    // User is authenticated if they have any token
+    const isAuthenticated = accessToken || googleAccessToken || facebookAccessToken;
     
     if (isAuthenticated) {
       // If token exists, redirect to home

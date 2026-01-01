@@ -51,6 +51,7 @@ export function AdminHeader() {
     localStorage.removeItem("userImage");
     localStorage.removeItem("backendUserId");
     localStorage.removeItem("googleAccessToken");
+    localStorage.removeItem("facebookAccessToken");
 
     // Sign out from NextAuth
     await signOut({ 

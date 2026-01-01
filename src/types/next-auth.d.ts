@@ -13,6 +13,7 @@ declare module "next-auth" {
         tokenType?: string;
         backendUserId?: string;
         googleAccessToken?: string;
+        facebookAccessToken?: string;
       }
 
   interface User {
@@ -32,6 +33,7 @@ declare module "next-auth/jwt" {
     provider?: string;
     providerAccountId?: string;
     googleAccessToken?: string; // Google OAuth access_token
+    facebookAccessToken?: string; // Facebook OAuth access_token
   }
 }
 

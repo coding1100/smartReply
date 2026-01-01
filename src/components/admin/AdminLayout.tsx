@@ -38,8 +38,9 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       
       const accessToken = localStorage.getItem("accessToken");
       const googleAccessToken = localStorage.getItem("googleAccessToken");
-      // User is authenticated if they have either token
-      const isAuthenticated = accessToken || googleAccessToken;
+      const facebookAccessToken = localStorage.getItem("facebookAccessToken");
+      // User is authenticated if they have any token
+      const isAuthenticated = accessToken || googleAccessToken || facebookAccessToken;
       
       const currentPathNow = window.location.pathname;
       
