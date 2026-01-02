@@ -11,7 +11,7 @@ export default function CommentSelectorPage() {
   const [activeTab, setActiveTab] = React.useState<TabKey>("posts");
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [selectedComments, setSelectedComments] = React.useState<string[]>([]);
-  const [selectedReplies, setSelectedReplies] = React.useState<string[]>(['694112bd1da09']);
+  const [selectedReplies, setSelectedReplies] = React.useState<string[]>([]);
 
   const showContent = (tab: TabKey) => {
     setActiveTab(tab);
@@ -42,8 +42,15 @@ export default function CommentSelectorPage() {
     console.log("Comment clicked:", commentId);
   };
 
-  const handleReplyClick = (commentId: string, replyId: string) => {
-    // TODO: Implement reply selection logic
+  const handleReplyClick = (commentId: string, replyId: string, e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation(); // Prevent triggering parent comment click
+    }
+    setSelectedReplies(prev =>
+      prev.includes(replyId)
+        ? prev.filter(id => id !== replyId)
+        : [...prev, replyId]
+    );
     console.log("Reply clicked:", commentId, replyId);
   };
 
@@ -406,11 +413,23 @@ export default function CommentSelectorPage() {
 
                           {/* Nested Replies */}
                           <div className="mt-6 pl-4 space-y-3 border-l-2 border-zinc-100">
-                            <div className="relative p-3 !rounded-xl bg-zinc-50 border border-zinc-100 flex items-start gap-3">
+                            <div 
+                              className={`group relative p-3 !rounded-xl border transition-all cursor-pointer flex items-start gap-3 ${selectedReplies.includes('reply_122146508888890127_885430057309494_1') ? 'border-indigo-200 bg-indigo-50/30' : 'bg-zinc-50 border-zinc-100 hover:border-indigo-100 hover:shadow-sm'}`}
+                              onClick={(e) => handleReplyClick('122146508888890127_885430057309494', 'reply_122146508888890127_885430057309494_1', e)}
+                            >
                               <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" alt="Wise man" className="h-8 w-8 rounded-full border border-white object-cover" />
                               <div className="flex-1">
-                                <h6 className="text-[13px] font-bold text-zinc-800 m-0">Wise man</h6>
+                                <div className="flex items-center gap-2 mb-1">
+                                  <h6 className="text-[13px] font-bold text-zinc-800 m-0">Wise man</h6>
+                                  {selectedReplies.includes('reply_122146508888890127_885430057309494_1') && (
+                                    <span className="text-[9px] bg-indigo-600 text-white px-1.5 py-0.5 rounded-full">Pinned</span>
+                                  )}
+                                </div>
                                 <p className="text-[12px] text-zinc-600 mt-1 mb-0">Awais Jutt Thanks so much!</p>
+                                <span className="text-[10px] text-zinc-400 block mt-1">Reply • Tue, Dec 16, 2025 • 8:05 AM</span>
+                              </div>
+                              <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${selectedReplies.includes('reply_122146508888890127_885430057309494_1') ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-zinc-200 group-hover:border-indigo-300'}`}>
+                                {selectedReplies.includes('reply_122146508888890127_885430057309494_1') && <i className="bi bi-check-lg text-[10px]"></i>}
                               </div>
                             </div>
                           </div>
@@ -427,6 +446,7 @@ export default function CommentSelectorPage() {
 
                       <div className="space-y-6">
                         <AnimatePresence>
+                          {/* Selected Comments */}
                           {selectedComments.map(id => {
                             const isWiseMan = id.includes('2078759359617457');
                             const name = isWiseMan ? "Wise man" : "Awais Jutt";
@@ -515,15 +535,111 @@ export default function CommentSelectorPage() {
                               </motion.div>
                             );
                           })}
+                          
+                          {/* Selected Replies */}
+                          {selectedReplies.map(replyId => {
+                            // Extract comment ID from reply ID (format: reply_commentId_replyId)
+                            const parts = replyId.split('_');
+                            const commentId = parts.slice(1, -1).join('_');
+                            const isReplyFromWiseMan = replyId.includes('885430057309494');
+                            const name = isReplyFromWiseMan ? "Wise man" : "Awais Jutt";
+                            const avatar = isReplyFromWiseMan ? "https://app.smartreply.io/storage/company_logo/3552_1760582765.png" : "https://platform-lookaside.fbsbx.com/platform/profilepic/?eai=Aa1GxIdmtnWAToazYI9jsad_QNO_NiAcL-T9bcT9-VUPvWQmh4B1blmSzbb18zib-IBYVlmnG_sJ&psid=24362880443305426&height=50&width=50&ext=1768817199&hash=AT-PD-isvY1-MvfCzuvhJx1B";
+                            const time = isReplyFromWiseMan ? "Tue, Dec 16, 2025 • 8:05 AM" : "Tue, Dec 16, 2025 • 8:05 AM";
+                            const text = isReplyFromWiseMan ? "Awais Jutt Thanks so much!" : "Thanks for your feedback!";
+
+                            return (
+                              <motion.div
+                                key={replyId}
+                                layout
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                className="bg-white rounded-2xl p-6 shadow-sm border border-zinc-100"
+                              >
+                                <div className="flex items-center justify-between mb-4">
+                                  <div className="flex items-center gap-3">
+                                    <img src={avatar} className="h-10 w-10 rounded-full border border-zinc-50 object-cover" alt={name} />
+                                    <div>
+                                      <div className="flex items-center gap-2">
+                                        <h6 className="text-sm font-bold text-zinc-900 m-0">{name}</h6>
+                                        <span className="text-[10px] bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full font-semibold">Reply</span>
+                                      </div>
+                                      <span className="text-[11px] text-zinc-400">{time}</span>
+                                    </div>
+                                  </div>
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); handleReplyClick(commentId, replyId, e); }}
+                                    className="h-8 w-8 rounded-full bg-zinc-50 text-zinc-400 hover:bg-red-50 hover:text-red-500 transition-colors flex items-center justify-center"
+                                  >
+                                    <i className="bi bi-trash text-[13px]"></i>
+                                  </button>
+                                </div>
+                                <p className="text-[14px] text-zinc-800 bg-zinc-50/50 p-3 !rounded-xl border border-dashed border-zinc-200 font-medium">{text}</p>
+
+                                <div className="mt-3 pt-3 border-t border-zinc-100">
+                                  <div className="flex items-center gap-4 mb-3">
+                                    <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">Define AI Response:</span>
+                                    <div className="flex gap-2">
+                                      <button onClick={() => saveActionReply(commentId, replyId, 'like')} className="flex items-center gap-2 px-3 py-1.5 !rounded-xl border border-zinc-100 bg-white text-zinc-600 hover:border-red-200 hover:bg-red-50 hover:text-red-500 transition-all text-xs font-semibold">
+                                        <i className="bi bi-heart-fill"></i> Like
+                                      </button>
+                                      <button onClick={() => saveActionReply(commentId, replyId, 'remove')} className="flex items-center gap-2 px-3 py-1.5 !rounded-xl border border-zinc-100 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-100 transition-all text-xs font-semibold">
+                                        <i className="bi bi-eye-slash"></i> Hide
+                                      </button>
+                                      <button onClick={() => saveActionReply(commentId, replyId, 'stop')} className="flex items-center gap-2 px-3 py-1.5 !rounded-xl border border-zinc-100 bg-white text-zinc-600 hover:border-red-200 hover:bg-red-50 hover:text-red-500 transition-all text-xs font-semibold text-nowrap">
+                                        <i className="bi bi-slash-circle"></i> Don't Reply
+                                      </button>
+                                    </div>
+                                  </div>
+
+                                  <div className="space-y-4">
+                                    <div className="space-y-2">
+                                      <label className="text-[12px] font-bold text-zinc-700">Custom AI Reply:</label>
+                                      <div className="flex gap-2">
+                                        <input
+                                          id={`custom-reply-input-${replyId}`}
+                                          className="flex-1 bg-white border border-zinc-200 !rounded-xl px-4 py-2 text-sm focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 outline-none transition-all"
+                                          placeholder="How should the AI respond?"
+                                        />
+                                        <button
+                                          onClick={() => saveCustomReply(commentId, replyId, (document.getElementById(`custom-reply-input-${replyId}`) as HTMLInputElement).value)}
+                                          className="px-4 py-2 bg-indigo-600 text-white !rounded-xl text-xs font-bold hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100"
+                                        >
+                                          Save
+                                        </button>
+                                      </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                      <label className="text-[12px] font-bold text-zinc-700">Private AI Reply:</label>
+                                      <div className="flex gap-2">
+                                        <input
+                                          id={`custom-private-reply-input-${replyId}`}
+                                          className="flex-1 bg-white border border-zinc-200 !rounded-xl px-4 py-2 text-sm focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 outline-none transition-all"
+                                          placeholder="Direct message response..."
+                                        />
+                                        <button
+                                          onClick={() => savePrivateReply(commentId, replyId, (document.getElementById(`custom-private-reply-input-${replyId}`) as HTMLInputElement).value)}
+                                          className="px-4 py-2 bg-zinc-800 text-white !rounded-xl text-xs font-bold hover:bg-black transition-all shadow-md shadow-zinc-200"
+                                        >
+                                          Save
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </motion.div>
+                            );
+                          })}
                         </AnimatePresence>
 
-                        {selectedComments.length === 0 && (
+                        {selectedComments.length === 0 && selectedReplies.length === 0 && (
                           <div className="flex flex-col items-center justify-center py-20 text-center">
                             <div className="h-16 w-16 rounded-full bg-zinc-50 flex items-center justify-center text-zinc-300 mb-4 border-2 border-dashed border-zinc-200">
                               <i className="bi bi-plus-lg text-2xl"></i>
                             </div>
                             <h6 className="text-zinc-600 font-bold m-0">No context selected</h6>
-                            <p className="text-xs text-zinc-400 mt-1">Select comments on the left to start training.</p>
+                            <p className="text-xs text-zinc-400 mt-1">Select comments or replies on the left to start training.</p>
                           </div>
                         )}
                       </div>
