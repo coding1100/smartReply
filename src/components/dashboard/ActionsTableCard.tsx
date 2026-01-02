@@ -33,15 +33,15 @@ export function ActionsTableCard() {
           ["Influencer Order", 0],
           ["Modify Subscription", 0],
         ].map(([label, value]) => (
-          <div key={label as string} className="rounded-2xl bg-white px-3 py-2">
-            <div className="text-xs text-zinc-500">{label}</div>
-            <div className="text-lg font-semibold text-zinc-900">{value as number}</div>
+          <div key={label as string} className="!rounded-xl bg-zinc-50 border border-zinc-100 px-3 py-2.5 hover:bg-zinc-100 transition-colors">
+            <div className="text-xs text-zinc-500 font-medium">{label}</div>
+            <div className="text-lg font-bold text-zinc-900">{value as number}</div>
           </div>
         ))}
       </div>
 
-      <div className="mt-4 overflow-hidden rounded-2xl bg-white">
-        <div className="grid grid-cols-9 gap-2 border-b border-zinc-100 bg-zinc-50 px-3 py-2 text-[11px] font-semibold text-zinc-500">
+      <div className="mt-4 overflow-hidden !rounded-xl bg-white border border-zinc-100">
+        <div className="grid grid-cols-9 gap-2 border-b border-zinc-100 bg-zinc-50 px-3 py-2.5 text-[11px] font-bold text-zinc-600 uppercase tracking-wider">
           {[
             "ACTION",
             "CUSTOMER",
@@ -58,7 +58,7 @@ export function ActionsTableCard() {
             </div>
           ))}
         </div>
-        <div className="px-3 py-10 text-center text-sm text-zinc-400">
+        <div className="px-3 py-10 text-center text-sm text-zinc-400 font-medium">
           No actions found.
         </div>
       </div>

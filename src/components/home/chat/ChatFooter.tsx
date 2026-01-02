@@ -21,10 +21,10 @@ export function ChatFooter({
     };
 
     return (
-        <div className="flex shrink-0 items-center gap-2 border-t border-zinc-200 bg-white p-4">
+        <div className="flex shrink-0 items-center gap-3 border-t border-zinc-200 bg-white/90 backdrop-blur-md p-4 shadow-sm">
             <button
                 type="button"
-                className="flex h-10 w-10 items-center justify-center !rounded-full border border-zinc-200 text-zinc-400 hover:bg-zinc-50 hover:text-zinc-600"
+                className="flex h-10 w-10 items-center justify-center !rounded-xl border border-zinc-200 text-zinc-400 hover:bg-zinc-50 hover:text-zinc-600 hover:border-zinc-300 transition-all shadow-sm"
                 title="Add manual action"
                 onClick={onManualAction}
             >
@@ -47,7 +47,7 @@ export function ChatFooter({
             <div className="flex-grow">
                 <textarea
                     rows={1}
-                    className="block w-full resize-none rounded-full border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm focus:border-blue-500 focus:bg-white focus:ring-blue-500"
+                    className="block w-full resize-none !rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-50 outline-none transition-all"
                     placeholder="Type a message"
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
@@ -57,7 +57,7 @@ export function ChatFooter({
 
             <button
                 type="button"
-                className="flex h-10 w-10 items-center justify-center !rounded-full bg-blue-600 text-white shadow-sm hover:bg-blue-700"
+                className="flex h-10 w-10 items-center justify-center !rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-100 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-200 transition-all"
                 onClick={onSend}
             >
                 <svg

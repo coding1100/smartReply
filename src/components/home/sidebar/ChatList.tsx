@@ -29,9 +29,9 @@ export function ChatList({ chats, activeId, onSelectChat }: ChatListProps) {
                         <li key={chat.id}>
                             <button
                                 onClick={() => onSelectChat(chat.id)}
-                                className={`flex w-full items-center justify-between border-l-4 px-4 py-3 transition-colors hover:bg-zinc-50 ${isActive
-                                        ? "border-blue-600 bg-blue-50/50"
-                                        : "border-transparent"
+                                className={`flex w-full items-center justify-between border-l-4 px-4 py-3 transition-all rounded-r-lg ${isActive
+                                    ? "border-indigo-600 bg-indigo-50/50 shadow-sm"
+                                    : "border-transparent hover:bg-zinc-50"
                                     }`}
                             >
                                 <div className="flex min-w-0 items-center gap-3">
@@ -39,7 +39,7 @@ export function ChatList({ chats, activeId, onSelectChat }: ChatListProps) {
                                         <img
                                             src={chat.platformIcon}
                                             alt="Platform"
-                                            className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border border-white"
+                                            className="absolute -bottom-1 -right-1 h-4 w-4 !rounded-xl border border-white"
                                         />
                                         {/* Using avatarUrl if available, or placeholder/icon if that's what was intended. 
                          Snippet used platformIcon as main image in some places, but let's assume standard avatar. 
@@ -53,13 +53,13 @@ export function ChatList({ chats, activeId, onSelectChat }: ChatListProps) {
                                         <img
                                             src={chat.avatarUrl}
                                             alt={chat.name}
-                                            className="h-10 w-10 rounded-full object-cover"
+                                            className="h-10 w-10 !rounded-xl object-cover border border-zinc-200 shadow-sm"
                                         />
                                     </div>
 
                                     <div className="min-w-0 text-left">
                                         <div className="flex items-center gap-2">
-                                            <span className={`truncate text-sm font-semibold ${isActive ? "text-blue-900" : "text-zinc-900"}`}>
+                                            <span className={`truncate text-sm font-semibold ${isActive ? "text-indigo-900" : "text-zinc-900"}`}>
                                                 {chat.name}
                                             </span>
                                         </div>

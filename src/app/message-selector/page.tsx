@@ -85,18 +85,18 @@ export default function MessageSelectorPage() {
                         <div className="mb-6 flex gap-3">
                             <button
                                 onClick={() => setPlatform("facebook")}
-                                className={`px-6 py-2.5 rounded-full text-sm font-medium transition-colors ${platform === "facebook"
-                                        ? "bg-[#5A6BF2] text-white shadow-sm"
-                                        : "bg-white border border-blue-200 text-[#5A6BF2] hover:bg-blue-50"
+                                className={`px-6 py-2.5 !rounded-xl text-sm font-semibold transition-all ${platform === "facebook"
+                                        ? "bg-indigo-600 text-white shadow-md shadow-indigo-100"
+                                        : "bg-white border border-zinc-200 text-zinc-600 hover:bg-indigo-50 hover:border-indigo-200"
                                     }`}
                             >
                                 Facebook
                             </button>
                             <button
                                 onClick={() => setPlatform("instagram")}
-                                className={`px-6 py-2.5 rounded-full text-sm font-medium transition-colors ${platform === "instagram"
-                                        ? "bg-[#5A6BF2] text-white shadow-sm"
-                                        : "bg-white border border-blue-200 text-[#5A6BF2] hover:bg-blue-50"
+                                className={`px-6 py-2.5 !rounded-xl text-sm font-semibold transition-all ${platform === "instagram"
+                                        ? "bg-indigo-600 text-white shadow-md shadow-indigo-100"
+                                        : "bg-white border border-zinc-200 text-zinc-600 hover:bg-indigo-50 hover:border-indigo-200"
                                     }`}
                             >
                                 Instagram
@@ -108,7 +108,7 @@ export default function MessageSelectorPage() {
                             {filteredConversations.map((conv) => (
                                 <div
                                     key={conv.id}
-                                    className="flex items-center justify-between rounded-xl border border-zinc-100 bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
+                                    className="flex items-center justify-between !rounded-xl border border-zinc-100 bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
                                 >
                                     <div className="flex-1 min-w-0 pr-6">
                                         <div className="text-xs text-zinc-400 mb-1.5">
@@ -123,7 +123,7 @@ export default function MessageSelectorPage() {
                                     </div>
                                     <button
                                         onClick={() => handleOpenModal(conv.id)}
-                                        className="shrink-0 rounded-full border border-[#5A6BF2] bg-white px-6 py-2 text-sm font-medium text-[#5A6BF2] hover:bg-blue-50 transition-colors"
+                                        className="shrink-0 !rounded-xl border border-[#5A6BF2] bg-white px-6 py-2 text-sm font-medium text-[#5A6BF2] hover:bg-blue-50 transition-colors"
                                     >
                                         Open
                                     </button>
@@ -131,7 +131,7 @@ export default function MessageSelectorPage() {
                             ))}
 
                             {/* Load More Mock */}
-                            <button className="rounded-full bg-[#5A6BF2] px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors shadow-sm mt-4">
+                            <button className="!rounded-xl bg-[#5A6BF2] px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors shadow-sm mt-4">
                                 Load More
                             </button>
                         </div>
@@ -146,8 +146,8 @@ export default function MessageSelectorPage() {
 
                         <div className="space-y-4 mt-4">
                             {/* Placeholder for selected item in sidebar */}
-                            <div className="flex items-center gap-3 p-4 bg-white rounded-xl border border-zinc-100 shadow-sm">
-                                <div className="h-10 w-10 shrink-0 rounded-full bg-zinc-400 flex items-center justify-center text-white">
+                            <div className="flex items-center gap-3 p-4 bg-white !rounded-xl border border-zinc-100 shadow-sm">
+                                <div className="h-10 w-10 shrink-0 !rounded-xl bg-zinc-400 flex items-center justify-center text-white">
                                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                     </svg>
@@ -159,8 +159,8 @@ export default function MessageSelectorPage() {
                             </div>
 
                             {/* Message Item Mock in Sidebar */}
-                            <div className="bg-white p-4 rounded-xl border border-zinc-100 shadow-sm flex items-start gap-3">
-                                <div className="h-10 w-10 shrink-0 rounded-full bg-zinc-400 flex items-center justify-center text-white">
+                            <div className="bg-white p-4 !rounded-xl border border-zinc-100 shadow-sm flex items-start gap-3">
+                                <div className="h-10 w-10 shrink-0 !rounded-xl bg-zinc-400 flex items-center justify-center text-white">
                                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                     </svg>
@@ -185,7 +185,7 @@ export default function MessageSelectorPage() {
                     <div className="fixed inset-0 bg-black/50 transition-opacity" onClick={handleCloseModal} />
 
                     <div className="flex min-h-full items-center justify-center p-4">
-                        <div className="relative w-full max-w-5xl transform rounded-xl bg-white shadow-2xl transition-all flex flex-col max-h-[90vh]">
+                        <div className="relative w-full max-w-5xl transform !rounded-xl bg-white shadow-2xl transition-all flex flex-col max-h-[90vh]">
 
                             {/* Modal Header */}
                             <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-4">
@@ -212,21 +212,21 @@ export default function MessageSelectorPage() {
                                                 <div
                                                     key={msg.id}
                                                     onClick={() => toggleMessageSelection(msg.id)}
-                                                    className={`mb-3 cursor-pointer rounded-lg border p-4 transition-all ${isSelected
+                                                    className={`mb-3 cursor-pointer !rounded-xl border p-4 transition-all ${isSelected
                                                             ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500"
                                                             : "border-zinc-200 bg-white hover:border-blue-300"
                                                         }`}
                                                 >
                                                     <div className="flex items-start justify-between">
                                                         <div className="flex gap-3">
-                                                            <img src={msg.avatar} alt={msg.sender} className="h-10 w-10 rounded-full" />
+                                                            <img src={msg.avatar} alt={msg.sender} className="h-10 w-10 !rounded-xl" />
                                                             <div>
                                                                 <h5 className="font-semibold text-zinc-900">{msg.sender}</h5>
                                                                 <span className="text-xs text-zinc-500">{msg.timestamp}</span>
                                                             </div>
                                                         </div>
                                                         {isSelected && (
-                                                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs">
+                                                            <span className="flex h-6 w-6 items-center justify-center !rounded-xl bg-blue-600 text-white text-xs">
                                                                 ✓
                                                             </span>
                                                         )}
@@ -238,7 +238,7 @@ export default function MessageSelectorPage() {
                                     </div>
 
                                     {/* Right: Selected Summary (Mock) */}
-                                    <div className="flex-1 rounded-lg border border-zinc-200 bg-zinc-50 p-4 overflow-y-auto">
+                                    <div className="flex-1 !rounded-xl border border-zinc-200 bg-zinc-50 p-4 overflow-y-auto">
                                         <h5 className="font-semibold text-zinc-900 mb-3">Selected Messages and Replies</h5>
                                         {selectedMessages.length === 0 ? (
                                             <p className="text-zinc-500 text-sm">No messages selected.</p>
@@ -264,7 +264,7 @@ export default function MessageSelectorPage() {
                             <div className="border-t border-zinc-100 px-6 py-4 flex justify-end">
                                 <button
                                     onClick={handleCloseModal}
-                                    className="rounded-full bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+                                    className="!rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
                                 >
                                     Save and close
                                 </button>
