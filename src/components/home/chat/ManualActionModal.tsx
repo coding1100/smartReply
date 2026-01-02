@@ -23,7 +23,7 @@ export function ManualActionModal({
 
             {/* Modal Panel */}
             <div className="flex min-h-screen items-center justify-center p-4 text-center">
-                <div className="relative transform overflow-hidden rounded-xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl">
+                <div className="relative transform overflow-hidden !rounded-xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl">
                     {/* Header */}
                     <div className="flex items-start justify-between border-b border-zinc-100 px-6 py-3">
                         <div className="flex flex-col">
@@ -65,7 +65,7 @@ export function ManualActionModal({
                         <div className="manual-action-form space-y-6">
                             {/* Info Alert */}
                             <div
-                                className="flex items-start rounded-lg bg-teal-50 p-3 border border-teal-100"
+                                className="flex items-start !rounded-xl bg-teal-50 p-3 border border-teal-100"
                                 role="alert"
                             >
                                 <div className="flex-shrink-0">
@@ -103,7 +103,7 @@ export function ManualActionModal({
                                 <div className="relative">
                                     <select
                                         id="manual-action-select"
-                                        className="block w-full appearance-none rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-zinc-900 placeholder-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                                        className="block w-full appearance-none !rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-zinc-900 placeholder-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm"
                                         required
                                         defaultValue=""
                                     >
@@ -172,7 +172,7 @@ export function ManualActionModal({
                                 </label>
                                 <textarea
                                     id="manual-action-notes"
-                                    className="block w-full rounded-lg border border-zinc-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-3"
+                                    className="block w-full !rounded-xl border border-zinc-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-3"
                                     rows={4}
                                     placeholder="Add context, customer requests, or next steps"
                                 ></textarea>

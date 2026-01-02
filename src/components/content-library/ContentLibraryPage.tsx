@@ -22,7 +22,7 @@ export function ContentLibraryPage() {
           </div>
         </div>
 
-        <Button color="primary" isDisabled={!selectedCount}>
+        <Button color="primary" isDisabled={!selectedCount} className="!rounded-xl shadow-md shadow-indigo-100 hover:shadow-lg">
           Export ({selectedCount})
         </Button>
       </div>

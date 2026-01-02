@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // basePath removed - using root path for localhost
 };
 
 export default nextConfig;

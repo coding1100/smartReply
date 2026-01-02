@@ -1,24 +1,221 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
+import { motion } from "framer-motion";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
+    const { data: session, status } = useSession();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://sme.namatechnologlies.com";
+
+    // Track redirect state to prevent loops
+    const hasRedirected = React.useRef(false);
+    const isChecking = React.useRef(false);
+
+    // Check if already logged in (has accessToken) - redirect to home
+    // Only check once on mount to prevent loops
+    useEffect(() => {
+        if (isChecking.current) return;
+        isChecking.current = true;
+        
+        // Wait a bit to ensure we're not in a redirect loop
+        const timeoutId = setTimeout(() => {
+            // Check if we're still on login page (not already redirected)
+            if (window.location.pathname !== "/login" || hasRedirected.current) {
+                return; // Already redirected, don't do anything
+            }
+            
+            const accessToken = localStorage.getItem("accessToken");
+            const googleAccessToken = localStorage.getItem("googleAccessToken");
+            const facebookAccessToken = localStorage.getItem("facebookAccessToken");
+            // User is authenticated if they have any token
+            const isAuthenticated = accessToken || googleAccessToken || facebookAccessToken;
+            
+            if (isAuthenticated && !hasRedirected.current) {
+                hasRedirected.current = true;
+                // Only redirect if we have a token and we're actually on the login page
+                router.replace("/home");
+            }
+        }, 500);
+        
+        return () => clearTimeout(timeoutId);
+    }, [router]);
+
+    // Redirect if already logged in and sync data to localStorage
+    useEffect(() => {
+        // Prevent redirect if already redirected
+        if (hasRedirected.current) return;
+        
+        if (status === "authenticated" && session) {
+            // Store backend token in localStorage for API calls
+            if (session.accessToken) {
+                localStorage.setItem("accessToken", session.accessToken);
+                localStorage.setItem("tokenType", session.tokenType || "Bearer");
+            }
+            
+            // Store user information in localStorage
+            if (session.user) {
+                if (session.user.id) {
+                    localStorage.setItem("userId", session.user.id);
+                }
+                if (session.user.email) {
+                    localStorage.setItem("userEmail", session.user.email);
+                }
+                if (session.user.name) {
+                    localStorage.setItem("userName", session.user.name);
+                }
+                if (session.user.image) {
+                    localStorage.setItem("userImage", session.user.image);
+                }
+            }
+            
+            // Store backend user ID if available
+            if (session.backendUserId) {
+                localStorage.setItem("backendUserId", session.backendUserId);
+            }
+            
+            // Store provider-specific OAuth access_token if available
+            if (session.googleAccessToken) {
+                localStorage.setItem("googleAccessToken", session.googleAccessToken);
+            }
+            if (session.facebookAccessToken) {
+                localStorage.setItem("facebookAccessToken", session.facebookAccessToken);
+            }
+            
+            // Only redirect if we have accessToken and haven't redirected yet
+            const hasToken = session.accessToken || session.googleAccessToken || session.facebookAccessToken;
+            if (hasToken && !hasRedirected.current) {
+                hasRedirected.current = true;
+                router.replace("/home");
+            }
+        }
+    }, [session, status, router]);
+    
+    // Additional effect to sync token when it becomes available (handles delayed token loading)
+    useEffect(() => {
+        if (status === "authenticated" && session?.accessToken) {
+            localStorage.setItem("accessToken", session.accessToken);
+            localStorage.setItem("tokenType", session.tokenType || "Bearer");
+        }
+    }, [session?.accessToken, session?.tokenType, status]);
+
+    // Handle error from URL params
+    useEffect(() => {
+        const errorParam = new URLSearchParams(window.location.search).get('error');
+        if (errorParam) {
+            switch (errorParam) {
+                case 'OAuthSignin':
+                case 'OAuthCallback':
+                case 'OAuthCreateAccount':
+                case 'EmailCreateAccount':
+                case 'Callback':
+                    setError('OAuth authentication failed. Please try again.');
+                    break;
+                case 'OAuthAccountNotLinked':
+                    setError('An account with this email already exists. Please sign in with your original method.');
+                    break;
+                case 'EmailSignin':
+                    setError('Check your email for the sign in link.');
+                    break;
+                case 'CredentialsSignin':
+                    setError('Invalid credentials. Please check your email and password.');
+                    break;
+                case 'SessionRequired':
+                    setError('Please sign in to access this page.');
+                    break;
+                default:
+                    setError('An error occurred. Please try again.');
+            }
+        }
+    }, []);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Login attempt:", { email, password, rememberMe });
+        setError("");
+        setLoading(true);
+
+        try {
+            const formData = new URLSearchParams();
+            formData.append("username", email);
+            formData.append("password", password);
+
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: formData.toString(),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem("accessToken", data.access_token);
+                localStorage.setItem("tokenType", data.token_type);
+                if (!hasRedirected.current) {
+                hasRedirected.current = true;
+                router.replace("/home");
+            }
+            } else {
+                const errorMsg = typeof data.detail === 'string'
+                    ? data.detail
+                    : JSON.stringify(data.detail) || "Login failed. Please check your credentials.";
+                setError(errorMsg);
+            }
+        } catch (err) {
+            setError("Something went wrong. Please try again later.");
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleFacebookLogin = () => {
-        console.log("Facebook login clicked");
+    const handleGoogleLogin = async () => {
+        setError("");
+        setLoading(true);
+        
+        try {
+            const result = await signIn("google", {
+                callbackUrl: "/home",
+                redirect: true,
+            });
+
+            if (result?.error) {
+                setError("Google authentication failed. Please try again.");
+                setLoading(false);
+            }
+        } catch (err) {
+            setError("Something went wrong. Please try again later.");
+            setLoading(false);
+        }
     };
 
-    const handleGoogleLogin = () => {
-        console.log("Google login clicked");
+    const handleFacebookLogin = async () => {
+        setError("");
+        setLoading(true);
+        
+        try {
+            const result = await signIn("facebook", {
+                callbackUrl: "/home",
+                redirect: true,
+            });
+
+            if (result?.error) {
+                setError("Facebook authentication failed. Please try again.");
+                setLoading(false);
+            }
+        } catch (err) {
+            setError("Something went wrong. Please try again later.");
+            setLoading(false);
+        }
     };
 
     return (
@@ -51,27 +248,40 @@ export default function LoginPage() {
 
                 {/* Right Column - Form Section (White Background) */}
                 <div className="w-1/2 bg-white flex items-center justify-center p-12 relative">
-                    <Link
-                        href="/register"
-                        className="px-6 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-full hover:bg-blue-50 no-underline hover:no-underline transition-colors absolute top-[20px] right-[20px]"
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
                     >
-                        GET STARTED FREE
-                    </Link>
-                    <div className="w-full max-w-md space-y-4">
-                        {/* Social Login Buttons */}
-                        <button
-                            onClick={handleFacebookLogin}
-                            className="w-full flex items-center justify-center gap-3 mb-3 !rounded-lg py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                        <Link
+                            href="/register"
+                            className="px-6 py-2 text-sm font-medium text-indigo-600 border border-indigo-600 !rounded-xl hover:bg-indigo-50 hover:shadow-sm !no-underline hover:!no-underline absolute top-[20px] right-[20px]"
                         >
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                            </svg>
-                            Continue With Facebook
-                        </button>
+                            GET STARTED FREE
+                        </Link>
+                    </motion.div>
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="w-full max-w-md space-y-4"
+                    >
+                        {error && (
+                            <motion.div 
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="p-4 text-sm text-red-600 bg-red-50 border border-red-200 !rounded-xl shadow-sm"
+                            >
+                                {error}
+                            </motion.div>
+                        )}
 
-                        <button
+                        <motion.button
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.99 }}
                             onClick={handleGoogleLogin}
-                            className="w-full flex items-center justify-center !rounded-lg gap-3 py-3 px-4 bg-white border border-zinc-300 text-zinc-900 rounded-lg hover:bg-zinc-50 transition-colors font-medium"
+                            className="w-full mb-2 flex items-center justify-center !rounded-xl gap-3 py-3 px-4 bg-white border border-zinc-200 text-zinc-900 shadow-sm hover:shadow-md hover:border-zinc-300 transition-all font-medium"
+                            disabled={loading}
                         >
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
                                 <path
@@ -92,7 +302,20 @@ export default function LoginPage() {
                                 />
                             </svg>
                             Sign In With Google
-                        </button>
+                        </motion.button>
+
+                        <motion.button
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.99 }}
+                            onClick={handleFacebookLogin}
+                            className="w-full flex items-center justify-center !rounded-xl gap-3 py-3 px-4 bg-white border border-zinc-200 text-zinc-900 shadow-sm hover:shadow-md hover:border-zinc-300 transition-all font-medium"
+                            disabled={loading}
+                        >
+                            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#1877F2">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            Sign In With Facebook
+                        </motion.button>
 
                         {/* Divider */}
                         <div className="relative my-6">
@@ -120,7 +343,7 @@ export default function LoginPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="m.ovais@mindfind.com"
-                                    className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                    className="w-full px-4 py-2.5 border border-zinc-200 !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
                                 />
                             </div>
 
@@ -138,7 +361,7 @@ export default function LoginPage() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••••"
-                                    className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                    className="w-full px-4 py-2.5 border border-zinc-200 !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all"
                                 />
                             </div>
 
@@ -148,7 +371,7 @@ export default function LoginPage() {
                                         type="checkbox"
                                         checked={rememberMe}
                                         onChange={(e) => setRememberMe(e.target.checked)}
-                                        className="w-4 h-4 text-blue-600 border-zinc-300 rounded focus:ring-blue-500"
+                                        className="w-4 h-4 text-indigo-600 border-zinc-300 rounded focus:ring-indigo-500"
                                     />
                                     <span className="ml-2 text-sm text-zinc-700">
                                         Remember me
@@ -156,24 +379,27 @@ export default function LoginPage() {
                                 </label>
                                 <Link
                                     href="/forgot-password"
-                                    className="text-sm text-blue-600 hover:text-blue-700"
+                                    className="text-sm text-indigo-600 hover:text-indigo-700"
                                 >
                                     Forgot your password?
                                 </Link>
                             </div>
 
-                            <button
+                            <motion.button
+                                whileHover={{ scale: loading ? 1 : 1.01 }}
+                                whileTap={{ scale: loading ? 1 : 0.99 }}
                                 type="submit"
-                                className="w-full py-3 px-4 bg-blue-600 text-white !rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                                disabled={loading}
+                                className="w-full py-3 px-4 bg-indigo-600 text-white !rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-100 hover:shadow-lg hover:shadow-indigo-200 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                LOGIN
-                            </button>
+                                {loading ? "LOGGING IN..." : "LOGIN"}
+                            </motion.button>
                         </form>
 
                         {/* Sign Up Link */}
                         <p className="text-center text-sm text-zinc-600 mt-6">
                             New to SmartReply?{" "}
-                            <Link href="/register" className="text-blue-600 hover:text-blue-700 font-medium">
+                            <Link href="/register" className="text-indigo-600 hover:text-indigo-700 font-medium">
                                 Sign up
                             </Link>
                         </p>
@@ -182,18 +408,18 @@ export default function LoginPage() {
                         <div className="flex justify-center gap-6 mt-8 text-sm">
                             <Link
                                 href="https://www.smartreply.io/policy-pages/terms-of-service"
-                                className="text-blue-600 hover:text-blue-700"
+                                className="text-indigo-600 hover:text-indigo-700"
                             >
                                 Terms of Service
                             </Link>
                             <Link
                                 href="https://www.smartreply.io/policy-pages/privacy-policy"
-                                className="text-blue-600 hover:text-blue-700"
+                                className="text-indigo-600 hover:text-indigo-700"
                             >
                                 Privacy Policy
                             </Link>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
 

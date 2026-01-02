@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { ChatLayout } from "./layout/ChatLayout";
 import { Sidebar } from "./sidebar/Sidebar";
 import { ChatWindow } from "./chat/ChatWindow";
@@ -117,6 +118,18 @@ const MOCK_COMMENT_CUSTOMER: Customer = {
 
 
 export default function HomeClient() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  React.useEffect(() => {
+    const token = searchParams.get("token");
+    if (token) {
+      localStorage.setItem("accessToken", token);
+      // Remove the token from the URL for cleaner UI
+      router.replace("/home");
+    }
+  }, [searchParams, router]);
+
   const [tab, setTab] = React.useState<"chats" | "comments" | "subscribers">(
     "chats",
   );

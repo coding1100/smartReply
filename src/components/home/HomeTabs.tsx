@@ -35,10 +35,10 @@ export function HomeTabs({
 
       <div className="flex flex-wrap items-center gap-2 text-xs text-zinc-600">
         <span className="font-medium">Filters:</span>
-        <Chip size="sm" variant="flat" className="rounded-xl">
+        <Chip size="sm" variant="flat" className="!rounded-xl">
           Platform
         </Chip>
-        <Chip size="sm" variant="flat" className="rounded-xl">
+        <Chip size="sm" variant="flat" className="!rounded-xl">
           Sentiment
         </Chip>
       </div>

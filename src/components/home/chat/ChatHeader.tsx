@@ -21,7 +21,7 @@ export function ChatHeader({
     isCommentMode = false,
 }: ChatHeaderProps) {
     return (
-        <div className="flex shrink-0 items-center justify-between border-b border-zinc-200 px-6 py-3">
+        <div className="flex shrink-0 items-center justify-between border-b border-zinc-200 bg-white/90 backdrop-blur-md px-6 py-4 shadow-sm">
             <div className="flex items-center gap-1 flex-col">
                 {/* Mobile Back Button (Hidden on lg) */}
                 <button className="text-zinc-500 hover:text-zinc-700 lg:hidden">
@@ -45,22 +45,22 @@ export function ChatHeader({
                     <div className="relative">
                         <img
                             src={customerAvatar}
-                            className="h-10 w-10 rounded-full object-cover"
+                            className="h-11 w-11 !rounded-full object-cover border-2 border-zinc-100 shadow-sm"
                             alt="avatar"
                         />
                         {/* Show online status only if NOT comment mode? Or keep it? keeping it for now */}
                         {isOnline && (
-                            <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-green-500"></div>
+                            <div className="absolute bottom-0 right-0 h-3 w-3 !rounded-xl border-2 border-white bg-emerald-500 shadow-sm"></div>
                         )}
                     </div>
                     <div>
-                        <div className="font-semibold text-zinc-900">{customerName}</div>
-                        <div className="text-xs text-zinc-500">{isCommentMode ? "Post ID: " : "Ad ID: "}{adId}</div>
+                        <div className="font-bold text-zinc-900">{customerName}</div>
+                        <div className="text-xs text-zinc-500 font-medium">{isCommentMode ? "Post ID: " : "Ad ID: "}{adId}</div>
                     </div>
                 </div>
 
                 {!isCommentMode && (
-                    <div className="ml-4 flex items-center gap-2 rounded-full px-3 py-1">
+                    <div className="ml-4 flex items-center gap-2 !rounded-xl px-3 py-1.5">
                         <BootstrapSwitch
                             checked={autoReply}
                             onChange={onAutoReplyChange}
@@ -68,7 +68,7 @@ export function ChatHeader({
                         />
                         <label
                             htmlFor="header_auto_reply"
-                            className="cursor-pointer text-xs font-medium text-blue-700"
+                            className="cursor-pointer text-xs font-semibold text-indigo-700"
                         >
                             Auto Reply
                         </label>

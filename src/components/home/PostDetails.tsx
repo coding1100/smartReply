@@ -24,13 +24,13 @@ export function PostDetails() {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Chip size="sm" className="rounded-xl bg-indigo-100 text-indigo-700">
+          <Chip size="sm" className="!rounded-xl bg-indigo-100 text-indigo-700">
             Warm Contemporary
           </Chip>
-          <Chip size="sm" className="rounded-xl bg-indigo-100 text-indigo-700">
+          <Chip size="sm" className="!rounded-xl bg-indigo-100 text-indigo-700">
             Cozy
           </Chip>
-          <Chip size="sm" className="rounded-xl bg-indigo-100 text-indigo-700">
+          <Chip size="sm" className="!rounded-xl bg-indigo-100 text-indigo-700">
             Wood Accents
           </Chip>
         </div>

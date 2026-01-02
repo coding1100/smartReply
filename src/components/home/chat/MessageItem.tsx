@@ -32,7 +32,7 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
                     <div className="flex-shrink-0">
                         <img
                             src={message.avatarUrl}
-                            className="h-10 w-10 rounded-full border border-zinc-200 object-cover"
+                            className="h-10 w-10 !rounded-xl border border-zinc-200 object-cover"
                             alt="avatar"
                         />
                     </div>
@@ -43,7 +43,7 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
 
                         {/* Bubble Row */}
                         <div className="flex items-center gap-3">
-                            <div className="bg-blue-50/50 rounded-xl px-4 py-2 text-sm text-zinc-800 shadow-sm border border-blue-100">
+                            <div className="bg-indigo-50/50 rounded-2xl px-4 py-2.5 text-sm text-zinc-800 shadow-sm border border-indigo-100">
                                 <div dangerouslySetInnerHTML={{ __html: message.text }} />
                             </div>
 
@@ -57,12 +57,12 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
                                     <i className="fas fa-ellipsis-h"></i>
                                 </button>
                                 {showMenu && (
-                                    <div className="absolute left-0 top-full mt-1 w-32 bg-white rounded-md shadow-lg border border-zinc-100 z-10 py-1">
-                                        <button className="block w-full text-left px-3 py-1.5 text-xs text-zinc-700 hover:bg-zinc-50">Open Training</button>
-                                        <button className="block w-full text-left px-3 py-1.5 text-xs text-zinc-700 hover:bg-zinc-50">Reprocess</button>
-                                        <button className="block w-full text-left px-3 py-1.5 text-xs text-zinc-700 hover:bg-zinc-50">Go to Profile</button>
-                                        <button className="block w-full text-left px-3 py-1.5 text-xs text-zinc-700 hover:bg-zinc-50">Delete</button>
-                                        <button className="block w-full text-left px-3 py-1.5 text-xs text-zinc-700 hover:bg-zinc-50">Hide Comment</button>
+                                    <div className="absolute left-0 top-full mt-2 w-40 bg-white !rounded-xl shadow-xl border border-zinc-100 z-10 py-1 overflow-hidden">
+                                        <button className="block w-full text-left px-4 py-2 text-xs text-zinc-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-medium">Open Training</button>
+                                        <button className="block w-full text-left px-4 py-2 text-xs text-zinc-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-medium">Reprocess</button>
+                                        <button className="block w-full text-left px-4 py-2 text-xs text-zinc-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-medium">Go to Profile</button>
+                                        <button className="block w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-red-50 transition-colors font-medium">Delete</button>
+                                        <button className="block w-full text-left px-4 py-2 text-xs text-zinc-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-medium">Hide Comment</button>
                                     </div>
                                 )}
                             </div>
@@ -71,10 +71,10 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
                         {/* Footer Row: Time, Reply link */}
                         <div className="flex items-center gap-3 mt-1 ml-1 text-xs text-zinc-400">
                             <span>{message.time}</span>
-                            <button className="font-medium text-blue-600 hover:underline">Send Reply</button>
+                            <button className="font-medium text-indigo-600 hover:underline">Send Reply</button>
                         </div>
                         <div className="ml-1 mt-0.5 text-xs">
-                            <button className="text-blue-500 hover:underline">Show Replies (1)</button>
+                            <button className="text-indigo-500 hover:underline">Show Replies (1)</button>
                         </div>
                     </div>
                 </div>
@@ -91,7 +91,7 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
                 <div className="flex-shrink-0">
                     <img
                         src={message.avatarUrl}
-                        className="h-8 w-8 rounded-full border border-zinc-200 object-cover"
+                        className="h-8 w-8 !rounded-full border border-zinc-200 object-cover"
                         alt="avatar"
                     />
                 </div>
@@ -102,7 +102,7 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
                     <div className="mb-1 flex items-center gap-2">
                         <span className="text-xs font-medium text-zinc-900">{message.name}</span>
                         {message.isAi && (
-                            <span className="rounded bg-blue-100 px-1 py-0.5 text-[10px] font-bold text-blue-600">AI</span>
+                            <span className="rounded bg-indigo-100 px-1 py-0.5 text-[10px] font-bold text-indigo-600">AI</span>
                         )}
                         <span className="text-[10px] text-zinc-400">{message.time}</span>
                     </div>
@@ -112,7 +112,7 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
                         <div className="mb-2 text-xs text-zinc-500">
                             This was sent as a private message to a comment.
                             {message.commentUrl && (
-                                <a href={message.commentUrl} target="_blank" rel="noreferrer" className="ml-1 font-medium text-blue-600 hover:underline">View comment</a>
+                                <a href={message.commentUrl} target="_blank" rel="noreferrer" className="ml-1 font-medium text-indigo-600 hover:underline">View comment</a>
                             )}
                         </div>
                     )}
@@ -120,8 +120,8 @@ export function MessageItem({ message, isCommentMode = false }: MessageItemProps
                     {/* Bubble */}
                     <div
                         className={`rounded-2xl px-4 py-3 text-sm shadow-sm ${isMe
-                            ? "rounded-tr-sm bg-blue-600 text-white"
-                            : "rounded-tl-sm bg-zinc-100 text-zinc-800"
+                            ? "rounded-tr-sm bg-indigo-600 text-white shadow-md shadow-indigo-200"
+                            : "rounded-tl-sm bg-zinc-100 text-zinc-800 border border-zinc-200"
                             }`}
                     >
                         <div dangerouslySetInnerHTML={{ __html: message.text }} />
