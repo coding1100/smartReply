@@ -10,111 +10,13 @@ import { Message } from "./chat/MessageItem";
 import { ChatPreview } from "./sidebar/ChatList";
 import { Customer } from "./right-sidebar/CustomerProfile";
 
-// --- MOCK DATA FOR CHATS TAB ---
-const MOCK_CHATS: ChatPreview[] = [
-  {
-    id: "t_2122612654922893",
-    name: "Awais Jutt",
-    message: "i like the 2nd option",
-    time: "4 days ago",
-    avatarUrl:
-      "https://app.smartreply.io/assets/images/traffic_sources/facebook.png",
-    platformIcon:
-      "https://app.smartreply.io/assets/images/traffic_sources/facebook.png",
-  },
-];
+import { api, ConversationSummary, MessageSummary } from "../../services/api";
 
-const MOCK_CHAT_MESSAGES: Message[] = [
-  {
-    id: 1526687,
-    sender: "me",
-    name: "Wise man",
-    avatarUrl:
-      "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-1/502586578_2121943574989801_801439392086419003_n.jpg?stp=c341.0.1365.1365a_cp0_dst-jpg_s50x50_tt6&_nc_cat=104&ccb=1-7&_nc_sid=f907e8&_nc_eui2=AeGB6r9xqokwK7wrrTPZGgqlYfzXYouZ6bBh_Ndii5npsHdgWSOTEzsLrEA6hl0HVG0IQSGu-i1A0Hq8ujz1Tqfm&_nc_ohc=NMC5lFO6xAcQ7kNvwFA4zyi&_nc_oc=AdnvbUpSN0r2Ol4ajPkLTn2_iz3eRRY67mCCzFAKD5hHaDLdnJBymzaT7DUWKEuRTmZ4fYTwEEfXrfj5xyVHWLCg&_nc_zt=24&_nc_ht=scontent-iad3-1.xx&edm=AJdBtusEAAAA&_nc_gid=wZbj5r2NmUa9F8o3OGQhaQ&_nc_tpa=Q5bMBQFyO_cypCGYhj-U7wjcXvVU9Q_xt4rF1yaawVrxYUDHMCAAJHUd8KGV0Y5E1DD81AoLy6tMDFYD&oh=00_AfngmgqG-Cq7PMRPa4ieGCU-NwhBjqQas_UnlIuw-1o4XA&oe=694C7BCC",
-    text: "Hi Awais! Thanks for the love, want behind-the-scenes shots or design details of this Modern Residential Home? Message us and we’ll send them right away.",
-    time: "02:05 AM",
-    isAi: true,
-    isPrivateReply: true,
-    commentUrl: "https://www.facebook.com/645232738675563_122146508888890127",
-  },
-  {
-    id: 1526698,
-    sender: "friend",
-    name: "Awais Jutt",
-    avatarUrl:
-      "https://platform-lookaside.fbsbx.com/platform/profilepic/?eai=Aa3ONGwp69DFukVj6z9n7HeND1QSoSBL2tO7vekAGEsiNInViWVFNXNvti9mQO_yNQW6jFMz77H8&psid=24362880443305426&width=1024&ext=1768823313&hash=AT84k2fd7nnUT-OF9S1Z_Q1_",
-    text: "i like the 2nd option but can you provide something more better options",
-    time: "02:10 AM",
-  },
-  {
-    id: 1526700,
-    sender: "me",
-    name: "Wise man",
-    avatarUrl:
-      "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-1/502586578_2121943574989801_801439392086419003_n.jpg?stp=c341.0.1365.1365a_cp0_dst-jpg_s50x50_tt6&_nc_cat=104&ccb=1-7&_nc_sid=f907e8&_nc_eui2=AeGB6r9xqokwK7wrrTPZGgqlYfzXYouZ6bBh_Ndii5npsHdgWSOTEzsLrEA6hl0HVG0IQSGu-i1A0Hq8ujz1Tqfm&_nc_ohc=NMC5lFO6xAcQ7kNvwFA4zyi&_nc_oc=AdnvbUpSN0r2Ol4ajPkLTn2_iz3eRRY67mCCzFAKD5hHaDLdnJBymzaT7DUWKEuRTmZ4fYTwEEfXrfj5xyVHWLCg&_nc_zt=24&_nc_ht=scontent-iad3-1.xx&edm=AJdBtusEAAAA&_nc_gid=wZbj5r2NmUa9F8o3OGQhaQ&_nc_tpa=Q5bMBQFyO_cypCGYhj-U7wjcXvVU9Q_xt4rF1yaawVrxYUDHMCAAJHUd8KGV0Y5E1DD81AoLy6tMDFYD&oh=00_AfngmgqG-Cq7PMRPa4ieGCU-NwhBjqQas_UnlIuw-1o4XA&oe=694C7BCC",
-    text: "Love it, here are 3 upgraded directions you might like:<br>1) Sleek Minimal Modern, crisp lines, glass, monochrome elegance.<br>2) Warm Contemporary, wood accents, soft lighting, cozy livability.<br>3) Luxury Eco-Friendly, reclaimed materials, green roof, smart systems.<br>Pick a vibe and I’ll pull the best matches and quotes for you, Olivia",
-    time: "02:11 AM",
-    isAi: true,
-  },
-  {
-    id: 1526702,
-    sender: "friend",
-    name: "Awais Jutt",
-    avatarUrl:
-      "https://platform-lookaside.fbsbx.com/platform/profilepic/?eai=Aa3ONGwp69DFukVj6z9n7HeND1QSoSBL2tO7vekAGEsiNInViWVFNXNvti9mQO_yNQW6jFMz77H8&psid=24362880443305426&width=1024&ext=1768823313&hash=AT84k2fd7nnUT-OF9S1Z_Q1_",
-    text: "i like the 2nd option",
-    time: "02:12 AM",
-  },
-  {
-    id: 1526704,
-    sender: "me",
-    name: "Wise man",
-    avatarUrl:
-      "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-1/502586578_2121943574989801_801439392086419003_n.jpg?stp=c341.0.1365.1365a_cp0_dst-jpg_s50x50_tt6&_nc_cat=104&ccb=1-7&_nc_sid=f907e8&_nc_eui2=AeGB6r9xqokwK7wrrTPZGgqlYfzXYouZ6bBh_Ndii5npsHdgWSOTEzsLrEA6hl0HVG0IQSGu-i1A0Hq8ujz1Tqfm&_nc_ohc=NMC5lFO6xAcQ7kNvwFA4zyi&_nc_oc=AdnvbUpSN0r2Ol4ajPkLTn2_iz3eRRY67mCCzFAKD5hHaDLdnJBymzaT7DUWKEuRTmZ4fYTwEEfXrfj5xyVHWLCg&_nc_zt=24&_nc_ht=scontent-iad3-1.xx&edm=AJdBtusEAAAA&_nc_gid=wZbj5r2NmUa9F8o3OGQhaQ&_nc_tpa=Q5bMBQFyO_cypCGYhj-U7wjcXvVU9Q_xt4rF1yaawVrxYUDHMCAAJHUd8KGV0Y5E1DD81AoLy6tMDFYD&oh=00_AfngmgqG-Cq7PMRPa4ieGCU-NwhBjqQas_UnlIuw-1o4XA&oe=694C7BCC",
-    text: "Awesome, Warm Contemporary it is!<br>Here are 3 curated directions I’ll pull matches and quotes for:<br>1) Cozy Wood Haven, oak accents, warm neutrals, layered textiles.<br>2) Soft-Light Open Plan, breezy layout, soft pendant and floor lighting.<br>3) Rustic-Modern Blend, reclaimed wood, matte black fixtures, plush seating.<br>I’ll go fetch the best product matches and price estimates now, Olivia",
-    time: "02:13 AM",
-    isAi: true,
-  },
-];
+type HomeTab = "chats" | "comments" | "subscribers";
 
-const MOCK_CHAT_CUSTOMER: Customer = {
-  id: "24362880443305426",
-  name: "Awais Jutt",
-  avatarUrl:
-    "https://platform-lookaside.fbsbx.com/platform/profilepic/?eai=Aa3ONGwp69DFukVj6z9n7HeND1QSoSBL2tO7vekAGEsiNInViWVFNXNvti9mQO_yNQW6jFMz77H8&psid=24362880443305426&width=1024&ext=1768823313&hash=AT84k2fd7nnUT-OF9S1Z_Q1_",
-  tags: ["Warm Contemporary", "Cozy", "Wood Accents"],
-};
-
-
-// --- MOCK DATA FOR COMMENTS TAB ---
-const HOUSE_AVATAR = "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/561824335_122146508780890127_269311364933202105_n.jpg?stp=dst-jpg_p720x720_tt6&_nc_cat=110&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGe61CsNROzMHuUovCHorhGgx2HUKFJ6keDHYdQoUnqR5BPbmD8AgGDZBJYR2RqVCxKTVwijAAkzEo4sY1UJA1V&_nc_ohc=MQEjHQclOHcQ7kNvwE6I5e4&_nc_oc=AdkGBcKVzzSYXabxwNZJt5q7ApTP0s5vjCGsz1SnK5mV3bhonqTxZBoYhgb0-z3W172FOJyhE4BBgOupNO0vKgpj&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&edm=AJfPMC4EAAAA&_nc_gid=GT_Vc4BG72jvFvfvnzUHxg&_nc_tpa=Q5bMBQFMCKr_GGUcRFK1s6KnpBEocXECwmyNRpd_vGfiECcesY5-5xa9mTjxnJdfTSmfjRW7b0AvyuPk&oh=00_Afn9kfAi8KFoD5zfSVHRVAaKUKRYDI-CtzsTtxrYuaDxjg&oe=694C9167";
-
-const MOCK_COMMENT_MESSAGES: Message[] = [
-  {
-    id: 968599,
-    sender: "friend",
-    name: "Awais Jutt",
-    avatarUrl:
-      "https://platform-lookaside.fbsbx.com/platform/profilepic/?eai=Aa1mO2ROaaUp-ktD5ariwLzMY22btkLBPxxWhF-VZZYN8TJo3NIz9iDjNUCTKo1eW1adTp_urhwx&psid=24362880443305426&width=1024&ext=1768827193&hash=AT9O4AHTMn8pYwNm9QCSwuBf",
-    text: "thats beautifull",
-    time: "02:04 AM",
-  },
-  {
-    id: 972760,
-    sender: "friend",
-    name: "Wise man",
-    avatarUrl: "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-1/502586578_2121943574989801_801439392086419003_n.jpg?stp=c341.0.1365.1365a_cp0_dst-jpg_s50x50_tt6&_nc_cat=104&ccb=1-7&_nc_sid=f907e8&_nc_eui2=AeGB6r9xqokwK7wrrTPZGgqlYfzXYouZ6bBh_Ndii5npsHdgWSOTEzsLrEA6hl0HVG0IQSGu-i1A0Hq8ujz1Tqfm&_nc_ohc=NMC5lFO6xAcQ7kNvwFA4zyi&_nc_oc=AdnvbUpSN0r2Ol4ajPkLTn2_iz3eRRY67mCCzFAKD5hHaDLdnJBymzaT7DUWKEuRTmZ4fYTwEEfXrfj5xyVHWLCg&_nc_zt=24&_nc_ht=scontent-iad3-1.xx&edm=ANsyT80EAAAA&_nc_gid=WWyb-KiDhxWZ0Eb_2iWdEw&_nc_tpa=Q5bMBQHpaMJhI5Dk6EEVXw-q_2H0iDDRWTlZSxBt9G_QRD-PVqgpeKlDa4xfyWXw3LrxkxEO3sgPTZUP&oh=00_AflBx5q5GDmM7UfZ31oU2bHgu0n2hBbKcDc133MxCMU8uA&oe=694C7BCC",
-    text: "that's awesome",
-    time: "06:13 AM",
-  }
-];
-
-const MOCK_COMMENT_CUSTOMER: Customer = {
-  id: "645232738675563_122146508888890127",
-  name: "House of My Dream",
-  avatarUrl: HOUSE_AVATAR,
-  tags: ["Page post"], // Using tags for "Page post" or similar
-};
+interface ExtendedChatPreview extends ChatPreview {
+  platform: "facebook" | "instagram";
+}
 
 
 export default function HomeClient() {
@@ -130,36 +32,139 @@ export default function HomeClient() {
     }
   }, [searchParams, router]);
 
-  const [tab, setTab] = React.useState<"chats" | "comments" | "subscribers">(
-    "chats",
-  );
-  const [activeChatId, setActiveChatId] = React.useState("t_2122612654922893");
+  const [tab, setTab] = React.useState<HomeTab>("chats");
+  const [activeChatId, setActiveChatId] = React.useState<string | null>(null);
   const [composerText, setComposerText] = React.useState("");
   const [autoReply, setAutoReply] = React.useState(true);
 
-  // Derive data based on Active Tab
-  const chats = MOCK_CHATS.map((c) => ({
-    ...c,
-    isActive: c.id === activeChatId,
-  }));
+  // API Data State
+  const [chats, setChats] = React.useState<ExtendedChatPreview[]>([]);
+  const [messages, setMessages] = React.useState<Message[]>([]);
+  const [customer, setCustomer] = React.useState<Customer | null>(null);
+  const [loading, setLoading] = React.useState(false);
 
-  // Logic to switch data sources
-  let currentMessages = MOCK_CHAT_MESSAGES;
-  let currentCustomer = MOCK_CHAT_CUSTOMER;
-  let currentAdId = "";
+  // Load Chats or Comments when tab changes
+  React.useEffect(() => {
+    loadList(tab);
+  }, [tab]);
 
-  if (tab === "comments") {
-    currentMessages = MOCK_COMMENT_MESSAGES;
-    currentCustomer = MOCK_COMMENT_CUSTOMER;
-    currentAdId = "645232738675563_122146508888890127"; // Using Ad ID field for Post ID per snippet
-  }
+  // Load Messages when activeChatId changes
+  React.useEffect(() => {
+    if (activeChatId) {
+      loadMessages(activeChatId, tab);
+    } else {
+      setMessages([]);
+      setCustomer(null);
+    }
+  }, [activeChatId, tab]);
 
-  const handleSend = () => {
-    if (!composerText.trim()) return;
-    // Mock send
-    console.log("Sending:", composerText);
-    setComposerText("");
+  const loadList = async (currentTab: HomeTab) => {
+    setLoading(true);
+    try {
+      if (currentTab === "chats") {
+        const data = await api.messenger.getConversations();
+        const mapped: ExtendedChatPreview[] = data.map((c: any) => ({
+          id: c.id,
+          name: c.participants?.[0]?.name || "Unknown",
+          message: c.snippet,
+          time: new Date(c.updated_time).toLocaleDateString(),
+          avatarUrl: "https://app.smartreply.io/assets/images/placeholder.jpg",
+          platformIcon: "https://app.smartreply.io/assets/images/traffic_sources/facebook.png",
+          platform: "facebook",
+          isActive: false,
+        }));
+        setChats(mapped);
+        if (mapped.length > 0 && !activeChatId) {
+          setActiveChatId(mapped[0].id);
+        }
+      } else if (currentTab === "comments") {
+        // Re-using comments/getAll endpoint from API
+        const data = await api.comments.getAll();
+        const mapped: ExtendedChatPreview[] = data.map((c: any) => ({
+          id: c.id,
+          name: c.from?.name || "User",
+          message: c.message,
+          time: new Date(c.created_time).toLocaleDateString(),
+          avatarUrl: "https://app.smartreply.io/assets/images/placeholder.jpg",
+          platformIcon: "https://app.smartreply.io/assets/images/traffic_sources/facebook.png",
+          platform: "facebook",
+          isActive: false,
+        }));
+        setChats(mapped);
+        if (mapped.length > 0 && !activeChatId) {
+          setActiveChatId(mapped[0].id);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load list", err);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const loadMessages = async (id: string, currentTab: HomeTab) => {
+    try {
+      if (currentTab === "chats") {
+        const data = await api.messenger.getMessages(id);
+        const mappedMsgs: Message[] = data.map((m: any) => ({
+          id: m.id,
+          sender: m.from ? "friend" : "me", // Simple heuristic, actual API should tell us
+          name: m.from?.name || "Me",
+          avatarUrl: "https://app.smartreply.io/assets/images/placeholder.jpg",
+          text: m.message,
+          time: new Date(m.created_time).toLocaleTimeString(),
+          isAi: false, // Default
+        }));
+        setMessages(mappedMsgs);
+        // Verify customer logic
+        const chat = chats.find(c => c.id === id);
+        if (chat) {
+          setCustomer({
+            id: chat.id,
+            name: chat.name,
+            avatarUrl: chat.avatarUrl,
+            tags: ["Facebook"],
+          });
+        }
+      } else if (currentTab === "comments") {
+        // For comments, we might not have a full thread view in the same way, 
+        // but let's assume we can fetch replies
+        // NOTE: Implementation depends on API capabilities for comment threads
+        setMessages([]);
+      }
+    } catch (err) {
+      console.error("Failed to load messages", err);
+    }
+  };
+
+  const handleSend = async () => {
+    if (!composerText.trim() || !activeChatId) return;
+    try {
+      if (tab === "chats") {
+        await api.messenger.sendMessage(activeChatId, composerText);
+        // Optimistic update
+        const newMsg: Message = {
+          id: Date.now(),
+          sender: "me",
+          name: "Me",
+          avatarUrl: "https://app.smartreply.io/assets/images/placeholder.jpg",
+          text: composerText,
+          time: new Date().toLocaleTimeString(),
+        };
+        setMessages(prev => [...prev, newMsg]);
+      }
+      setComposerText("");
+    } catch (err) {
+      console.error("Failed to send", err);
+      alert("Failed to send message");
+    }
+  };
+
+  // Enhance chats with isActive state for Sidebar
+  const displayedChats = chats.map(c => ({
+    ...c,
+    isActive: c.id === activeChatId
+  }));
 
   return (
     <ChatLayout
@@ -167,17 +172,17 @@ export default function HomeClient() {
         <Sidebar
           activeTab={tab}
           onTabChange={setTab}
-          chats={chats}
-          activeChatId={activeChatId}
+          chats={displayedChats}
+          activeChatId={activeChatId || ""}
           onSelectChat={setActiveChatId}
         />
       }
       chat={
         <ChatWindow
-          messages={currentMessages}
-          customerName={currentCustomer.name}
-          customerAvatar={currentCustomer.avatarUrl}
-          adId={currentAdId}
+          messages={messages}
+          customerName={customer ? customer.name : "Select a chat"}
+          customerAvatar={customer ? customer.avatarUrl : ""}
+          adId={""}
           isOnline={true}
           autoReply={autoReply}
           onAutoReplyChange={setAutoReply}
@@ -188,7 +193,7 @@ export default function HomeClient() {
           isCommentMode={tab === "comments"}
         />
       }
-      rightSidebar={<RightSidebar customer={currentCustomer} />}
+      rightSidebar={customer ? <RightSidebar customer={customer} /> : <div />}
     />
   );
 }

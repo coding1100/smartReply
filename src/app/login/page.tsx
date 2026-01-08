@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { motion } from "framer-motion";
+import { api } from "@/services/api";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -26,27 +27,27 @@ export default function LoginPage() {
     useEffect(() => {
         if (isChecking.current) return;
         isChecking.current = true;
-        
+
         // Wait a bit to ensure we're not in a redirect loop
         const timeoutId = setTimeout(() => {
             // Check if we're still on login page (not already redirected)
             if (window.location.pathname !== "/login" || hasRedirected.current) {
                 return; // Already redirected, don't do anything
             }
-            
+
             const accessToken = localStorage.getItem("accessToken");
             const googleAccessToken = localStorage.getItem("googleAccessToken");
             const facebookAccessToken = localStorage.getItem("facebookAccessToken");
             // User is authenticated if they have any token
             const isAuthenticated = accessToken || googleAccessToken || facebookAccessToken;
-            
+
             if (isAuthenticated && !hasRedirected.current) {
                 hasRedirected.current = true;
                 // Only redirect if we have a token and we're actually on the login page
                 router.replace("/home");
             }
         }, 500);
-        
+
         return () => clearTimeout(timeoutId);
     }, [router]);
 
@@ -54,52 +55,58 @@ export default function LoginPage() {
     useEffect(() => {
         // Prevent redirect if already redirected
         if (hasRedirected.current) return;
-        
-        if (status === "authenticated" && session) {
-            // Store backend token in localStorage for API calls
-            if (session.accessToken) {
-                localStorage.setItem("accessToken", session.accessToken);
-                localStorage.setItem("tokenType", session.tokenType || "Bearer");
-            }
-            
-            // Store user information in localStorage
-            if (session.user) {
-                if (session.user.id) {
-                    localStorage.setItem("userId", session.user.id);
+
+        const checkAuthAndRedirect = async () => {
+            if (status === "authenticated" && session) {
+                // Store backend token in localStorage for API calls
+                if (session.accessToken) {
+                    localStorage.setItem("accessToken", session.accessToken);
+                    localStorage.setItem("tokenType", session.tokenType || "Bearer");
                 }
-                if (session.user.email) {
-                    localStorage.setItem("userEmail", session.user.email);
+
+                // Store user information in localStorage
+                if (session.user) {
+                    if (session.user.id) localStorage.setItem("userId", session.user.id);
+                    if (session.user.email) localStorage.setItem("userEmail", session.user.email);
+                    if (session.user.name) localStorage.setItem("userName", session.user.name);
+                    if (session.user.image) localStorage.setItem("userImage", session.user.image);
                 }
-                if (session.user.name) {
-                    localStorage.setItem("userName", session.user.name);
+
+                // Store backend user ID if available
+                if (session.backendUserId) {
+                    localStorage.setItem("backendUserId", session.backendUserId);
                 }
-                if (session.user.image) {
-                    localStorage.setItem("userImage", session.user.image);
+
+                // Store provider-specific OAuth access_token if available
+                if (session.googleAccessToken) {
+                    localStorage.setItem("googleAccessToken", session.googleAccessToken);
+                }
+                if (session.facebookAccessToken) {
+                    localStorage.setItem("facebookAccessToken", session.facebookAccessToken);
+                }
+
+                // Only redirect if we have accessToken and haven't redirected yet
+                const hasToken = session.accessToken || session.googleAccessToken || session.facebookAccessToken;
+                if (hasToken && !hasRedirected.current) {
+                    hasRedirected.current = true;
+                    try {
+                        const agents = await api.agents.list();
+                        if (!agents || agents.length === 0) {
+                            router.replace("/ai-agent-settings");
+                        } else {
+                            router.replace("/home");
+                        }
+                    } catch (error) {
+                        console.error("Error fetching agents list:", error);
+                        router.replace("/home");
+                    }
                 }
             }
-            
-            // Store backend user ID if available
-            if (session.backendUserId) {
-                localStorage.setItem("backendUserId", session.backendUserId);
-            }
-            
-            // Store provider-specific OAuth access_token if available
-            if (session.googleAccessToken) {
-                localStorage.setItem("googleAccessToken", session.googleAccessToken);
-            }
-            if (session.facebookAccessToken) {
-                localStorage.setItem("facebookAccessToken", session.facebookAccessToken);
-            }
-            
-            // Only redirect if we have accessToken and haven't redirected yet
-            const hasToken = session.accessToken || session.googleAccessToken || session.facebookAccessToken;
-            if (hasToken && !hasRedirected.current) {
-                hasRedirected.current = true;
-                router.replace("/home");
-            }
-        }
+        };
+
+        checkAuthAndRedirect();
     }, [session, status, router]);
-    
+
     // Additional effect to sync token when it becomes available (handles delayed token loading)
     useEffect(() => {
         if (status === "authenticated" && session?.accessToken) {
@@ -162,9 +169,19 @@ export default function LoginPage() {
                 localStorage.setItem("accessToken", data.access_token);
                 localStorage.setItem("tokenType", data.token_type);
                 if (!hasRedirected.current) {
-                hasRedirected.current = true;
-                router.replace("/home");
-            }
+                    hasRedirected.current = true;
+                    try {
+                        const agents = await api.agents.list();
+                        if (!agents || agents.length === 0) {
+                            router.replace("/ai-agent-settings");
+                        } else {
+                            router.replace("/home");
+                        }
+                    } catch (error) {
+                        console.error("Error fetching agents list:", error);
+                        router.replace("/home");
+                    }
+                }
             } else {
                 const errorMsg = typeof data.detail === 'string'
                     ? data.detail
@@ -181,7 +198,7 @@ export default function LoginPage() {
     const handleGoogleLogin = async () => {
         setError("");
         setLoading(true);
-        
+
         try {
             const result = await signIn("google", {
                 callbackUrl: "/home",
@@ -201,7 +218,7 @@ export default function LoginPage() {
     const handleFacebookLogin = async () => {
         setError("");
         setLoading(true);
-        
+
         try {
             const result = await signIn("facebook", {
                 callbackUrl: "/home",
@@ -260,14 +277,14 @@ export default function LoginPage() {
                             GET STARTED FREE
                         </Link>
                     </motion.div>
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                         className="w-full max-w-md space-y-4"
                     >
                         {error && (
-                            <motion.div 
+                            <motion.div
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 className="p-4 text-sm text-red-600 bg-red-50 border border-red-200 !rounded-xl shadow-sm"
@@ -312,7 +329,7 @@ export default function LoginPage() {
                             disabled={loading}
                         >
                             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#1877F2">
-                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                             </svg>
                             Sign In With Facebook
                         </motion.button>

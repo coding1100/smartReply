@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
+import { api } from "@/services/api";
 
 function RegisterContent() {
     const router = useRouter();
@@ -36,27 +37,27 @@ function RegisterContent() {
     useEffect(() => {
         if (isChecking.current) return;
         isChecking.current = true;
-        
+
         // Wait a bit to ensure we're not in a redirect loop
         const timeoutId = setTimeout(() => {
             // Check if we're still on register page (not already redirected)
             if (window.location.pathname !== "/register" || hasRedirected.current) {
                 return; // Already redirected, don't do anything
             }
-            
+
             const accessToken = localStorage.getItem("accessToken");
             const googleAccessToken = localStorage.getItem("googleAccessToken");
             const facebookAccessToken = localStorage.getItem("facebookAccessToken");
             // User is authenticated if they have any token
             const isAuthenticated = accessToken || googleAccessToken || facebookAccessToken;
-            
+
             if (isAuthenticated && !hasRedirected.current) {
                 hasRedirected.current = true;
                 // Only redirect if we have a token and we're actually on the register page
                 router.replace("/home");
             }
         }, 500);
-        
+
         return () => clearTimeout(timeoutId);
     }, [router]);
 
@@ -64,55 +65,62 @@ function RegisterContent() {
     useEffect(() => {
         // Prevent redirect if already redirected
         if (hasRedirected.current) return;
-        
+
         // Only redirect if we have a confirmed authenticated session
         // Don't redirect during loading state
-        if (status === "authenticated" && session) {
-            // Store backend token in localStorage for API calls
-            if (session.accessToken) {
-                localStorage.setItem("accessToken", session.accessToken);
-                localStorage.setItem("tokenType", session.tokenType || "Bearer");
-            }
-            
-            // Store user information in localStorage
-            if (session.user) {
-                if (session.user.id) {
-                    localStorage.setItem("userId", session.user.id);
+        const checkAuthAndRedirect = async () => {
+            if (status === "authenticated" && session) {
+                // Store backend token in localStorage for API calls
+                if (session.accessToken) {
+                    localStorage.setItem("accessToken", session.accessToken);
+                    localStorage.setItem("tokenType", session.tokenType || "Bearer");
                 }
-                if (session.user.email) {
-                    localStorage.setItem("userEmail", session.user.email);
+
+                // Store user information in localStorage
+                if (session.user) {
+                    if (session.user.id) localStorage.setItem("userId", session.user.id);
+                    if (session.user.email) localStorage.setItem("userEmail", session.user.email);
+                    if (session.user.name) localStorage.setItem("userName", session.user.name);
+                    if (session.user.image) localStorage.setItem("userImage", session.user.image);
                 }
-                if (session.user.name) {
-                    localStorage.setItem("userName", session.user.name);
+
+                // Store backend user ID if available
+                if (session.backendUserId) {
+                    localStorage.setItem("backendUserId", session.backendUserId);
                 }
-                if (session.user.image) {
-                    localStorage.setItem("userImage", session.user.image);
+
+                // Store provider-specific OAuth access_token if available
+                if (session.googleAccessToken) localStorage.setItem("googleAccessToken", session.googleAccessToken);
+                if (session.facebookAccessToken) localStorage.setItem("facebookAccessToken", session.facebookAccessToken);
+
+                // Only redirect if we have any token and haven't redirected yet
+                const isAuthenticated = session.accessToken || session.googleAccessToken || session.facebookAccessToken;
+
+                if (isAuthenticated && !hasRedirected.current) {
+                    hasRedirected.current = true;
+
+                    try {
+                        // Check if user has any agents connected
+                        const agents = await api.agents.list();
+                        if (!agents || agents.length === 0) {
+                            router.replace("/ai-agent-settings");
+                        } else {
+                            router.replace("/home");
+                        }
+                    } catch (error) {
+                        console.error("Error fetching agents list:", error);
+                        // Fallback to home on error
+                        router.replace("/home");
+                    }
                 }
             }
-            
-            // Store backend user ID if available
-            if (session.backendUserId) {
-                localStorage.setItem("backendUserId", session.backendUserId);
-            }
-            
-            // Store provider-specific OAuth access_token if available
-            if (session.googleAccessToken) {
-                localStorage.setItem("googleAccessToken", session.googleAccessToken);
-            }
-            if (session.facebookAccessToken) {
-                localStorage.setItem("facebookAccessToken", session.facebookAccessToken);
-            }
-            
-            // Only redirect if we have any token and haven't redirected yet
-            const isAuthenticated = session.accessToken || session.googleAccessToken || session.facebookAccessToken;
-            if (isAuthenticated && !hasRedirected.current) {
-                hasRedirected.current = true;
-                router.replace("/home");
-            }
-        }
+        };
+
+        checkAuthAndRedirect();
+
         // If status is "unauthenticated" or "loading", do nothing - user can stay on register page
     }, [session, status, router]);
-    
+
     // Additional effect to sync token when it becomes available (handles delayed token loading)
     useEffect(() => {
         if (status === "authenticated" && session?.accessToken) {
@@ -154,7 +162,7 @@ function RegisterContent() {
     const handleGoogleSignup = async () => {
         setError("");
         setLoading(true);
-        
+
         try {
             // Use redirect: false to handle the redirect manually
             const result = await signIn("google", {
@@ -183,7 +191,7 @@ function RegisterContent() {
     const handleFacebookSignup = async () => {
         setError("");
         setLoading(true);
-        
+
         try {
             // Use redirect: false to handle the redirect manually
             const result = await signIn("facebook", {
@@ -212,7 +220,7 @@ function RegisterContent() {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        
+
         // Clear validation error for this field when user starts typing
         if (validationErrors[name]) {
             setValidationErrors(prev => {
@@ -257,7 +265,7 @@ function RegisterContent() {
         e.preventDefault();
         setError("");
         setValidationErrors({});
-        
+
         // Validate form before submission
         if (!validateForm()) {
             return;
@@ -268,7 +276,7 @@ function RegisterContent() {
         try {
             // Prepare data for API (exclude confirm_password)
             const { confirm_password, ...apiData } = formData;
-            
+
             const response = await fetch(`${API_URL}/auth/register`, {
                 method: "POST",
                 headers: {
@@ -385,14 +393,14 @@ function RegisterContent() {
 
                 {/* Right Column - Form/Options Section */}
                 <div className="w-1/2 bg-zinc-50 flex items-center justify-center p-24 overflow-y-auto">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                         className="w-full max-w-md py-8"
                     >
                         {error && (
-                            <motion.div 
+                            <motion.div
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 className="mb-4 p-4 text-sm text-red-600 bg-red-50 border border-red-200 !rounded-xl shadow-sm"
@@ -431,7 +439,7 @@ function RegisterContent() {
                                     className="flex items-center w-full py-4 px-6 bg-white border border-zinc-200 !rounded-xl shadow-sm hover:shadow-md hover:border-zinc-300 transition-all !no-underline !text-zinc-900 mb-4"
                                 >
                                     <svg className="w-8 h-8 mr-4" viewBox="0 0 24 24" fill="#1877F2">
-                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                                     </svg>
                                     <div className="text-left flex-1">
                                         <h3 className="text-base font-semibold">Facebook</h3>
@@ -473,9 +481,8 @@ function RegisterContent() {
                                         value={formData.email}
                                         onChange={handleInputChange}
                                         placeholder="m.ovais@mindfind.com"
-                                        className={`w-full px-4 py-2.5 border !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${
-                                            validationErrors.email ? "border-red-300" : "border-zinc-200"
-                                        }`}
+                                        className={`w-full px-4 py-2.5 border !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${validationErrors.email ? "border-red-300" : "border-zinc-200"
+                                            }`}
                                     />
                                     {validationErrors.email && (
                                         <p className="mt-1 text-xs text-red-500">{validationErrors.email}</p>
@@ -495,9 +502,8 @@ function RegisterContent() {
                                             value={formData.first_name}
                                             onChange={handleInputChange}
                                             placeholder="John"
-                                            className={`w-full px-4 py-2.5 border !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${
-                                                validationErrors.first_name ? "border-red-300" : "border-zinc-200"
-                                            }`}
+                                            className={`w-full px-4 py-2.5 border !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${validationErrors.first_name ? "border-red-300" : "border-zinc-200"
+                                                }`}
                                         />
                                         {validationErrors.first_name && (
                                             <p className="mt-1 text-xs text-red-500">{validationErrors.first_name}</p>
@@ -569,9 +575,8 @@ function RegisterContent() {
                                         value={formData.password}
                                         onChange={handleInputChange}
                                         placeholder="••••••••••"
-                                        className={`w-full px-4 py-2.5 border !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${
-                                            validationErrors.password ? "border-red-300" : "border-zinc-200"
-                                        }`}
+                                        className={`w-full px-4 py-2.5 border !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${validationErrors.password ? "border-red-300" : "border-zinc-200"
+                                            }`}
                                     />
                                     {validationErrors.password && (
                                         <p className="mt-1 text-xs text-red-500">{validationErrors.password}</p>
@@ -590,9 +595,8 @@ function RegisterContent() {
                                         value={formData.confirm_password}
                                         onChange={handleInputChange}
                                         placeholder="••••••••••"
-                                        className={`w-full px-4 py-2.5 border !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${
-                                            validationErrors.confirm_password ? "border-red-300" : "border-zinc-200"
-                                        }`}
+                                        className={`w-full px-4 py-2.5 border !rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all ${validationErrors.confirm_password ? "border-red-300" : "border-zinc-200"
+                                            }`}
                                     />
                                     {validationErrors.confirm_password && (
                                         <p className="mt-1 text-xs text-red-500">{validationErrors.confirm_password}</p>
@@ -623,10 +627,10 @@ function RegisterContent() {
 }
 
 export default function RegisterPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <RegisterContent />
-    </Suspense>
-  );
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <RegisterContent />
+        </Suspense>
+    );
 }
 

@@ -1,9 +1,14 @@
 "use client";
 
 import * as React from "react";
+import { api, AgentSummary, AgentDetail } from "@/services/api";
 
 export function SettingsTab() {
   const [activeAccordion, setActiveAccordion] = React.useState<string | null>("connect");
+  const [agents, setAgents] = React.useState<AgentSummary[]>([]);
+  const [selectedAgentId, setSelectedAgentId] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState(false);
+
   const [goal, setGoal] = React.useState("sales");
   const [businessDescription, setBusinessDescription] = React.useState("");
   const [businessAddress, setBusinessAddress] = React.useState("");
@@ -24,6 +29,69 @@ export function SettingsTab() {
   const [subscriptionPolicyUrl, setSubscriptionPolicyUrl] = React.useState("");
   const [subscriptionPolicyText, setSubscriptionPolicyText] = React.useState("");
 
+  React.useEffect(() => {
+    loadAgents();
+  }, []);
+
+  const loadAgents = async () => {
+    try {
+      const list = await api.agents.list();
+      setAgents(list);
+      if (list.length > 0) {
+        setSelectedAgentId(list[0].page_id);
+        loadAgentDetails(list[0].page_id);
+      }
+    } catch (err) {
+      console.error("Failed to load agents", err);
+    }
+  };
+
+  const loadAgentDetails = async (pageId: string) => {
+    setLoading(true);
+    try {
+      const details = await api.agents.getDetails(pageId);
+      if (details) {
+        setGoal(details.goal || "sales");
+        setBusinessDescription(details.company_bio || "");
+        setBusinessAddress(details.business_address || "");
+        setSupportEmail(details.support_email || "");
+        setPersonality(details.persona || "helpful");
+        setBookingLink(details.calendar_link || "");
+        setPromotionOffers(details.promotion_code || "");
+        setDomain(details.domain || "");
+
+        // Populate Policy Pages
+        if (details.policy_pages) {
+          setPrivacyPolicyUrl(details.policy_pages["privacy_policy_url"] || "");
+          setPrivacyPolicyText(details.policy_pages["privacy_policy_text"] || "");
+          setTermsOfServiceUrl(details.policy_pages["terms_of_service_url"] || "");
+          setTermsOfServiceText(details.policy_pages["terms_of_service_text"] || "");
+          setRefundPolicyUrl(details.policy_pages["refund_policy_url"] || "");
+          setRefundPolicyText(details.policy_pages["refund_policy_text"] || "");
+          setShippingPolicyUrl(details.policy_pages["shipping_policy_url"] || "");
+          setShippingPolicyText(details.policy_pages["shipping_policy_text"] || "");
+          setSubscriptionPolicyUrl(details.policy_pages["subscription_policy_url"] || "");
+          setSubscriptionPolicyText(details.policy_pages["subscription_policy_text"] || "");
+        }
+
+        if (details.faqs) {
+          // Transform Record<string, string>[] to UI format
+          // details.faqs is Array of objects? Schema says Record<string, string>[]
+          // We'll adapt as needed.
+          const loadedFaqs = details.faqs.map(f => {
+            const key = Object.keys(f)[0];
+            return { question: key, answer: f[key] };
+          });
+          if (loadedFaqs.length > 0) setFaqs(loadedFaqs);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load agent details", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const toggleAccordion = (id: string) => {
     setActiveAccordion(activeAccordion === id ? null : id);
   };
@@ -38,15 +106,58 @@ export function SettingsTab() {
     setFaqs(updated);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement save logic
-    console.log("Saving settings...");
+    if (!selectedAgentId) return;
+
+    setLoading(true);
+    try {
+      const updateData = {
+        goal,
+        company_bio: businessDescription,
+        business_address: businessAddress,
+        support_email: supportEmail,
+        persona: personality,
+        calendar_link: bookingLink,
+        promotion_code: promotionOffers,
+        domain,
+        faqs: faqs.map(f => ({ [f.question]: f.answer })),
+        policy_pages: {
+          privacy_policy_url: privacyPolicyUrl,
+          privacy_policy_text: privacyPolicyText,
+          terms_of_service_url: termsOfServiceUrl,
+          terms_of_service_text: termsOfServiceText,
+          refund_policy_url: refundPolicyUrl,
+          refund_policy_text: refundPolicyText,
+          shipping_policy_url: shippingPolicyUrl,
+          shipping_policy_text: shippingPolicyText,
+          subscription_policy_url: subscriptionPolicyUrl,
+          subscription_policy_text: subscriptionPolicyText,
+        }
+      };
+      await api.agents.updateConfig(selectedAgentId, updateData);
+      alert("Settings saved successfully!");
+    } catch (err) {
+      console.error("Failed to save settings", err);
+      alert("Failed to save settings.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const openAccountMetaModal = () => {
-    // TODO: Implement account meta modal logic
-    console.log("Opening account meta modal...");
+  const openAccountMetaModal = async () => {
+    try {
+      // Call backend to get the Facebook OAuth URL
+      const response = await api.onboarding.connectFacebook();
+      if (response && response.url) {
+        window.location.href = response.url;
+      } else {
+        // Fallback if URL is not in response (though it should be)
+        alert("Could not initiate Facebook connection.");
+      }
+    } catch (err) {
+      console.error("Failed to connect Facebook", err);
+    }
   };
 
   return (
@@ -71,7 +182,13 @@ export function SettingsTab() {
               aria-labelledby="headingConnect"
             >
               <div className="mb-3-body" >
-                <div className="text-success mb-2">Page selected, ID: 645232738675563</div>
+                {selectedAgentId ? (
+                  <div className="text-success mb-2">
+                    Active Page: {agents.find(a => a.page_id === selectedAgentId)?.page_name} (ID: {selectedAgentId})
+                  </div>
+                ) : (
+                  <div className="text-muted mb-2">No page connected.</div>
+                )}
                 <button
                   className="btn btn-primary"
                   onClick={(e) => {
@@ -79,7 +196,7 @@ export function SettingsTab() {
                     openAccountMetaModal();
                   }}
                 >
-                  Change Page
+                  {selectedAgentId ? "Change / Reconnect Page" : "Connect Page"}
                 </button>
               </div>
             </div>
@@ -567,8 +684,9 @@ export function SettingsTab() {
                   type="submit"
                   className="btn btn-primary d-block mx-auto"
                   style={{ width: "85%", maxWidth: "600px" }}
+                  disabled={loading}
                 >
-                  Activate SmartReply
+                  {loading ? "Saving..." : "Activate / Save SmartReply Settings"}
                 </button>
               </div>
             </div>
