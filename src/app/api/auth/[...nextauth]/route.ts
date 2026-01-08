@@ -12,15 +12,15 @@ const getBaseUrl = () => {
   if (process.env.NEXTAUTH_URL) {
     return process.env.NEXTAUTH_URL;
   }
-  
+
   // Detect environment
   const isDevelopment = process.env.NODE_ENV === 'development';
-  
+
   if (isDevelopment) {
     // Local development - using root path
     return "http://localhost:3000";
   }
-  
+
   // Production fallback
   return "https://sme.namatechnologlies.com";
 };
@@ -35,12 +35,21 @@ const facebookRedirectUri = `${baseUrl}/api/auth/callback/facebook`;
 // Build providers array conditionally based on available credentials
 const providers = [];
 
+const googleClientId = process.env.GOOGLE_CLIENT_ID;
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+const facebookClientId = process.env.FACEBOOK_CLIENT_ID;
+const facebookClientSecret = process.env.FACEBOOK_CLIENT_SECRET;
+
+console.log("Auth Configuration Initializing...");
+console.log("- Google Client ID:", googleClientId ? "Set" : "Missing");
+console.log("- Facebook Client ID:", facebookClientId ? "Set" : "Missing");
+
 // Add Google provider if credentials are available
-if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+if (googleClientId && googleClientSecret) {
   providers.push(
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: googleClientId,
+      clientSecret: googleClientSecret,
       authorization: {
         params: {
           redirect_uri: googleRedirectUri,
@@ -49,34 +58,35 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
           response_type: "code",
         },
       },
-      // Ensure proper scopes
       checks: ["pkce", "state"],
     })
   );
 } else {
-  console.warn("Warning: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET is not set. Google login will not be available.");
+  console.warn("Warning: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET is not set.");
 }
 
 // Add Facebook provider if credentials are available
-if (process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET) {
+if (facebookClientId && facebookClientSecret) {
   providers.push(
     FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      clientId: facebookClientId,
+      clientSecret: facebookClientSecret,
       authorization: {
         params: {
+          // Note: NextAuth handles its own redirect_uri mostly, 
+          // but we can specify it if needed to match external config
           redirect_uri: facebookRedirectUri,
         },
       },
     })
   );
 } else {
-  console.warn("Warning: FACEBOOK_CLIENT_ID or FACEBOOK_CLIENT_SECRET is not set. Facebook login will not be available.");
+  console.warn("Warning: FACEBOOK_CLIENT_ID or FACEBOOK_CLIENT_SECRET is not set.");
 }
 
 // Ensure at least one provider is configured
 if (providers.length === 0) {
-  console.error("Error: No OAuth providers configured. Please set at least GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET or FACEBOOK_CLIENT_ID/FACEBOOK_CLIENT_SECRET in your environment variables.");
+  console.error("Error: No OAuth providers configured.");
 }
 
 export const authOptions: NextAuthOptions = {
@@ -119,7 +129,7 @@ export const authOptions: NextAuthOptions = {
           return true;
         }
       }
-      
+
       if (account?.provider === "facebook") {
         try {
           // Send user data to backend API for registration/login
@@ -152,7 +162,7 @@ export const authOptions: NextAuthOptions = {
           return true;
         }
       }
-      
+
       return true;
     },
     async jwt({ token, user, account }) {
@@ -163,11 +173,11 @@ export const authOptions: NextAuthOptions = {
         token.email = user.email || "";
         token.name = user.name || "";
         token.image = user.image || "";
-        
+
         // Store provider account info
         token.provider = account.provider;
         token.providerAccountId = account.providerAccountId;
-        
+
         // Store provider-specific OAuth access_token
         if (account.provider === "google" && account.access_token) {
           token.googleAccessToken = account.access_token;
@@ -180,7 +190,7 @@ export const authOptions: NextAuthOptions = {
         try {
           let apiEndpoint = "";
           let requestBody: any = {};
-          
+
           if (account.provider === "google") {
             apiEndpoint = `${API_URL}/auth/google/callback`;
             requestBody = {
@@ -199,7 +209,7 @@ export const authOptions: NextAuthOptions = {
               image: user.image,
             };
           }
-          
+
           console.log("Calling live API:", apiEndpoint);
           const response = await fetch(apiEndpoint, {
             method: "POST",
@@ -214,7 +224,7 @@ export const authOptions: NextAuthOptions = {
             token.accessToken = data.access_token;
             token.tokenType = data.token_type || "Bearer";
             token.backendUserId = data.user_id;
-            
+
             // Log success
             console.log("Backend token received successfully");
           } else {
@@ -238,7 +248,7 @@ export const authOptions: NextAuthOptions = {
           if (token.name) session.user.name = token.name as string;
           if (token.image) session.user.image = token.image as string;
         }
-        
+
         // Backend token information (will be stored in localStorage by SessionSync component)
         if (token.accessToken) {
           session.accessToken = token.accessToken as string;
@@ -251,7 +261,7 @@ export const authOptions: NextAuthOptions = {
         if (token.backendUserId) {
           session.backendUserId = token.backendUserId as string;
         }
-        
+
         // Store provider-specific OAuth access_token in session
         if (token.googleAccessToken) {
           session.googleAccessToken = token.googleAccessToken as string;
@@ -259,7 +269,7 @@ export const authOptions: NextAuthOptions = {
         if (token.facebookAccessToken) {
           session.facebookAccessToken = token.facebookAccessToken as string;
         }
-        
+
         // Log in development to verify token is being set
         if (process.env.NODE_ENV === 'development' && token.accessToken) {
           console.log('Session callback - Token available:', !!token.accessToken);

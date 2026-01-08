@@ -8,6 +8,7 @@ import { AdminSidebar } from "./AdminSidebar";
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
   const hasChecked = useRef(false);
   const isRedirecting = useRef(false);
@@ -15,42 +16,42 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Only check once on mount
     if (hasChecked.current || isRedirecting.current) return;
-    
+
     // Wait for window to be available
     if (typeof window === "undefined") {
       return;
     }
-    
+
     // Check current pathname - don't protect public routes
     const currentPath = window.location.pathname;
     const publicRoutes = ["/login", "/register", "/error"];
-    
+
     if (publicRoutes.includes(currentPath)) {
       hasChecked.current = true;
       setIsAuthorized(true);
       return;
     }
-    
+
     // Check for accessToken in localStorage
     const checkAuth = () => {
       // Prevent multiple redirects
       if (isRedirecting.current) return;
-      
+
       const accessToken = localStorage.getItem("accessToken");
       const googleAccessToken = localStorage.getItem("googleAccessToken");
       const facebookAccessToken = localStorage.getItem("facebookAccessToken");
       // User is authenticated if they have any token
       const isAuthenticated = accessToken || googleAccessToken || facebookAccessToken;
-      
+
       const currentPathNow = window.location.pathname;
-      
+
       // Double-check we're not on a public route
       if (publicRoutes.includes(currentPathNow)) {
         hasChecked.current = true;
         setIsAuthorized(true);
         return;
       }
-      
+
       if (!isAuthenticated) {
         // If no token and not already on login, redirect to login
         if (currentPathNow !== "/login" && !isRedirecting.current) {
@@ -67,10 +68,10 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         setIsAuthorized(true);
       }
     };
-    
+
     // Check after a delay to avoid race conditions
     const timeoutId = setTimeout(checkAuth, 300);
-    
+
     return () => clearTimeout(timeoutId);
   }, []); // Only run once on mount
 
@@ -97,7 +98,9 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         <AdminSidebar />
         <div className="flex min-w-0 flex-1 flex-col">
           <AdminHeader />
-          <main className="min-w-0 flex-1 overflow-y-auto p-6">{children}</main>
+          <main className={`min-w-0 flex-1 overflow-hidden ${pathname === "/home" ? "" : "p-6"}`}>
+            {children}
+          </main>
           <footer className="border-t border-zinc-200 bg-white px-6 py-3 text-right text-xs text-zinc-500">
             Copyright © 2021 SmartReply. All rights reserved
           </footer>

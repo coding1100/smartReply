@@ -193,7 +193,7 @@ export default function HomeClient() {
           isCommentMode={tab === "comments"}
         />
       }
-      rightSidebar={customer ? <RightSidebar customer={customer} /> : <div />}
+      rightSidebar={<RightSidebar customer={customer} />}
     />
   );
 }

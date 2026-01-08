@@ -129,6 +129,27 @@ function RegisterContent() {
         }
     }, [session?.accessToken, session?.tokenType, status]);
 
+    // Handle tokens from direct backend login/signup
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        const params = new URLSearchParams(window.location.search);
+        const accessToken = params.get('accessToken') || params.get('access_token');
+        const tokenType = params.get('tokenType') || params.get('token_type') || 'Bearer';
+        const userId = params.get('userId') || params.get('user_id');
+
+        if (accessToken) {
+            localStorage.setItem("accessToken", accessToken);
+            localStorage.setItem("tokenType", tokenType);
+            if (userId) localStorage.setItem("backendUserId", userId);
+
+            if (!hasRedirected.current) {
+                hasRedirected.current = true;
+                router.replace("/home");
+            }
+        }
+    }, [router]);
+
     // Handle error from URL params
     useEffect(() => {
         const errorParam = searchParams.get('error');
@@ -193,25 +214,11 @@ function RegisterContent() {
         setLoading(true);
 
         try {
-            // Use redirect: false to handle the redirect manually
-            const result = await signIn("facebook", {
-                callbackUrl: "/home",
-                redirect: false,
-            });
-
-            if (result?.error) {
-                setError("Facebook authentication failed. Please try again.");
-                setLoading(false);
-            } else if (result?.ok) {
-                // If successful, the session will be updated and useEffect will handle redirect
-                // Don't set loading to false here as the redirect will happen
-            } else {
-                // If URL is returned, redirect to it (this handles the OAuth flow)
-                if (result?.url) {
-                    window.location.href = result.url;
-                }
-            }
+            // Using the backend's social login flow as specified in openapi.json
+            console.log("Initiating Facebook signup via backend flow...");
+            api.auth.loginProvider("facebook");
         } catch (err) {
+            console.error("Facebook signup error:", err);
             setError("Something went wrong. Please try again later.");
             setLoading(false);
         }

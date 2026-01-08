@@ -115,9 +115,31 @@ export default function LoginPage() {
         }
     }, [session?.accessToken, session?.tokenType, status]);
 
+    // Handle tokens from direct backend login
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        const params = new URLSearchParams(window.location.search);
+        const accessToken = params.get('accessToken') || params.get('access_token');
+        const tokenType = params.get('tokenType') || params.get('token_type') || 'Bearer';
+        const userId = params.get('userId') || params.get('user_id');
+
+        if (accessToken) {
+            localStorage.setItem("accessToken", accessToken);
+            localStorage.setItem("tokenType", tokenType);
+            if (userId) localStorage.setItem("backendUserId", userId);
+
+            if (!hasRedirected.current) {
+                hasRedirected.current = true;
+                router.replace("/home");
+            }
+        }
+    }, [router]);
+
     // Handle error from URL params
     useEffect(() => {
-        const errorParam = new URLSearchParams(window.location.search).get('error');
+        const params = new URLSearchParams(window.location.search);
+        const errorParam = params.get('error');
         if (errorParam) {
             switch (errorParam) {
                 case 'OAuthSignin':
@@ -220,16 +242,12 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            const result = await signIn("facebook", {
-                callbackUrl: "/home",
-                redirect: true,
-            });
-
-            if (result?.error) {
-                setError("Facebook authentication failed. Please try again.");
-                setLoading(false);
-            }
+            // Using the backend's social login flow as specified in openapi.json
+            // This bypasses the need for frontend-side Facebook credentials
+            console.log("Initiating Facebook login via backend flow...");
+            api.auth.loginProvider("facebook");
         } catch (err) {
+            console.error("Facebook login error:", err);
             setError("Something went wrong. Please try again later.");
             setLoading(false);
         }
@@ -265,18 +283,12 @@ export default function LoginPage() {
 
                 {/* Right Column - Form Section (White Background) */}
                 <div className="w-1/2 bg-white flex items-center justify-center p-12 relative">
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.5, delay: 0.2 }}
+                    <Link
+                        href="/register"
+                        className="px-6 py-2 text-sm font-medium text-indigo-600 border border-indigo-600 !rounded-xl hover:bg-indigo-50 hover:shadow-sm !no-underline hover:!no-underline absolute top-[20px] right-[20px]"
                     >
-                        <Link
-                            href="/register"
-                            className="px-6 py-2 text-sm font-medium text-indigo-600 border border-indigo-600 !rounded-xl hover:bg-indigo-50 hover:shadow-sm !no-underline hover:!no-underline absolute top-[20px] right-[20px]"
-                        >
-                            GET STARTED FREE
-                        </Link>
-                    </motion.div>
+                        GET STARTED FREE
+                    </Link>
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
