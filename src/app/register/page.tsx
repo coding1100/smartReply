@@ -134,7 +134,7 @@ function RegisterContent() {
         if (typeof window === "undefined") return;
 
         const params = new URLSearchParams(window.location.search);
-        const accessToken = params.get('accessToken') || params.get('access_token');
+        const accessToken = params.get('accessToken') || params.get('access_token') || params.get('token');
         const tokenType = params.get('tokenType') || params.get('token_type') || 'Bearer';
         const userId = params.get('userId') || params.get('user_id');
 
@@ -216,7 +216,8 @@ function RegisterContent() {
         try {
             // Using the backend's social login flow as specified in openapi.json
             console.log("Initiating Facebook signup via backend flow...");
-            api.auth.loginProvider("facebook");
+            const redirectUri = `${window.location.origin}/register`;
+            api.auth.loginProvider("facebook", redirectUri);
         } catch (err) {
             console.error("Facebook signup error:", err);
             setError("Something went wrong. Please try again later.");

@@ -24,10 +24,16 @@ export default function HomeClient() {
   const router = useRouter();
 
   React.useEffect(() => {
-    const token = searchParams.get("token");
-    if (token) {
-      localStorage.setItem("accessToken", token);
-      // Remove the token from the URL for cleaner UI
+    const accessToken = searchParams.get("accessToken") || searchParams.get("access_token") || searchParams.get("token");
+    const tokenType = searchParams.get("tokenType") || searchParams.get("token_type") || "Bearer";
+    const userId = searchParams.get("userId") || searchParams.get("user_id");
+
+    if (accessToken) {
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("tokenType", tokenType);
+      if (userId) localStorage.setItem("backendUserId", userId);
+
+      // Remove the params from the URL for cleaner UI
       router.replace("/home");
     }
   }, [searchParams, router]);
