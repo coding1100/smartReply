@@ -146,7 +146,7 @@ class ApiService {
     private baseUrl: string;
 
     constructor() {
-        this.baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://sme.namatechnologlies.com";
+        this.baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://ec0466902e1b.ngrok-free.app";
     }
 
     private async getHeaders(): Promise<HeadersInit> {
@@ -212,8 +212,15 @@ class ApiService {
         // Note: Social Login redirects are usually handled by simple links, 
         // but these methods can be used if we need to fetch the redirect URL programmatically if API supports it.
         // Based on spec, these return schemas, so they might return a JSON with URL or redirect directly.
-        loginProvider: async (provider: string) => {
-            window.location.href = `${this.baseUrl}/auth/login/${provider}`;
+        loginProvider: async (provider: string, redirectUri?: string) => {
+            let url = `${this.baseUrl}/auth/login/${provider}`;
+            if (redirectUri) {
+                // Determine if we should use ? or & based on existing params
+                const separator = url.includes("?") ? "&" : "?";
+                url += `${separator}redirect_url=${encodeURIComponent(redirectUri)}`;
+            }
+            console.log("Redirecting to social login:", url);
+            window.location.href = url;
         },
 
         // Callbacks are usually handled by NextAuth or a specific route page capturing params
