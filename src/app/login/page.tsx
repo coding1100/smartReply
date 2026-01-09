@@ -120,7 +120,7 @@ export default function LoginPage() {
         if (typeof window === "undefined") return;
 
         const params = new URLSearchParams(window.location.search);
-        const accessToken = params.get('accessToken') || params.get('access_token');
+        const accessToken = params.get('accessToken') || params.get('access_token') || params.get('token');
         const tokenType = params.get('tokenType') || params.get('token_type') || 'Bearer';
         const userId = params.get('userId') || params.get('user_id');
 
@@ -242,10 +242,16 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            // Using the backend's social login flow as specified in openapi.json
-            // This bypasses the need for frontend-side Facebook credentials
-            console.log("Initiating Facebook login via backend flow...");
-            api.auth.loginProvider("facebook");
+            console.log("Initiating Facebook login via NextAuth...");
+            const result = await signIn("facebook", {
+                callbackUrl: "/home",
+                redirect: true,
+            });
+
+            if (result?.error) {
+                setError("Facebook authentication failed. Please try again.");
+                setLoading(false);
+            }
         } catch (err) {
             console.error("Facebook login error:", err);
             setError("Something went wrong. Please try again later.");
