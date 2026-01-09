@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { api, AgentSummary, AgentDetail } from "@/services/api";
 
 // Bootstrap-style Switch Component
 function BootstrapSwitch({
@@ -33,6 +34,11 @@ function BootstrapSwitch({
 }
 
 export function ControlsTab() {
+  const [activeAccordion, setActiveAccordion] = React.useState<string | null>("connect");
+  const [agents, setAgents] = React.useState<AgentSummary[]>([]);
+  const [selectedAgentId, setSelectedAgentId] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState(false);
+
   // State for form fields
   const [isActiveMessages, setIsActiveMessages] = React.useState(true);
   const [webChatActive, setWebChatActive] = React.useState(false);
@@ -46,16 +52,85 @@ export function ControlsTab() {
   );
   const [commentAction, setCommentAction] = React.useState("hide");
 
-  const handleSave = () => {
-    // TODO: Implement save logic
-    console.log("Saving agent settings...");
+  React.useEffect(() => {
+    loadAgents();
+  }, []);
+
+  const loadAgents = async () => {
+    try {
+      const list = await api.agents.list();
+      setAgents(list);
+      if (list.length > 0) {
+        setSelectedAgentId(list[0].page_id);
+        loadAgentDetails(list[0].page_id);
+      }
+    } catch (err) {
+      console.error("Failed to load agents", err);
+    }
+  };
+
+  const loadAgentDetails = async (pageId: string) => {
+    setLoading(true);
+    try {
+      const details = await api.agents.getDetails(pageId);
+      if (details && details.features) {
+        const f = details.features;
+        if (f.auto_message_enabled !== undefined) setIsActiveMessages(f.auto_message_enabled);
+        if (f.website_widget_enabled !== undefined) setWebChatActive(f.website_widget_enabled);
+        if (f.auto_followup_enabled !== undefined) setIsActiveFollowUp(f.auto_followup_enabled);
+        if (f.auto_comment_reply_enabled !== undefined) setIsActiveComments(f.auto_comment_reply_enabled);
+        if (f.auto_private_reply_enabled !== undefined) setIsActivePrivateReply(f.auto_private_reply_enabled);
+        if (f.private_reply_action) setPrivateReplyAction(f.private_reply_action);
+        if (f.auto_remove_comment_enabled !== undefined) setIsActiveRemoveComments(f.auto_remove_comment_enabled);
+        if (f.moderation_rules) setDeleteHideCommentPrompt(f.moderation_rules);
+        if (f.removal_action) setCommentAction(f.removal_action);
+      }
+    } catch (err) {
+      console.error("Failed to load agent details", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!selectedAgentId) return;
+    setLoading(true);
+    try {
+      const updateData = {
+        features: {
+          auto_message_enabled: isActiveMessages,
+          website_widget_enabled: webChatActive,
+          auto_followup_enabled: isActiveFollowUp,
+          auto_comment_reply_enabled: isActiveComments,
+          auto_private_reply_enabled: isActivePrivateReply,
+          private_reply_action: privateReplyAction,
+          auto_remove_comment_enabled: isActiveRemoveComments,
+          moderation_rules: deleteHideCommentPrompt,
+          removal_action: commentAction
+        }
+      };
+      await api.agents.updateConfig(selectedAgentId, updateData);
+      alert("Control settings saved successfully!");
+    } catch (err) {
+      console.error("Failed to save settings", err);
+      alert("Failed to save settings.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="row">
       <div className="col-md-6">
         <div className="mt-2">
-          <h3 className="h5 mb-1">AI Message Settings</h3>
+          <div className="d-flex justify-content-between align-items-center">
+            <h3 className="h5 mb-1">AI Message Settings</h3>
+            {selectedAgentId && agents.length > 0 && (
+              <span className="badge bg-success text-white">
+                Active: {agents.find(a => a.page_id === selectedAgentId)?.page_name}
+              </span>
+            )}
+          </div>
           <p className="text-muted small mb-4">
             Configure settings for automated messaging and chat functionalities.
           </p>
@@ -90,12 +165,14 @@ export function ControlsTab() {
               <small className="text-muted">
                 Activate this setting to display a chat widget on your website.
               </small>
-              <Link
-                href="/website-settings#"
-                className="small text-primary text-decoration-none d-block mt-1"
+
+              <button
+                type="button"
+                className="btn btn-link p-0 small text-primary text-decoration-none d-block mt-1"
+                onClick={() => alert("Website settings configuration coming soon.")}
               >
                 Additional Website Settings
-              </Link>
+              </button>
             </div>
           </div>
 
@@ -118,7 +195,7 @@ export function ControlsTab() {
           <div className="mb-4">
             <button
               type="button"
-              className="btn btn-link p-0 text-primary text-decoration-none small"
+              onClick={() => alert("Advanced messaging settings coming soon.")}
             >
               Advanced Settings
             </button>
@@ -132,12 +209,13 @@ export function ControlsTab() {
           <p className="text-muted small mb-2">
             Configure settings for automated comment responses and moderation.
           </p>
-          <Link
-            href="/advanced-settings"
-            className="small text-primary text-decoration-none d-block mb-3"
+          <button
+            type="button"
+            className="btn btn-link p-0 small text-primary text-decoration-none d-block mb-3"
+            onClick={() => alert("Advanced comment settings coming soon.")}
           >
             Additional Comment Settings
-          </Link>
+          </button>
           <hr className="mb-4" />
 
           <div className="mb-4 d-flex align-items-start">
@@ -244,12 +322,13 @@ export function ControlsTab() {
             type="button"
             className="btn btn-primary px-5"
             onClick={handleSave}
+            disabled={loading}
           >
-            Save
+            {loading ? "Saving..." : "Save Controls"}
           </button>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 
