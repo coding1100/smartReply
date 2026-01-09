@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { motion, AnimatePresence } from "framer-motion";
+import { api, AgentSummary, PostSummary, CommentSummary } from "@/services/api";
 
 type TabKey = "posts" | "igposts";
 
@@ -13,25 +14,99 @@ export default function CommentSelectorPage() {
   const [selectedComments, setSelectedComments] = React.useState<string[]>([]);
   const [selectedReplies, setSelectedReplies] = React.useState<string[]>([]);
 
+  // API State
+  const [agents, setAgents] = React.useState<AgentSummary[]>([]);
+  const [selectedAgentId, setSelectedAgentId] = React.useState<string | null>(null);
+  const [posts, setPosts] = React.useState<PostSummary[]>([]);
+  const [currentPostComments, setCurrentPostComments] = React.useState<CommentSummary[]>([]);
+  const [loading, setLoading] = React.useState(false);
+  const [postUrl, setPostUrl] = React.useState("");
+
+  React.useEffect(() => {
+    loadAgents();
+  }, []);
+
+  const loadAgents = async () => {
+    try {
+      const list = await api.agents.list();
+      setAgents(list);
+      if (list.length > 0) {
+        setSelectedAgentId(list[0].page_id);
+        loadPosts(list[0].page_id);
+      }
+    } catch (err) {
+      console.error("Failed to load agents", err);
+    }
+  };
+
+  const loadPosts = async (pageId: string) => {
+    setLoading(true);
+    try {
+      const data = await api.agents.getPosts(pageId);
+      setPosts(data);
+    } catch (err) {
+      console.error("Failed to load posts", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadComments = async (postId: string) => {
+    if (!selectedAgentId) return;
+    try {
+      // Assuming API might need agentId + postId
+      const comments = await api.agents.getPostComments(selectedAgentId, postId);
+      setCurrentPostComments(comments);
+    } catch (err) {
+      console.error("Failed to load comments", err);
+    }
+  };
+
   const showContent = (tab: TabKey) => {
     setActiveTab(tab);
   };
 
-  const openModalWithLoader = (postId: string, url: string, platform: string) => {
-    setPostUrl(url);
+  const openModalWithLoader = async (postId: string, url: string, platform: string) => {
+    setPostUrl(url || "#");
     setIsModalOpen(true);
+    await loadComments(postId);
   };
 
   const closeCommentModal = () => {
     setIsModalOpen(false);
+    setSelectedComments([]);
+    setCurrentPostComments([]); // Clear on close to avoid stale data
   };
 
-  const saveComments = () => {
-    // TODO: Implement save logic
-    console.log("Saving comments...");
-  };
+  const saveComments = async () => {
+    if (!selectedAgentId) return;
+    setLoading(true);
+    try {
+      // Save selected comments as training examples
+      for (const commentId of selectedComments) {
+        const comment = currentPostComments.find(c => c.id === commentId);
+        if (comment) {
+          await api.agents.addTrainingExample(selectedAgentId, {
+            comment_id: comment.id,
+            comment_text: comment.message,
+            agent_reaction: "like", // Default or derived from UI
+            // agent_comment_reply: ... (if custom reply set)
+          });
+        }
+      }
 
-  const [postUrl, setPostUrl] = React.useState("");
+      // TODO: Handle custom replies and private replies mapping from UI state to API
+      // For now, basic saving of selected comments
+
+      alert("Training examples saved!");
+      closeCommentModal();
+    } catch (err) {
+      console.error("Failed to save training data", err);
+      alert("Failed to save training data");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleCommentClick = (commentId: string) => {
     setSelectedComments(prev =>
@@ -171,99 +246,64 @@ export default function CommentSelectorPage() {
 
                 <div className="carousel-inner">
                   <div className="carousel-item active">
-                    <div className="d-flex justify-content-center gap-4">
-                      <div
-                        className="custom-card-container"
-                        style={{
-                          flex: "1 1 0%",
-                          maxWidth: "calc(20%)",
-                          padding: "15px",
-                          borderRadius: "16px",
-                          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                          transform: "scale(1)"
-                        }}
-                        onMouseOver={(e) => {
-                          e.currentTarget.style.transform = "scale(1.03) translateY(-2px)";
-                          e.currentTarget.style.boxShadow = "0 8px 16px rgba(79, 70, 229, 0.2)";
-                        }}
-                        onMouseOut={(e) => {
-                          e.currentTarget.style.transform = "scale(1)";
-                          e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.1)";
-                        }}
-                      >
-                        <div className="card">
+                    <div className="d-flex justify-content-center gap-4 flex-wrap">
+                      {posts.length === 0 ? (
+                        <div className="text-center p-5 text-muted">No posts found for this agent.</div>
+                      ) : (
+                        posts.map(post => (
                           <div
-                            className="custom-card"
-                            onClick={() => openModalWithLoader("645232738675563_122146508888890127", "https://facebook.com/645232738675563_122146508888890127", "Facebook")}
-                            style={{ cursor: "pointer", borderRadius: "12px" }}
-                            role="button"
-                            tabIndex={0}
-                            onKeyPress={(e) => {
-                              if (e.key === "Enter") {
-                                openModalWithLoader("645232738675563_122146508888890127", "https://facebook.com/645232738675563_122146508888890127", "Facebook");
-                              }
+                            key={post.id}
+                            className="custom-card-container"
+                            style={{
+                              flex: "0 0 auto",
+                              width: "300px",
+                              padding: "15px",
+                              borderRadius: "16px",
+                              transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                              transform: "scale(1)"
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.transform = "scale(1.03) translateY(-2px)";
+                              e.currentTarget.style.boxShadow = "0 8px 16px rgba(79, 70, 229, 0.2)";
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.transform = "scale(1)";
+                              e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.1)";
                             }}
                           >
-                            <img
-                              src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/561824335_122146508780890127_269311364933202105_n.jpg?stp=dst-jpg_p720x720_tt6&_nc_cat=110&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGe61CsNROzMHuUovCHorhGgx2HUKFJ6keDHYdQoUnqR5BPbmD8AgGDZBJYR2RqVCxKTVwijAAkzEo4sY1UJA1V&_nc_ohc=MQEjHQclOHcQ7kNvwE6I5e4&_nc_oc=AdkGBcKVzzSYXabxwNZJt5q7ApTP0s5vjCGsz1SnK5mV3bhonqTxZBoYhgb0-z3W172FOJyhE4BBgOupNO0vKgpj&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&edm=AKK4YLsEAAAA&_nc_gid=908jCbB11PileYU9jOdLfQ&_nc_tpa=Q5bMBQHV825vk-mpMztqOfGA9dG3djPVzjpNkaCV4FK_nb78lnXc7yjvrRSlb0IC0IB3aREvKnKTmTW0&oh=00_AfnUuFDpDjbLUiCglVfwzfMFWXTBKWbNGcnQT53_5gzJbw&oe=694C20E7"
-                              alt="Post Image"
-                              style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px", marginBottom: "10px" }}
-                            />
-                            <div style={{ padding: "10px 0" }}>
-                              <h5 style={{ fontSize: "1rem", fontWeight: "bold", marginBottom: "5px" }}>Post</h5>
-                              <p style={{ fontSize: "0.9rem", marginBottom: "5px", overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
-                                House of My Dream
-                              </p>
-                              <small style={{ fontSize: "0.85rem" }}>Comments: 2</small>
+                            <div className="card h-100">
+                              <div
+                                className="custom-card h-100 d-flex flex-column"
+                                onClick={() => openModalWithLoader(post.id, post.permalink_url || "", "Facebook")}
+                                style={{ cursor: "pointer", borderRadius: "12px" }}
+                                role="button"
+                                tabIndex={0}
+                              >
+                                {post.full_picture ? (
+                                  <img
+                                    src={post.full_picture}
+                                    alt="Post Image"
+                                    style={{ width: "100%", height: "200px", objectFit: "cover", borderRadius: "10px", marginBottom: "10px" }}
+                                  />
+                                ) : (
+                                  <div style={{ width: "100%", height: "200px", backgroundColor: "#f0f0f0", borderRadius: "10px", marginBottom: "10px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                    <span className="text-muted">No Image</span>
+                                  </div>
+                                )}
+                                <div style={{ padding: "10px 0" }} className="flex-grow-1">
+                                  <h5 style={{ fontSize: "1rem", fontWeight: "bold", marginBottom: "5px" }}>Post</h5>
+                                  <p style={{ fontSize: "0.9rem", marginBottom: "5px", overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical" }}>
+                                    {post.message || "No content"}
+                                  </p>
+                                  <small style={{ fontSize: "0.85rem" }} className="text-muted">
+                                    {new Date(post.created_time).toLocaleDateString()}
+                                  </small>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
-                      <div
-                        className="custom-card-container"
-                        style={{
-                          flex: "1 1 0%",
-                          maxWidth: "calc(20%)",
-                          padding: "15px",
-                          borderRadius: "16px",
-                          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                          transform: "scale(1)"
-                        }}
-                        onMouseOver={(e) => {
-                          e.currentTarget.style.transform = "scale(1.03) translateY(-2px)";
-                          e.currentTarget.style.boxShadow = "0 8px 16px rgba(79, 70, 229, 0.2)";
-                        }}
-                        onMouseOut={(e) => {
-                          e.currentTarget.style.transform = "scale(1)";
-                          e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.1)";
-                        }}
-                      >
-                        <div className="card">
-                          <div
-                            className="custom-card"
-                            onClick={() => openModalWithLoader("645232738675563_122105647052890127", "https://facebook.com/645232738675563_122105647052890127", "Facebook")}
-                            style={{ cursor: "pointer", borderRadius: "12px" }}
-                            role="button"
-                            tabIndex={0}
-                            onKeyPress={(e) => {
-                              if (e.key === "Enter") {
-                                openModalWithLoader("645232738675563_122105647052890127", "https://facebook.com/645232738675563_122105647052890127", "Facebook");
-                              }
-                            }}
-                          >
-                            <img
-                              src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/502586578_2121943574989801_801439392086419003_n.jpg?stp=dst-jpg_s1080x2048_tt6&_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGB6r9xqokwK7wrrTPZGgqlYfzXYouZ6bBh_Ndii5npsHdgWSOTEzsLrEA6hl0HVG0IQSGu-i1A0Hq8ujz1Tqfm&_nc_ohc=NMC5lFO6xAcQ7kNvwFA4zyi&_nc_oc=AdnvbUpSN0r2Ol4ajPkLTn2_iz3eRRY67mCCzFAKD5hHaDLdnJBymzaT7DUWKEuRTmZ4fYTwEEfXrfj5xyVHWLCg&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&edm=AKK4YLsEAAAA&_nc_gid=908jCbB11PileYU9jOdLfQ&_nc_tpa=Q5bMBQHZ63I7k4asuos4ns-bhWZC1s_98vBZX5yhsH5rEQE1iMR-bHRhjXrj3rdKgKA8y1YvCuXnRAIR&oh=00_AfkC9npp-tprMQP_-8v17c-k3hJbV0WTatCBSN2WntQ9OQ&oe=694C488E"
-                              alt="Post Image"
-                              style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px", marginBottom: "10px" }}
-                            />
-                            <div style={{ padding: "10px 0" }}>
-                              <h5 style={{ fontSize: "1rem", fontWeight: "bold", marginBottom: "5px" }}>Post</h5>
-                              <p style={{ fontSize: "0.9rem", marginBottom: "5px", overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}></p>
-                              <small style={{ fontSize: "0.85rem" }}>Comments: 0</small>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                        ))
+                      )}
                     </div>
                   </div>
                 </div>
@@ -361,79 +401,45 @@ export default function CommentSelectorPage() {
                       </div>
 
                       <div id="comment-list" className="space-y-4">
-                        <div className={`group relative p-3 rounded-2xl border transition-all cursor-pointer ${selectedComments.includes('122146508888890127_2078759359617457') ? 'border-indigo-200 bg-indigo-50/30' : 'border-zinc-100 bg-white hover:border-indigo-100 hover:shadow-md'}`}
-                          onClick={() => handleCommentClick('122146508888890127_2078759359617457')}>
-                          <div className="flex items-start justify-between">
-                            <div className="flex gap-4">
-                              <div className="relative">
-                                <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" alt="Wise man" className="h-12 w-12 rounded-full border-2 border-white shadow-sm object-cover" />
-                                <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-white flex items-center justify-center border border-zinc-100 shadow-sm">
-                                  <i className="bi bi-facebook text-blue-600 text-[10px]"></i>
-                                </div>
-                              </div>
-                              <div>
-                                <div className="flex items-center gap-2">
-                                  <h6 className="text-[15px] font-bold text-zinc-900 m-0">Wise man</h6>
-                                  {selectedComments.includes('122146508888890127_2078759359617457') && (
-                                    <span className="text-[10px] bg-indigo-600 text-white px-1.5 py-0.5 rounded-full">Pinned</span>
-                                  )}
-                                </div>
-                                <span className="text-[11px] text-zinc-500 block mt-0.5">Wed, Dec 17, 2025 • 12:13 PM</span>
-                              </div>
-                            </div>
-                            <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all ${selectedComments.includes('122146508888890127_2078759359617457') ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-zinc-200 group-hover:border-indigo-300'}`}>
-                              {selectedComments.includes('122146508888890127_2078759359617457') && <i className="bi bi-check-lg text-xs"></i>}
-                            </div>
-                          </div>
-                          <p className="mt-4 text-[14px] leading-relaxed text-zinc-700">that's awesome</p>
-                        </div>
+                        {currentPostComments.length === 0 ? (
+                          <p className="text-muted text-center py-4">No comments found.</p>
+                        ) : (
+                          currentPostComments.map(comment => {
+                            // Mock name/avatar logic if missing from API, assuming API gives basic comment structure
+                            const name = comment.from?.name || "User";
+                            const avatar = "https://app.smartreply.io/assets/images/placeholder.jpg";
+                            const time = new Date(comment.created_time).toLocaleString();
 
-                        <div className={`group relative p-3 rounded-2xl border transition-all cursor-pointer ${selectedComments.includes('122146508888890127_885430057309494') ? 'border-indigo-200 bg-indigo-50/30' : 'border-zinc-100 bg-white hover:border-indigo-100 hover:shadow-md'}`}
-                          onClick={() => handleCommentClick('122146508888890127_885430057309494')}>
-                          <div className="flex items-start justify-between">
-                            <div className="flex gap-4">
-                              <div className="relative">
-                                <img src="https://platform-lookaside.fbsbx.com/platform/profilepic/?eai=Aa1GxIdmtnWAToazYI9jsad_QNO_NiAcL-T9bcT9-VUPvWQmh4B1blmSzbb18zib-IBYVlmnG_sJ&psid=24362880443305426&height=50&width=50&ext=1768817199&hash=AT-PD-isvY1-MvfCzuvhJx1B" alt="Awais Jutt" className="h-12 w-12 rounded-full border-2 border-white shadow-sm object-cover" />
-                                <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-white flex items-center justify-center border border-zinc-100 shadow-sm">
-                                  <i className="bi bi-facebook text-blue-600 text-[10px]"></i>
+                            return (
+                              <div key={comment.id} className={`group relative p-3 rounded-2xl border transition-all cursor-pointer ${selectedComments.includes(comment.id) ? 'border-indigo-200 bg-indigo-50/30' : 'border-zinc-100 bg-white hover:border-indigo-100 hover:shadow-md'}`}
+                                onClick={() => handleCommentClick(comment.id)}>
+                                <div className="flex items-start justify-between">
+                                  <div className="flex gap-4">
+                                    <div className="relative">
+                                      <img src={avatar} alt={name} className="h-12 w-12 rounded-full border-2 border-white shadow-sm object-cover" />
+                                      <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-white flex items-center justify-center border border-zinc-100 shadow-sm">
+                                        <i className="bi bi-facebook text-blue-600 text-[10px]"></i>
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="flex items-center gap-2">
+                                        <h6 className="text-[15px] font-bold text-zinc-900 m-0">{name}</h6>
+                                        {selectedComments.includes(comment.id) && (
+                                          <span className="text-[10px] bg-indigo-600 text-white px-1.5 py-0.5 rounded-full">Pinned</span>
+                                        )}
+                                      </div>
+                                      <span className="text-[11px] text-zinc-500 block mt-0.5">{time}</span>
+                                    </div>
+                                  </div>
+                                  <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all ${selectedComments.includes(comment.id) ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-zinc-200 group-hover:border-indigo-300'}`}>
+                                    {selectedComments.includes(comment.id) && <i className="bi bi-check-lg text-xs"></i>}
+                                  </div>
                                 </div>
+                                <p className="mt-4 text-[14px] leading-relaxed text-zinc-700">{comment.message}</p>
                               </div>
-                              <div>
-                                <div className="flex items-center gap-2">
-                                  <h6 className="text-[15px] font-bold text-zinc-900 m-0">Awais Jutt</h6>
-                                </div>
-                                <span className="text-[11px] text-zinc-500 block mt-0.5">Tue, Dec 16, 2025 • 8:04 AM</span>
-                              </div>
-                            </div>
-                            <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all ${selectedComments.includes('122146508888890127_885430057309494') ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-zinc-200 group-hover:border-indigo-300'}`}>
-                              {selectedComments.includes('122146508888890127_885430057309494') && <i className="bi bi-check-lg text-xs"></i>}
-                            </div>
-                          </div>
-                          <p className="mt-4 text-[14px] leading-relaxed text-zinc-700">thats beautifull</p>
-
-                          {/* Nested Replies */}
-                          <div className="mt-6 pl-4 space-y-3 border-l-2 border-zinc-100">
-                            <div 
-                              className={`group relative p-3 !rounded-xl border transition-all cursor-pointer flex items-start gap-3 ${selectedReplies.includes('reply_122146508888890127_885430057309494_1') ? 'border-indigo-200 bg-indigo-50/30' : 'bg-zinc-50 border-zinc-100 hover:border-indigo-100 hover:shadow-sm'}`}
-                              onClick={(e) => handleReplyClick('122146508888890127_885430057309494', 'reply_122146508888890127_885430057309494_1', e)}
-                            >
-                              <img src="https://app.smartreply.io/storage/company_logo/3552_1760582765.png" alt="Wise man" className="h-8 w-8 rounded-full border border-white object-cover" />
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <h6 className="text-[13px] font-bold text-zinc-800 m-0">Wise man</h6>
-                                  {selectedReplies.includes('reply_122146508888890127_885430057309494_1') && (
-                                    <span className="text-[9px] bg-indigo-600 text-white px-1.5 py-0.5 rounded-full">Pinned</span>
-                                  )}
-                                </div>
-                                <p className="text-[12px] text-zinc-600 mt-1 mb-0">Awais Jutt Thanks so much!</p>
-                                <span className="text-[10px] text-zinc-400 block mt-1">Reply • Tue, Dec 16, 2025 • 8:05 AM</span>
-                              </div>
-                              <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${selectedReplies.includes('reply_122146508888890127_885430057309494_1') ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-zinc-200 group-hover:border-indigo-300'}`}>
-                                {selectedReplies.includes('reply_122146508888890127_885430057309494_1') && <i className="bi bi-check-lg text-[10px]"></i>}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                            );
+                          })
+                        )}
                       </div>
                     </div>
 
@@ -447,12 +453,19 @@ export default function CommentSelectorPage() {
                       <div className="space-y-6">
                         <AnimatePresence>
                           {/* Selected Comments */}
+                          {/* Selected Comments */}
                           {selectedComments.map(id => {
-                            const isWiseMan = id.includes('2078759359617457');
-                            const name = isWiseMan ? "Wise man" : "Awais Jutt";
-                            const avatar = isWiseMan ? "https://app.smartreply.io/storage/company_logo/3552_1760582765.png" : "https://platform-lookaside.fbsbx.com/platform/profilepic/?eai=Aa1GxIdmtnWAToazYI9jsad_QNO_NiAcL-T9bcT9-VUPvWQmh4B1blmSzbb18zib-IBYVlmnG_sJ&psid=24362880443305426&height=50&width=50&ext=1768817199&hash=AT-PD-isvY1-MvfCzuvhJx1B";
-                            const time = isWiseMan ? "Wed, Dec 17, 2025 • 12:13 PM" : "Tue, Dec 16, 2025 • 8:04 AM";
-                            const text = isWiseMan ? "that's awesome" : "thats beautifull";
+                            // Find comment in currentPostComments
+                            // Note: In real app, selectedComments might include comments from other posts if we persisted them.
+                            // For this UI, we might only be able to show details if they are in current set, 
+                            // or we need a global store. Simplification: scan current.
+                            const comment = currentPostComments.find(c => c.id === id);
+                            if (!comment) return null; // Or show dummy
+
+                            const name = comment.from?.name || "User";
+                            const avatar = "https://app.smartreply.io/assets/images/placeholder.jpg";
+                            const time = new Date(comment.created_time).toLocaleString();
+                            const text = comment.message;
 
                             return (
                               <motion.div
@@ -535,7 +548,7 @@ export default function CommentSelectorPage() {
                               </motion.div>
                             );
                           })}
-                          
+
                           {/* Selected Replies */}
                           {selectedReplies.map(replyId => {
                             // Extract comment ID from reply ID (format: reply_commentId_replyId)

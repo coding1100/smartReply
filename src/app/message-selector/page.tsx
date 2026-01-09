@@ -1,45 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AdminLayout } from "../../components/admin/AdminLayout";
+import { api, AgentSummary, ConversationSummary, MessageSummary } from "@/services/api";
 
-// --- MOCK DATA ---
-const MOCK_CONVERSATIONS = [
-    {
-        id: "t_2122612654922893",
-        platform: "facebook",
-        sender: "Awais Jutt",
-        avatar: "https://app.smartreply.io/assets/images/placeholder.jpg", // Placeholder
-        lastMessage: "Awesome, Warm Contemporary it is! Here are 3 curated directions I’ll p...",
-        timestamp: "4 days ago",
-    },
-    {
-        id: "t_insta_12345",
-        platform: "instagram",
-        sender: "John Doe",
-        avatar: "https://app.smartreply.io/assets/images/placeholder.jpg",
-        lastMessage: "Can you send the pricing?",
-        timestamp: "5 hour ago",
-    },
-    // Add more to test scroll if needed
-];
+// Helper Interface for UI
+interface UIConversation {
+    id: string;
+    platform: "facebook" | "instagram";
+    sender: string;
+    avatar: string;
+    lastMessage: string;
+    timestamp: string;
+}
 
-const MOCK_MESSAGES = [
-    {
-        id: "m_1",
-        sender: "Awais Jutt",
-        text: "Hi",
-        timestamp: "Tue, Jun 3, 2025 7:39 AM",
-        avatar: "https://app.smartreply.io/assets/images/placeholder.jpg",
-    },
-    {
-        id: "m_2",
-        sender: "Awais Jutt",
-        text: "I am interested in this property.",
-        timestamp: "Tue, Jun 3, 2025 7:40 AM",
-        avatar: "https://app.smartreply.io/assets/images/placeholder.jpg",
-    },
-];
+interface UIMessage {
+    id: string;
+    sender: string;
+    text: string;
+    timestamp: string;
+    avatar: string;
+}
 
 export default function MessageSelectorPage() {
     const [platform, setPlatform] = useState<"facebook" | "instagram">("facebook");
@@ -47,13 +28,80 @@ export default function MessageSelectorPage() {
     const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
     const [selectedMessages, setSelectedMessages] = useState<string[]>([]);
 
-    // Filter conversations by platform
-    const filteredConversations = MOCK_CONVERSATIONS.filter(c => c.platform === platform);
+    // API State
+    const [agents, setAgents] = useState<AgentSummary[]>([]);
+    const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
+    const [conversations, setConversations] = useState<UIConversation[]>([]);
+    const [currentMessages, setCurrentMessages] = useState<UIMessage[]>([]);
+    const [loading, setLoading] = useState(false);
 
-    const handleOpenModal = (conversationId: string) => {
+    useEffect(() => {
+        loadAgents();
+    }, []);
+
+    const loadAgents = async () => {
+        try {
+            const list = await api.agents.list();
+            setAgents(list);
+            if (list.length > 0) {
+                setSelectedAgentId(list[0].page_id);
+                loadConversations(list[0].page_id);
+            }
+        } catch (err) {
+            console.error("Failed to load agents", err);
+        }
+    };
+
+    const loadConversations = async (pageId: string) => {
+        setLoading(true);
+        try {
+            const data = await api.agents.getConversations(pageId);
+            // Map API data to UI
+            const mapped: UIConversation[] = data.map(c => ({
+                id: c.id,
+                platform: "facebook", // API doesn't specify platform per conversation, assuming page's platform or mixed
+                sender: c.participants && c.participants.length > 0 ? c.participants[0].name : "User",
+                avatar: "https://app.smartreply.io/assets/images/placeholder.jpg",
+                lastMessage: c.snippet,
+                timestamp: new Date(c.updated_time).toLocaleString() // Simple formatting
+            }));
+            setConversations(mapped);
+        } catch (err) {
+            console.error("Failed to load conversations", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const loadMessages = async (threadId: string) => {
+        if (!selectedAgentId) return;
+        setLoading(true);
+        try {
+            const data = await api.agents.getThreadMessages(selectedAgentId, threadId);
+            const mapped: UIMessage[] = data.map(m => ({
+                id: m.id,
+                sender: m.from ? m.from.name : "Unknown",
+                text: m.message,
+                timestamp: new Date(m.created_time).toLocaleString(),
+                avatar: "https://app.smartreply.io/assets/images/placeholder.jpg"
+            }));
+            setCurrentMessages(mapped);
+        } catch (err) {
+            console.error("Failed to load messages", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Filter conversations by platform (Optional: if we segregate them in UI but API returns all)
+    // For now, let's show all or filtered if API supports it.
+    // Assuming API returns all for the connected page.
+    const filteredConversations = conversations; //.filter(c => c.platform === platform);
+
+    const handleOpenModal = async (conversationId: string) => {
         setSelectedConversationId(conversationId);
         setIsModalOpen(true);
-        // In a real app, you'd fetch messages for this ID here
+        await loadMessages(conversationId);
     };
 
     const handleCloseModal = () => {
@@ -67,6 +115,31 @@ export default function MessageSelectorPage() {
                 ? prev.filter(id => id !== msgId)
                 : [...prev, msgId]
         );
+    };
+
+    const handleSave = async () => {
+        if (!selectedAgentId || !selectedConversationId) return;
+        setLoading(true);
+        try {
+            // Save selected messages as training examples
+            for (const msgId of selectedMessages) {
+                const msg = currentMessages.find(m => m.id === msgId);
+                if (msg) {
+                    await api.agents.addMessageTraining(selectedAgentId, {
+                        thread_id: selectedConversationId,
+                        user_message_text: msg.text,
+                        agent_reply_text: "...", // Optional: derive or prompt
+                    });
+                }
+            }
+            alert("Training saved!");
+            handleCloseModal();
+        } catch (err) {
+            console.error("Failed to save", err);
+            alert("Failed to save");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -86,8 +159,8 @@ export default function MessageSelectorPage() {
                             <button
                                 onClick={() => setPlatform("facebook")}
                                 className={`px-6 py-2.5 !rounded-xl text-sm font-semibold transition-all ${platform === "facebook"
-                                        ? "bg-indigo-600 text-white shadow-md shadow-indigo-100"
-                                        : "bg-white border border-zinc-200 text-zinc-600 hover:bg-indigo-50 hover:border-indigo-200"
+                                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-100"
+                                    : "bg-white border border-zinc-200 text-zinc-600 hover:bg-indigo-50 hover:border-indigo-200"
                                     }`}
                             >
                                 Facebook
@@ -95,8 +168,8 @@ export default function MessageSelectorPage() {
                             <button
                                 onClick={() => setPlatform("instagram")}
                                 className={`px-6 py-2.5 !rounded-xl text-sm font-semibold transition-all ${platform === "instagram"
-                                        ? "bg-indigo-600 text-white shadow-md shadow-indigo-100"
-                                        : "bg-white border border-zinc-200 text-zinc-600 hover:bg-indigo-50 hover:border-indigo-200"
+                                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-100"
+                                    : "bg-white border border-zinc-200 text-zinc-600 hover:bg-indigo-50 hover:border-indigo-200"
                                     }`}
                             >
                                 Instagram
@@ -206,35 +279,39 @@ export default function MessageSelectorPage() {
 
                                     {/* Left: Message List */}
                                     <div className="flex-1 overflow-y-auto pr-2">
-                                        {MOCK_MESSAGES.map(msg => {
-                                            const isSelected = selectedMessages.includes(msg.id);
-                                            return (
-                                                <div
-                                                    key={msg.id}
-                                                    onClick={() => toggleMessageSelection(msg.id)}
-                                                    className={`mb-3 cursor-pointer !rounded-xl border p-4 transition-all ${isSelected
+                                        {currentMessages.length === 0 ? (
+                                            <p className="text-muted">No messages found.</p>
+                                        ) : (
+                                            currentMessages.map(msg => {
+                                                const isSelected = selectedMessages.includes(msg.id);
+                                                return (
+                                                    <div
+                                                        key={msg.id}
+                                                        onClick={() => toggleMessageSelection(msg.id)}
+                                                        className={`mb-3 cursor-pointer !rounded-xl border p-4 transition-all ${isSelected
                                                             ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500"
                                                             : "border-zinc-200 bg-white hover:border-blue-300"
-                                                        }`}
-                                                >
-                                                    <div className="flex items-start justify-between">
-                                                        <div className="flex gap-3">
-                                                            <img src={msg.avatar} alt={msg.sender} className="h-10 w-10 !rounded-xl" />
-                                                            <div>
-                                                                <h5 className="font-semibold text-zinc-900">{msg.sender}</h5>
-                                                                <span className="text-xs text-zinc-500">{msg.timestamp}</span>
+                                                            }`}
+                                                    >
+                                                        <div className="flex items-start justify-between">
+                                                            <div className="flex gap-3">
+                                                                <img src={msg.avatar} alt={msg.sender} className="h-10 w-10 !rounded-xl" />
+                                                                <div>
+                                                                    <h5 className="font-semibold text-zinc-900">{msg.sender}</h5>
+                                                                    <span className="text-xs text-zinc-500">{msg.timestamp}</span>
+                                                                </div>
                                                             </div>
+                                                            {isSelected && (
+                                                                <span className="flex h-6 w-6 items-center justify-center !rounded-xl bg-blue-600 text-white text-xs">
+                                                                    ✓
+                                                                </span>
+                                                            )}
                                                         </div>
-                                                        {isSelected && (
-                                                            <span className="flex h-6 w-6 items-center justify-center !rounded-xl bg-blue-600 text-white text-xs">
-                                                                ✓
-                                                            </span>
-                                                        )}
+                                                        <p className="mt-2 text-zinc-800">{msg.text}</p>
                                                     </div>
-                                                    <p className="mt-2 text-zinc-800">{msg.text}</p>
-                                                </div>
-                                            );
-                                        })}
+                                                );
+                                            })
+                                        )}
                                     </div>
 
                                     {/* Right: Selected Summary (Mock) */}
@@ -245,7 +322,7 @@ export default function MessageSelectorPage() {
                                         ) : (
                                             <div className="space-y-3">
                                                 {selectedMessages.map(id => {
-                                                    const msg = MOCK_MESSAGES.find(m => m.id === id);
+                                                    const msg = currentMessages.find(m => m.id === id);
                                                     if (!msg) return null;
                                                     return (
                                                         <div key={id} className="bg-white p-3 rounded border border-zinc-200 shadow-sm text-sm">
@@ -263,7 +340,7 @@ export default function MessageSelectorPage() {
                             {/* Modal Footer */}
                             <div className="border-t border-zinc-100 px-6 py-4 flex justify-end">
                                 <button
-                                    onClick={handleCloseModal}
+                                    onClick={handleSave}
                                     className="!rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
                                 >
                                     Save and close
