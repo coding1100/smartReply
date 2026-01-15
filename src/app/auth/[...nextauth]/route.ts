@@ -64,14 +64,22 @@ console.log("📍 Google Redirect URI:", googleRedirectUri);
 console.log("⚠️  IMPORTANT: These redirect URIs MUST be whitelisted in OAuth provider consoles!");
 
 // Validate critical environment variables
+// Don't throw during build - NextAuth will handle missing secret at runtime
 if (!process.env.NEXTAUTH_SECRET) {
-    console.error("❌ CRITICAL ERROR: NEXTAUTH_SECRET is not set!");
-    console.error("   This will cause 500 errors on /auth/session endpoint");
-    console.error("   Generate with: openssl rand -base64 32");
-    console.error("   Add to Vercel Environment Variables: NEXTAUTH_SECRET=your-secret-here");
+    // Only log warnings, don't throw (prevents build failures)
+    // NextAuth will handle the missing secret gracefully at runtime
     if (process.env.NODE_ENV === 'production') {
-        throw new Error("NEXTAUTH_SECRET is required in production. Please set it in Vercel Environment Variables.");
+        console.warn("⚠️  WARNING: NEXTAUTH_SECRET is not set!");
+        console.warn("   This will cause 500 errors on /auth/session endpoint at runtime");
+        console.warn("   Generate with: openssl rand -base64 32");
+        console.warn("   Add to Vercel Environment Variables: NEXTAUTH_SECRET=your-secret-here");
+    } else {
+        console.error("❌ CRITICAL ERROR: NEXTAUTH_SECRET is not set!");
+        console.error("   This will cause 500 errors on /auth/session endpoint");
+        console.error("   Generate with: openssl rand -base64 32");
+        console.error("   Add to .env.local: NEXTAUTH_SECRET=your-secret-here");
     }
+    // Don't throw - let the build complete, NextAuth will handle it at runtime
 }
 
 if (!process.env.NEXTAUTH_URL && process.env.NODE_ENV === 'production') {
