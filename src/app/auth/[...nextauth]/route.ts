@@ -39,6 +39,10 @@ const facebookClientId = process.env.FACEBOOK_CLIENT_ID;
 const facebookClientSecret = process.env.FACEBOOK_CLIENT_SECRET;
 
 console.log("Auth Configuration Initializing (at /auth)...");
+console.log("📍 Base URL:", baseUrl);
+console.log("📍 Facebook Redirect URI:", facebookRedirectUri);
+console.log("📍 Google Redirect URI:", googleRedirectUri);
+console.log("⚠️  IMPORTANT: These redirect URIs MUST be whitelisted in OAuth provider consoles!");
 
 // Add Google provider if credentials are available
 if (googleClientId && googleClientSecret) {
@@ -225,6 +229,7 @@ export const authOptions: NextAuthOptions = {
         signIn: "/login",
         error: "/error",
     },
+    secret: process.env.NEXTAUTH_SECRET,
     debug: process.env.NODE_ENV === 'development',
 };
 
