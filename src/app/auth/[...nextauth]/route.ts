@@ -21,8 +21,27 @@ const getBaseUrl = () => {
         return "http://localhost:3000";
     }
 
-    // Production fallback
-    return "https://pseudoangular-maryrose-unbreathing.ngrok-free.dev";
+    // Production: Try to detect from Vercel environment variables
+    if (process.env.VERCEL_URL) {
+        return `https://${process.env.VERCEL_URL}`;
+    }
+
+    // Fallback: Use NEXT_PUBLIC_API_URL if available (for custom domains)
+    if (process.env.NEXT_PUBLIC_API_URL) {
+        // Extract domain from API URL if it's a full URL
+        try {
+            const url = new URL(process.env.NEXT_PUBLIC_API_URL);
+            // If API URL is on same domain, use it
+            if (url.hostname.includes('vercel.app') || url.hostname.includes('smart-reply')) {
+                return `https://smart-reply-xi.vercel.app`;
+            }
+        } catch (e) {
+            // Invalid URL, continue to fallback
+        }
+    }
+
+    // Final fallback: Use known production URL
+    return "https://smart-reply-xi.vercel.app";
 };
 
 const baseUrl = getBaseUrl();
@@ -43,6 +62,22 @@ console.log("📍 Base URL:", baseUrl);
 console.log("📍 Facebook Redirect URI:", facebookRedirectUri);
 console.log("📍 Google Redirect URI:", googleRedirectUri);
 console.log("⚠️  IMPORTANT: These redirect URIs MUST be whitelisted in OAuth provider consoles!");
+
+// Validate critical environment variables
+if (!process.env.NEXTAUTH_SECRET) {
+    console.error("❌ CRITICAL ERROR: NEXTAUTH_SECRET is not set!");
+    console.error("   This will cause 500 errors on /auth/session endpoint");
+    console.error("   Generate with: openssl rand -base64 32");
+    console.error("   Add to Vercel Environment Variables: NEXTAUTH_SECRET=your-secret-here");
+    if (process.env.NODE_ENV === 'production') {
+        throw new Error("NEXTAUTH_SECRET is required in production. Please set it in Vercel Environment Variables.");
+    }
+}
+
+if (!process.env.NEXTAUTH_URL && process.env.NODE_ENV === 'production') {
+    console.warn("⚠️  WARNING: NEXTAUTH_URL is not set in production");
+    console.warn("   Set in Vercel: NEXTAUTH_URL=https://smart-reply-xi.vercel.app");
+}
 
 // Add Google provider if credentials are available
 if (googleClientId && googleClientSecret) {
