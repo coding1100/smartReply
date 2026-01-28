@@ -37,13 +37,16 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       // Prevent multiple redirects
       if (isRedirecting.current) return;
 
-      const accessToken = localStorage.getItem("accessToken");
-      const googleAccessToken = localStorage.getItem("googleAccessToken");
-      const facebookAccessToken = localStorage.getItem("facebookAccessToken");
-      // User is authenticated if they have any token
-      const isAuthenticated = accessToken || googleAccessToken || facebookAccessToken;
-
       const currentPathNow = window.location.pathname;
+      const accessToken = localStorage.getItem("accessToken");
+      // User is authenticated if they have accessToken
+      const isAuthenticated = !!accessToken;
+      
+      console.log("🔐 AdminLayout - Auth Check:", {
+        hasAccessToken: !!accessToken,
+        isAuthenticated: isAuthenticated,
+        currentPath: currentPathNow
+      });
 
       // Double-check we're not on a public route
       if (publicRoutes.includes(currentPathNow)) {
@@ -69,10 +72,8 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       }
     };
 
-    // Check after a delay to avoid race conditions
-    const timeoutId = setTimeout(checkAuth, 300);
-
-    return () => clearTimeout(timeoutId);
+    // Check immediately - no delay needed as localStorage is synchronous
+    checkAuth();
   }, []); // Only run once on mount
 
   // Show loading state while checking
@@ -98,7 +99,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         <AdminSidebar />
         <div className="flex min-w-0 flex-1 flex-col">
           <AdminHeader />
-          <main className={`min-w-0 flex-1 overflow-hidden ${pathname === "/home" ? "" : "p-6"}`}>
+          <main className={`min-w-0 flex-1 overflow-auto ${pathname === "/home" ? "" : "p-6"}`}>
             {children}
           </main>
           <footer className="border-t border-zinc-200 bg-white px-6 py-3 text-right text-xs text-zinc-500">
