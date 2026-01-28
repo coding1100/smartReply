@@ -10,7 +10,7 @@ import { api } from "@/services/api";
 export default function LoginPage() {
     console.log("🔍 LoginPage Rendering...");
     console.log("📍 Current URL:", typeof window !== "undefined" ? window.location.href : "SSR");
-    
+
     // IMMEDIATE token check BEFORE any state/hooks
     if (typeof window !== "undefined") {
         const urlParams = new URLSearchParams(window.location.search);
@@ -20,7 +20,7 @@ export default function LoginPage() {
             console.log("🎯 IMMEDIATE CHECK - Token value:", token.substring(0, 20) + "...");
         }
     }
-    
+
     // Check if already authenticated IMMEDIATELY to prevent flash
     const [isRedirecting, setIsRedirecting] = useState(() => {
         if (typeof window !== "undefined") {
@@ -53,7 +53,7 @@ export default function LoginPage() {
         console.log("🔄 OAuth Token Effect Running (PRIORITY)...");
         console.log("🔄 typeof window:", typeof window);
         console.log("🔄 window.location.href:", typeof window !== "undefined" ? window.location.href : "N/A");
-        
+
         if (typeof window === "undefined") {
             console.log("⚠️ Window is undefined, skipping...");
             return;
@@ -62,39 +62,39 @@ export default function LoginPage() {
         // Check for token in URL IMMEDIATELY
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
-        
+
         console.log("❓ URL has token:", !!token);
         console.log("❓ Token value:", token ? token.substring(0, 20) + "..." : "null");
 
         if (token) {
             console.log("✅ Token found in URL, processing IMMEDIATELY...");
             console.log("🔑 Full Token:", token);
-            
+
             try {
                 // Save to localStorage IMMEDIATELY
                 localStorage.setItem("accessToken", token);
                 console.log("✅ Token saved to localStorage");
-                
+
                 localStorage.setItem("tokenType", urlParams.get('tokenType') || 'Bearer');
                 console.log("✅ TokenType saved to localStorage");
-                
+
                 const userId = urlParams.get('userId');
                 if (userId) {
                     console.log("👤 User ID:", userId);
                     localStorage.setItem("backendUserId", userId);
                     console.log("✅ UserId saved to localStorage");
                 }
-                
+
                 // Verify storage
                 console.log("🔍 Verifying localStorage:");
                 console.log("  - accessToken:", localStorage.getItem("accessToken") ? "✅ Saved" : "❌ Not saved");
                 console.log("  - tokenType:", localStorage.getItem("tokenType") ? "✅ Saved" : "❌ Not saved");
                 console.log("  - backendUserId:", localStorage.getItem("backendUserId") ? "✅ Saved" : "❌ Not saved");
-                
+
                 // Set flag to prevent other effects from interfering
                 hasRedirected.current = true;
                 setIsRedirecting(true);
-                
+
                 console.log("🚀 Redirecting to /home...");
                 // Use window.location for reliable redirect with fresh page load
                 window.location.href = "/home";
@@ -133,7 +133,7 @@ export default function LoginPage() {
         const checkAuthAndRedirect = async () => {
             if (status === "authenticated" && session) {
                 console.log("🔐 Session authenticated, saving tokens to localStorage...");
-                
+
                 // Store backend token in localStorage for API calls (PRIORITY)
                 if (session.accessToken) {
                     localStorage.setItem("accessToken", session.accessToken);
@@ -182,7 +182,7 @@ export default function LoginPage() {
     useEffect(() => {
         // Skip if we just processed a token from URL
         if (hasRedirected.current) return;
-        
+
         if (status === "authenticated" && session?.accessToken) {
             localStorage.setItem("accessToken", session.accessToken);
             localStorage.setItem("tokenType", session.tokenType || "Bearer");
@@ -289,12 +289,10 @@ export default function LoginPage() {
     const handleFacebookLogin = async () => {
         setError("");
         setLoading(true);
-
         try {
-            const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://pseudoangular-maryrose-unbreathing.ngrok-free.dev";
             console.log("🚀 Initiating Facebook login via backend...");
             console.log(`📍 Redirecting to: ${API_URL}/auth/login/facebook`);
-            
+
             // Redirect to backend OAuth endpoint
             // Backend will handle the OAuth flow and redirect back to frontend with token
             window.location.href = `${API_URL}/auth/login/facebook`;
