@@ -22,6 +22,40 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    // PRIORITY: Check for token in URL first (OAuth callback)
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
+    if (token) {
+      console.log("✅ AdminLayout - Token found in URL, processing...");
+      try {
+        // Save to localStorage IMMEDIATELY
+        localStorage.setItem("accessToken", token);
+        localStorage.setItem("tokenType", urlParams.get('tokenType') || 'Bearer');
+
+        const userId = urlParams.get('userId');
+        if (userId) {
+          localStorage.setItem("backendUserId", userId);
+        }
+
+        console.log("✅ AdminLayout - Token saved to localStorage");
+
+        // Clean up URL by removing token params (optional, but keeps URL clean)
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.delete('token');
+        newUrl.searchParams.delete('tokenType');
+        newUrl.searchParams.delete('userId');
+        window.history.replaceState({}, '', newUrl.toString());
+
+        // Mark as authorized and continue
+        hasChecked.current = true;
+        setIsAuthorized(true);
+        return;
+      } catch (error) {
+        console.error("❌ AdminLayout - Error processing token:", error);
+      }
+    }
+
     // Check current pathname - don't protect public routes
     const currentPath = window.location.pathname;
     const publicRoutes = ["/login", "/register", "/error"];
@@ -41,7 +75,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       const accessToken = localStorage.getItem("accessToken");
       // User is authenticated if they have accessToken
       const isAuthenticated = !!accessToken;
-      
+
       console.log("🔐 AdminLayout - Auth Check:", {
         hasAccessToken: !!accessToken,
         isAuthenticated: isAuthenticated,
