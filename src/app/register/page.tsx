@@ -185,25 +185,12 @@ function RegisterContent() {
         setLoading(true);
 
         try {
-            // Use redirect: false to handle the redirect manually
-            const result = await signIn("google", {
-                callbackUrl: "/home",
-                redirect: false,
-            });
-
-            if (result?.error) {
-                setError("Google authentication failed. Please try again.");
-                setLoading(false);
-            } else if (result?.ok) {
-                // If successful, the session will be updated and useEffect will handle redirect
-                // Don't set loading to false here as the redirect will happen
-            } else {
-                // If URL is returned, redirect to it (this handles the OAuth flow)
-                if (result?.url) {
-                    window.location.href = result.url;
-                }
-            }
+            // Use backend-initiated OAuth flow (same as Facebook)
+            console.log("🚀 Initiating Google OAuth via backend...");
+            const redirectUri = `${window.location.origin}/login`;
+            await api.auth.loginProvider('google', redirectUri);
         } catch (err) {
+            console.error("❌ Google signup error:", err);
             setError("Something went wrong. Please try again later.");
             setLoading(false);
         }

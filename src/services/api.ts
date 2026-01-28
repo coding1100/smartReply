@@ -223,6 +223,16 @@ class ApiService {
             window.location.href = url;
         },
 
+        // Get current authenticated user profile
+        getCurrentUser: async (): Promise<any> => {
+            const headers = await this.getHeaders();
+            const res = await fetch(`${this.baseUrl}/auth/me`, {
+                method: "GET",
+                headers,
+            });
+            return this.handleResponse(res);
+        },
+
         // Callbacks are usually handled by NextAuth or a specific route page capturing params
     };
 

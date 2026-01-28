@@ -13,6 +13,8 @@ export function SessionSync() {
   useEffect(() => {
     // Only sync when session is authenticated
     if (status === "authenticated" && session) {
+      console.log("✅ SessionSync: NextAuth session authenticated, syncing to localStorage");
+      
       // Store backend token in localStorage
       if (session.accessToken) {
         localStorage.setItem("accessToken", session.accessToken);
@@ -51,18 +53,10 @@ export function SessionSync() {
       if (session.facebookAccessToken) {
         localStorage.setItem("facebookAccessToken", session.facebookAccessToken);
       }
-    } else if (status === "unauthenticated") {
-      // Clear localStorage when user logs out
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("tokenType");
-      localStorage.removeItem("userId");
-      localStorage.removeItem("userEmail");
-      localStorage.removeItem("userName");
-      localStorage.removeItem("userImage");
-      localStorage.removeItem("backendUserId");
-      localStorage.removeItem("googleAccessToken");
-      localStorage.removeItem("facebookAccessToken");
     }
+    // REMOVED: unauthenticated cleanup block
+    // Backend OAuth doesn't use NextAuth sessions, so we shouldn't clear localStorage
+    // when NextAuth reports "unauthenticated". Logout is handled explicitly by AdminHeader.
   }, [session, status]);
 
   // This component doesn't render anything
