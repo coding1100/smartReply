@@ -8,6 +8,31 @@ import { motion } from "framer-motion";
 import { api } from "@/services/api";
 
 export default function LoginPage() {
+    console.log("🔍 LoginPage Rendering...");
+    console.log("📍 Current URL:", typeof window !== "undefined" ? window.location.href : "SSR");
+    
+    // IMMEDIATE token check BEFORE any state/hooks
+    if (typeof window !== "undefined") {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        console.log("🎯 IMMEDIATE CHECK - Token in URL:", !!token);
+        if (token) {
+            console.log("🎯 IMMEDIATE CHECK - Token value:", token.substring(0, 20) + "...");
+        }
+    }
+    
+    // Check if already authenticated IMMEDIATELY to prevent flash
+    const [isRedirecting, setIsRedirecting] = useState(() => {
+        if (typeof window !== "undefined") {
+            const hasToken = !!localStorage.getItem("accessToken");
+            if (hasToken) {
+                console.log("🔄 Already authenticated, preparing redirect...");
+            }
+            return hasToken;
+        }
+        return false;
+    });
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
@@ -22,46 +47,98 @@ export default function LoginPage() {
     const hasRedirected = React.useRef(false);
     const isChecking = React.useRef(false);
 
-    // Check if already logged in (has accessToken) - redirect to home
-    // Only check once on mount to prevent loops
+    // PRIORITY 1: Handle tokens from direct backend login (backend-initiated OAuth flow)
+    // This MUST run FIRST before any other auth checks
     useEffect(() => {
+        console.log("🔄 OAuth Token Effect Running (PRIORITY)...");
+        console.log("🔄 typeof window:", typeof window);
+        console.log("🔄 window.location.href:", typeof window !== "undefined" ? window.location.href : "N/A");
+        
+        if (typeof window === "undefined") {
+            console.log("⚠️ Window is undefined, skipping...");
+            return;
+        }
+
+        // Check for token in URL IMMEDIATELY
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        
+        console.log("❓ URL has token:", !!token);
+        console.log("❓ Token value:", token ? token.substring(0, 20) + "..." : "null");
+
+        if (token) {
+            console.log("✅ Token found in URL, processing IMMEDIATELY...");
+            console.log("🔑 Full Token:", token);
+            
+            try {
+                // Save to localStorage IMMEDIATELY
+                localStorage.setItem("accessToken", token);
+                console.log("✅ Token saved to localStorage");
+                
+                localStorage.setItem("tokenType", urlParams.get('tokenType') || 'Bearer');
+                console.log("✅ TokenType saved to localStorage");
+                
+                const userId = urlParams.get('userId');
+                if (userId) {
+                    console.log("👤 User ID:", userId);
+                    localStorage.setItem("backendUserId", userId);
+                    console.log("✅ UserId saved to localStorage");
+                }
+                
+                // Verify storage
+                console.log("🔍 Verifying localStorage:");
+                console.log("  - accessToken:", localStorage.getItem("accessToken") ? "✅ Saved" : "❌ Not saved");
+                console.log("  - tokenType:", localStorage.getItem("tokenType") ? "✅ Saved" : "❌ Not saved");
+                console.log("  - backendUserId:", localStorage.getItem("backendUserId") ? "✅ Saved" : "❌ Not saved");
+                
+                // Set flag to prevent other effects from interfering
+                hasRedirected.current = true;
+                setIsRedirecting(true);
+                
+                console.log("🚀 Redirecting to /home...");
+                // Use window.location for reliable redirect with fresh page load
+                window.location.href = "/home";
+                return; // Exit early
+            } catch (error) {
+                console.error("❌ Error processing token:", error);
+            }
+        } else {
+            console.log("⚠️ No token found in URL");
+        }
+    }, []); // Empty dependency array - run once on mount
+
+    // Check if already logged in (has accessToken) - redirect to home immediately
+    useEffect(() => {
+        // Skip if we just processed a token from URL
+        if (hasRedirected.current) return;
         if (isChecking.current) return;
         isChecking.current = true;
 
-        // Wait a bit to ensure we're not in a redirect loop
-        const timeoutId = setTimeout(() => {
-            // Check if we're still on login page (not already redirected)
-            if (window.location.pathname !== "/login" || hasRedirected.current) {
-                return; // Already redirected, don't do anything
-            }
+        // Check immediately - no delay needed
+        const accessToken = localStorage.getItem("accessToken");
 
-            const accessToken = localStorage.getItem("accessToken");
-            const googleAccessToken = localStorage.getItem("googleAccessToken");
-            const facebookAccessToken = localStorage.getItem("facebookAccessToken");
-            // User is authenticated if they have any token
-            const isAuthenticated = accessToken || googleAccessToken || facebookAccessToken;
-
-            if (isAuthenticated && !hasRedirected.current) {
-                hasRedirected.current = true;
-                // Only redirect if we have a token and we're actually on the login page
-                router.replace("/home");
-            }
-        }, 500);
-
-        return () => clearTimeout(timeoutId);
+        if (accessToken && !hasRedirected.current) {
+            console.log("✅ Token already exists, redirecting to /home...");
+            hasRedirected.current = true;
+            setIsRedirecting(true);
+            router.replace("/home");
+        }
     }, [router]);
 
-    // Redirect if already logged in and sync data to localStorage
+    // Redirect if already logged in and sync data to localStorage (NextAuth)
     useEffect(() => {
-        // Prevent redirect if already redirected
+        // Skip if we just processed a token from URL
         if (hasRedirected.current) return;
 
         const checkAuthAndRedirect = async () => {
             if (status === "authenticated" && session) {
-                // Store backend token in localStorage for API calls
+                console.log("🔐 Session authenticated, saving tokens to localStorage...");
+                
+                // Store backend token in localStorage for API calls (PRIORITY)
                 if (session.accessToken) {
                     localStorage.setItem("accessToken", session.accessToken);
                     localStorage.setItem("tokenType", session.tokenType || "Bearer");
+                    console.log("✅ Backend token saved to localStorage");
                 }
 
                 // Store user information in localStorage
@@ -77,7 +154,7 @@ export default function LoginPage() {
                     localStorage.setItem("backendUserId", session.backendUserId);
                 }
 
-                // Store provider-specific OAuth access_token if available
+                // Store provider-specific OAuth access_token if available (fallback)
                 if (session.googleAccessToken) {
                     localStorage.setItem("googleAccessToken", session.googleAccessToken);
                 }
@@ -85,21 +162,15 @@ export default function LoginPage() {
                     localStorage.setItem("facebookAccessToken", session.facebookAccessToken);
                 }
 
-                // Only redirect if we have accessToken and haven't redirected yet
+                // Redirect if we have backend accessToken (preferred) or provider token (fallback)
                 const hasToken = session.accessToken || session.googleAccessToken || session.facebookAccessToken;
                 if (hasToken && !hasRedirected.current) {
                     hasRedirected.current = true;
-                    try {
-                        const agents = await api.agents.list();
-                        if (!agents || agents.length === 0) {
-                            router.replace("/ai-agent-settings");
-                        } else {
-                            router.replace("/home");
-                        }
-                    } catch (error) {
-                        console.error("Error fetching agents list:", error);
+                    console.log("🚀 Redirecting to /home...");
+                    // Small delay to ensure localStorage is saved
+                    setTimeout(() => {
                         router.replace("/home");
-                    }
+                    }, 200);
                 }
             }
         };
@@ -107,34 +178,16 @@ export default function LoginPage() {
         checkAuthAndRedirect();
     }, [session, status, router]);
 
-    // Additional effect to sync token when it becomes available (handles delayed token loading)
+    // Additional effect to sync token when it becomes available (handles delayed token loading from NextAuth)
     useEffect(() => {
+        // Skip if we just processed a token from URL
+        if (hasRedirected.current) return;
+        
         if (status === "authenticated" && session?.accessToken) {
             localStorage.setItem("accessToken", session.accessToken);
             localStorage.setItem("tokenType", session.tokenType || "Bearer");
         }
     }, [session?.accessToken, session?.tokenType, status]);
-
-    // Handle tokens from direct backend login
-    useEffect(() => {
-        if (typeof window === "undefined") return;
-
-        const params = new URLSearchParams(window.location.search);
-        const accessToken = params.get('accessToken') || params.get('access_token') || params.get('token');
-        const tokenType = params.get('tokenType') || params.get('token_type') || 'Bearer';
-        const userId = params.get('userId') || params.get('user_id');
-
-        if (accessToken) {
-            localStorage.setItem("accessToken", accessToken);
-            localStorage.setItem("tokenType", tokenType);
-            if (userId) localStorage.setItem("backendUserId", userId);
-
-            if (!hasRedirected.current) {
-                hasRedirected.current = true;
-                router.replace("/home");
-            }
-        }
-    }, [router]);
 
     // Handle error from URL params
     useEffect(() => {
@@ -222,16 +275,12 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            const result = await signIn("google", {
-                callbackUrl: "/home",
-                redirect: true,
-            });
-
-            if (result?.error) {
-                setError("Google authentication failed. Please try again.");
-                setLoading(false);
-            }
+            // Use backend-initiated OAuth flow (same as Facebook)
+            console.log("🚀 Initiating Google OAuth via backend...");
+            const redirectUri = `${window.location.origin}/login`;
+            await api.auth.loginProvider('google', redirectUri);
         } catch (err) {
+            console.error("❌ Google login error:", err);
             setError("Something went wrong. Please try again later.");
             setLoading(false);
         }
@@ -242,22 +291,31 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            console.log("Initiating Facebook login via NextAuth...");
-            const result = await signIn("facebook", {
-                callbackUrl: "/home",
-                redirect: true,
-            });
-
-            if (result?.error) {
-                setError("Facebook authentication failed. Please try again.");
-                setLoading(false);
-            }
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://pseudoangular-maryrose-unbreathing.ngrok-free.dev";
+            console.log("🚀 Initiating Facebook login via backend...");
+            console.log(`📍 Redirecting to: ${API_URL}/auth/login/facebook`);
+            
+            // Redirect to backend OAuth endpoint
+            // Backend will handle the OAuth flow and redirect back to frontend with token
+            window.location.href = `${API_URL}/auth/login/facebook`;
         } catch (err) {
             console.error("Facebook login error:", err);
             setError("Something went wrong. Please try again later.");
             setLoading(false);
         }
     };
+
+    // Show loading state if already authenticated and redirecting
+    if (isRedirecting) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-white">
+                <div className="text-center">
+                    <div className="animate-spin !rounded-xl h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                    <p className="mt-4 text-zinc-600">Redirecting to home...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen flex flex-col">

@@ -129,10 +129,10 @@ export const authOptions: NextAuthOptions = {
     },
     callbacks: {
         redirect({ url, baseUrl }) {
-            // Redirect to dashboard after successful login
+            // Redirect to home after successful login
             if (url.startsWith("/")) return `${baseUrl}${url}`;
             else if (new URL(url).origin === baseUrl) return url;
-            return baseUrl + "/dashboard";
+            return baseUrl + "/home";
         },
         async signIn({ user, account }) {
             if (account?.provider === "google") {
@@ -234,9 +234,13 @@ export const authOptions: NextAuthOptions = {
                         token.accessToken = data.access_token;
                         token.tokenType = data.token_type || "Bearer";
                         token.backendUserId = data.user_id;
+                        console.log("✅ Backend token received and stored in session");
+                    } else {
+                        const errorData = await response.json().catch(() => ({}));
+                        console.error("❌ Backend token exchange failed:", response.status, errorData);
                     }
                 } catch (error) {
-                    console.error("Error fetching backend token:", error);
+                    console.error("❌ Error fetching backend token:", error);
                 }
             }
             return token;
