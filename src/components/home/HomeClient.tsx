@@ -23,20 +23,14 @@ export default function HomeClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  // Verify authentication on mount
   React.useEffect(() => {
-    const accessToken = searchParams.get("accessToken") || searchParams.get("access_token") || searchParams.get("token");
-    const tokenType = searchParams.get("tokenType") || searchParams.get("token_type") || "Bearer";
-    const userId = searchParams.get("userId") || searchParams.get("user_id");
-
-    if (accessToken) {
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("tokenType", tokenType);
-      if (userId) localStorage.setItem("backendUserId", userId);
-
-      // Remove the params from the URL for cleaner UI
-      router.replace("/home");
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      console.log("⚠️ No access token found, redirecting to login...");
+      router.replace("/login");
     }
-  }, [searchParams, router]);
+  }, [router]);
 
   const [tab, setTab] = React.useState<HomeTab>("chats");
   const [activeChatId, setActiveChatId] = React.useState<string | null>(null);
